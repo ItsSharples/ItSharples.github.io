@@ -1,0 +1,3 @@
+[submodule "CppLogo"]
+	path = Submodules/CppLogo
+	url = https://github.com/isocpp/logos.git
