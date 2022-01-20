@@ -25,14 +25,18 @@
         .navbar {
         position: sticky;
         top: 0;
+        background: #fff;
+        width: 100%;
+        display: flex;
+        }
+        .navbar .left {
+            justify-content: flex-start;
         }
         .navbar > ul {
-            width: 100%;
             display: flex;
             justify-content: flex-end;
             box-sizing: border-box;
             padding: 20px;
-            background: #fff;
         }
         .navbar > ul > li {
             list-style: none;
@@ -64,17 +68,16 @@
     </style>
 </head>
 <body>
-    <nav>
-        <div class="navbar">
-        <img src="/Icons/PIA21891/PIA21891.png" 
-        alt="Header Image"
-        width=500></img>
+    <nav class="navbar">
+        
         <ul>
+            <li class="left"><img src="/Icons/PIA21891/PIA21891.png" 
+                alt="Header Image"
+                width=500></img></li>
             <li><a>Home</a></li>
             <li><a>Projects</a></li>
             <li><a>Contact Me</a></li>
         </ul>
-    </div>
     </nav>
     <div class="subbody">
     <h1>Hello World</h1>
