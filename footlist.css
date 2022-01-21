@@ -1,7 +1,6 @@
 .footlist {
     justify-content: center;
     padding: 5px;
-    width: 100%;
     display: flex;
 }
 .footlist li {
