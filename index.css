@@ -3,6 +3,8 @@
     color-scheme: light dark;
     font: .9em/1.2 Arial, Helvetica, sans-serif;
     color: rgb(206, 206, 206);
+    min-width: 560px;
+    overscroll-behavior-x: contain;
 }
 
 body {
@@ -12,6 +14,7 @@ body {
     position: relative;
     min-height: 100vh;
     overscroll-behavior: none;
+    z-index: 0;
 }
 footer {
     width: 100%;
@@ -25,7 +28,9 @@ footer {
 
 .subbody {
     width: 90%;
+    
     max-width: 900px;
+    z-index: 10;
 }
 
 ul .left {
@@ -53,4 +58,36 @@ ul .spacer  {
 .skills > * {
     padding-top: 5px;
     padding-bottom: 5px;
+}
+
+
+
+:root {
+    zoom: 1;
+    -moz-transform: scale(1);/* Firefox Property */
+    -moz-transform-origin: 0 0;
+    -o-transform: scale(1);/* Opera Property */
+    -o-transform-origin: 0 0;
+    -webkit-transform: scale(1);/* Safari Property */
+    -webkit-transform-origin: 0 0;
+    transform: scale(1); /* Standard Property */
+    transform-origin: 0 0;  /* Standard Property */
+
+    transition: zoom 100ms linear;
+}
+
+@media (max-width: 560px) {
+    :root {
+        zoom: 50%;
+        -moz-transform: scale(50%);/* Firefox Property */
+        -moz-transform-origin: 0 0;
+        -o-transform: scale(50%);/* Opera Property */
+        -o-transform-origin: 0 0;
+        -webkit-transform: scale(50%);/* Safari Property */
+        -webkit-transform-origin: 0 0;
+        transform: scale(50%); /* Standard Property */
+        transform-origin: 0 0;  /* Standard Property */
+
+        transition: zoom 100ms linear;
+    }
 }

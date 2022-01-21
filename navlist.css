@@ -5,6 +5,7 @@
     width: 100%;
     display: flex;
     overscroll-behavior: none;
+    overflow: hidden;
 }
 .navlist {
     display: flex;
@@ -48,10 +49,10 @@
     transition: opacity 500ms linear;
     z-index: -1;
     overflow:hidden;
-    transform: translateX(0%);
-    -webkit-transform: translateX(0%);
+    transform: translateY(0%);
+    -webkit-transform: translateY(0%);
 }
-@media only all and (max-width: 850px) {
+@media only all and (max-width: 810px) {
     .iconTxt {
         opacity: 0;
         transition: opacity 250ms linear;
@@ -60,12 +61,10 @@
         -webkit-animation: slide-out 0.5s forwards;
     }
 }
-@media only all and (max-width: 780px) {
+@media only all and (max-width: 790px) {
     .iconTxt {
         display: none;
         transition: all 1s linear;
-
-        
     }
     .navlist {
         justify-content: center;
@@ -74,9 +73,9 @@
 
 
 @keyframes slide-out {
-    100% { transform: translateX(-200%); }
+    100% { transform: translateY(200%); }
 }
 
 @-webkit-keyframes slide-out {
-    100% { -webkit-transform: translateX(-200%); }
+    100% { -webkit-transform: translateY(200%); }
 }
