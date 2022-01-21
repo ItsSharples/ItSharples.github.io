@@ -59,35 +59,3 @@ ul .spacer  {
     padding-top: 5px;
     padding-bottom: 5px;
 }
-
-
-
-:root {
-    zoom: 1;
-    -moz-transform: scale(1);/* Firefox Property */
-    -moz-transform-origin: 0 0;
-    -o-transform: scale(1);/* Opera Property */
-    -o-transform-origin: 0 0;
-    -webkit-transform: scale(1);/* Safari Property */
-    -webkit-transform-origin: 0 0;
-    transform: scale(1); /* Standard Property */
-    transform-origin: 0 0;  /* Standard Property */
-
-    transition: zoom 100ms linear;
-}
-
-@media (max-width: 560px) {
-    :root {
-        zoom: 50%;
-        -moz-transform: scale(50%);/* Firefox Property */
-        -moz-transform-origin: 0 0;
-        -o-transform: scale(50%);/* Opera Property */
-        -o-transform-origin: 0 0;
-        -webkit-transform: scale(50%);/* Safari Property */
-        -webkit-transform-origin: 0 0;
-        transform: scale(50%); /* Standard Property */
-        transform-origin: 0 0;  /* Standard Property */
-
-        transition: zoom 100ms linear;
-    }
-}
