@@ -1,3 +1,11 @@
+.navbar {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.05);
+    width: 100%;
+    display: flex;
+    overscroll-behavior: none;
+}
 .navlist {
     display: flex;
     box-sizing: border-box;
@@ -32,22 +40,43 @@
     border-radius: 4px;
     vertical-align: baseline;
 }
-
+#iconDiv {
+    background: white;
+}
 .iconTxt {
-    transition: all 500ms linear;
+    position: relative;
+    transition: opacity 500ms linear;
+    z-index: -1;
+    overflow:hidden;
+    transform: translateX(0%);
+    -webkit-transform: translateX(0%);
 }
 @media only all and (max-width: 850px) {
     .iconTxt {
         opacity: 0;
-        transition: all 250ms linear;
+        transition: opacity 250ms linear;
+
+        animation: slide-out 0.5s forwards;
+        -webkit-animation: slide-out 0.5s forwards;
     }
 }
 @media only all and (max-width: 780px) {
     .iconTxt {
         display: none;
         transition: all 1s linear;
+
+        
     }
     .navlist {
         justify-content: center;
     }
-  }
+}
+
+
+@keyframes slide-out {
+    100% { transform: translateX(-200%); }
+}
+
+@-webkit-keyframes slide-out {
+    100% { -webkit-transform: translateX(-200%); }
+}

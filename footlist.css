@@ -1,8 +1,8 @@
 .footlist {
-    display: flex;
-    box-sizing: border-box;
     justify-content: center;
     padding: 5px;
+    width: 100%;
+    display: flex;
 }
 .footlist li {
     list-style: none;
