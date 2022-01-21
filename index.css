@@ -29,6 +29,8 @@ footer {
     width: 90%;
     margin: auto;
     z-index: 10;
+    position: relative;
+
 }
 
 ul .left {
@@ -56,4 +58,12 @@ ul .spacer  {
 .skills > * {
     padding-top: 5px;
     padding-bottom: 5px;
+}
+
+#toggle {
+    position: relative;
+    top: 0;
+}
+#toggle:checked + div {
+    display: none;
 }
