@@ -1,0 +1,18 @@
+.footlist {
+    display: flex;
+    box-sizing: border-box;
+    justify-content: center;
+    padding: 5px;
+}
+.footlist li {
+    list-style: none;
+    margin-right: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+}
+.footlist li > a {
+    text-decoration: none;
+    color: #1ac;
+}

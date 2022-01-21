@@ -3,120 +3,40 @@
 <head>
     <meta charset="utf-8">
     <title>CSS Grid starting point</title>
-    <style>
-        :root{
-            color-scheme: light dark;
-        }
-
-        body {
-            font: .9em/1.2 Arial, Helvetica, sans-serif;
-            color: rgb(34, 34, 34);
-            background-color: rgb(248, 248, 248);
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            min-height: 100vh;
-        }
-        .subbody {
-            width: 90%;
-            max-width: 900px;
-            margin: 2em auto;
-        }
-        .navbar {
-        position: sticky;
-        top: 0;
-        background: #fff;
-        width: 100%;
-        display: flex;
-        }
-        .navbar .left {
-            justify-content: flex-start;
-        }
-        .navbar img {
-            max-height: 40px;
-            width: auto;
-        }
-        .navbar > ul {
-            display: flex;
-            justify-content: flex-end;
-            box-sizing: border-box;
-            padding: 20px;
-        }
-        .navbar > ul > li {
-            list-style: none;
-            margin-right: 20px;
-            font-size: 25px;
-            font-weight: bold;
-        }
-        .navbar > ul > li > a {
-            text-decoration: none;
-            color: #1ac;
-        }
-
-        .box {
-            border-radius: 12px;
-            margin: 1em;
-            padding: 1em;
-            background-color: rgb(131, 179, 155);
-            break-inside: avoid;
-            box-shadow: 3px 3px 0 1px rgba(233, 233, 233, 0.7);
-        }
-
-        .skills {
-            column-count: 1;
-        }
-        .skills > * {
-            padding-top: 5px;
-            padding-bottom: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="navlist.css">
+    <link rel="stylesheet" href="footlist.css">
 </head>
 <body>
     <nav class="navbar">
-        
-        <ul>
-            <li class="left"><img src="/Icons/PIA21891/PIA21891.png" 
-                alt="Header Image"
-                width=500></img></li>
-            <li><a>Home</a></li>
-            <li><a>Projects</a></li>
-            <li><a>Contact Me</a></li>
+        <ul class="navlist">
+            <li class="left">
+                <ul>
+                    <li><img src="Icons/PIA21891/PIA21891.png" alt="Header Logo"></img></li>
+                    <li class="iconTxt">Sharples' Corner</li>
+                </ul>
+            </li>
+            <li class="spacer"></li>
+            <li>
+                <ul>
+                    <li><a>Home</a></li>
+                    <li><a>Projects</a></li>
+                    <li><a>Contact Me</a></li>
+                </ul>
+            </li>
         </ul>
     </nav>
     <div class="subbody">
-    <h1>Hello World</h1>
-    <p>I'm hosted with GitHub Pages.</p>
-    <h2>Skills Box</h2>
-        <div class="skills">
-            <div class="box">
-                <h4>Main Technical Skills</h2>
-                <div class="languages">
-                    <h5>Programming Languages</h5>
-                    C++, C#, Python, other Rust
-                </div>
-                <div class="frameworks">
-                    <h5>Frameworks:</h6>
-                    DX11, Vulkan, .Net, WinUI 3
-                </div>
-                <div class="engines">
-                    <h5>Engines:</h5>
-                    Unity, Unreal Engine 4
-                </div>
-            </div>
-            <div class="box">
-                <h4>Other Skills & Experience</h4>
-                <ul>
-                <li>GitHub</li>
-                <li>Visual Studio 2019 & 2022</li>
-                <li>Visual Studio Code</li>
-                <li>Maya</li>
-                <li>Audacity</li>
-                <li>OBS</li>
-                <li>Blender</li>
-                </ul>
-            </div> 
-        </div>
+        s
     </div>
 </div>
 </body>
+<footer>
+    <ul class="footlist">
+        <li><a href="mailto:benedict.sharp@exwick.com">Email</a></li>
+        <li><a href="https://github.com/ItsSharples">GitHub</a></li>
+        <li><a href="https://itssharples.itch.io">Itch.io</a></li>
+        <li><a href="https://twitter.com/ItsSharples">Twitter</a></li>
+    </ul>
+</footer>
 </html>
