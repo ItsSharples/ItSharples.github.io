@@ -10,7 +10,8 @@
 }
 
 body {
-    background-color: rgb(10, 15, 20);
+    background-color: rgb(206, 206, 206);
+    /* //rgb(10, 15, 20); */
     margin: 0 auto;
     padding: 0;
     position: relative;
@@ -29,15 +30,20 @@ header {
     position: sticky;
     top: 0;
     background: rgb(23, 27, 32);
+    box-shadow: 0 0 1em rgb(23, 27, 32);
     width: 100%;
     vertical-align: top;
     overscroll-behavior: none;
     overflow: hidden;
     z-index: 100;
+    
+    font-size: 25px;
+    transition: font-size 100ms linear;
 }
 
 html:not([data-scroll='0']) header{
-    box-shadow: 0 0 1em rgb(23, 27, 32);
+    font-size: 20px;
+    transition: font-size 100ms linear;
 }
 
 
