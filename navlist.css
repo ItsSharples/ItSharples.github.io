@@ -1,34 +1,31 @@
-.navbar {
-    position: sticky;
-    top: 0;
-    background: rgba(255, 255, 255, 0.05);
-    width: 100%;
-    display: flex;
-    overscroll-behavior: none;
-    overflow: hidden;
-}
+
 .navlist {
     display: flex;
     box-sizing: border-box;
-    justify-content: flex-end;
     width: 100%;
-    padding: 5px;
+
+    z-index: 100;
+    margin: 0;
+    padding: 20px 0px 20px 40px;
 }
 .navlist ul {
     display: flex;
     box-sizing: border-box;
     justify-content: flex-end;
-    width: 100%;
+    padding: 0px;
 }
 .navlist li {
     list-style: none;
-    margin-right: 20px;
+    /* margin-right: 20px; */
     font-size: 25px;
     height: 50px;
     font-weight: bold;
     text-align: center;
     white-space: nowrap;
     line-height: 50px;
+}
+.navlist li > * {
+    margin-right: 20px;
 }
 .navlist li > a {
     text-decoration: none;
@@ -79,3 +76,5 @@
 @-webkit-keyframes slide-out {
     100% { -webkit-transform: translateY(200%); }
 }
+
+

@@ -4,6 +4,8 @@
     font: .9em/1.2 Arial, Helvetica, sans-serif;
     color: rgb(206, 206, 206);
     min-width: 560px;
+
+    scroll-behavior: smooth;
     overscroll-behavior-x: auto;
 }
 
@@ -23,6 +25,21 @@ footer {
     background: rgb(24, 24, 24);
     /* margin-top: 1px; */
 }
+header {
+    position: sticky;
+    top: 0;
+    background: rgb(23, 27, 32);
+    width: 100%;
+    vertical-align: top;
+    overscroll-behavior: none;
+    overflow: hidden;
+    z-index: 100;
+}
+
+html:not([data-scroll='0']) header{
+    box-shadow: 0 0 1em rgb(23, 27, 32);
+}
+
 
 .subbody {
     max-width: 900px;
