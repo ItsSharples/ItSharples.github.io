@@ -48,6 +48,7 @@
     transform: translateY(0%);
     -webkit-transform: translateY(0%);
 }
+
 @media only all and (max-width: 810px) {
     .iconTxt {
         opacity: 0;
