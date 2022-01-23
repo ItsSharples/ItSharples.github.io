@@ -1,0 +1,262 @@
+/*
+ * Based on a Codepen made by Erik Terwan
+ *
+ / Original
+ * Made by Erik Terwan
+ * 24th of November 2015
+ * MIT License
+ *
+ *
+ * https://codepen.io/erikterwan/pen/EVzeRP
+ */
+
+#hamMenu
+{
+  display: flex;
+  position: relative;
+  min-height: 100%;
+
+
+  z-index: 95;
+  
+  -webkit-user-select: none;
+  user-select: none;
+}
+#hamMenu ul {
+    display: block;
+}
+#hamMenu li {
+    line-height: 100%;
+    height: 100%;
+    text-align: left;
+}
+/* #hamMenu a
+{
+  text-decoration: none;
+  color: #232323;
+  
+  transition: color 0.3s ease;
+}
+
+#hamMenu a:hover
+{
+  color: tomato;
+} */
+
+
+#hamMenu input
+{
+    position: absolute;
+    display: block;
+    width: 2em;
+    height: 2em;
+    padding: 0px;
+    margin: 0px;
+
+    /* top: -2.8em;
+    left: 0.8em; */
+    cursor: pointer;
+
+    opacity: 0; /* hide this */
+    z-index: 2; /* and place it over the hamburger */
+
+    -webkit-touch-callout: none;
+}
+
+/*
+ * Just a quick hamburger
+ */
+ #hamburger {
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+    width: 2em;
+    height: 1.08em;
+
+    padding-top: 0.56em;
+    padding-bottom: .36em;
+    z-index: 1;
+    transform: translate(0%, 0%);
+
+    transition: top, left, width, height 100ms linear;
+ }
+#hamburger span
+{
+  display: block;
+  width: 1.32em;
+  height: 0.16em;
+  margin: auto;
+  margin-bottom: 0.2em;
+  position: relative;
+
+  background: #cdcdcd;
+  border-radius: 3px;
+  z-index: 1;
+  transform-origin: 0.16em 0px;
+  
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              opacity 0.55s ease;
+}
+
+#hamburger > span:first-child
+{
+  transform-origin: 0% 0%;
+}
+#hamburger > span:last-child
+{
+  transform-origin: 0% 100%;
+}
+
+/* 
+ * Transform all the slices of hamburger
+ * into a crossmark.
+ */
+#menuButton:checked ~ #hamburger > span
+{
+  opacity: 1;
+  transform: rotate(45deg) translate(-2px, -1px);
+  /* background: #232323; */
+}
+
+/*
+ * But let's hide the middle one.
+ */
+#menuButton:checked ~ #hamburger > span:nth-child(2)
+{ 
+  opacity: 0;
+  transform: rotate(0deg) scale(0.2, 0.2);
+}
+
+/*
+ * Ohyeah and the last one should go the other direction
+ */
+#menuButton:checked ~ #hamburger > span:last-child
+{
+  transform: rotate(-45deg) translate(0, -1px);
+}
+
+/*
+ * Make this absolute positioned
+ * at the top left of the screen
+ */
+#menu {  
+    position: fixed;
+    box-sizing: border-box;
+    /* top:3.6em;*/
+    left:0px; 
+
+    margin: 0px;
+    padding: 0px;
+    z-index: 98;
+    min-height: calc(100% - 20px);
+    width: 300px;
+
+    overflow: visible;
+    word-wrap: nowrap;
+    
+
+    background: #ededed;
+    box-shadow: 0 0 1em rgba(23, 27, 32, 0.2);
+
+    list-style-type: none;
+    -webkit-font-smoothing: antialiased;
+    /* to stop flickering of text in safari */
+
+    transform-origin: 0% 0%;
+    transition: font-size 100ms linear, opacity 100ms linear, transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+}
+
+#menu li
+{
+  padding: 10px 0;
+  font-size: 25px;
+}
+
+/*
+ * And let's slide it in from the left
+ */
+#menu {  
+    transform: translate(-100%, 0);
+    
+ }
+#showMenu:checked ~ #menu
+{
+    transform: none;
+}
+
+#hamMenu {
+    font-size: 25px;
+    transition: font-size 100ms linear, top 100ms linear;
+}
+html:not([data-scroll='0']) #hamMenu{
+    font-size: 20px;
+    transition: font-size 100ms linear, top 100ms linear;
+}
+
+
+#hamMenu
+{
+    transition: opacity, width 100ms linear;
+}
+#hamMenu input {
+    transition: z-index 100ms linear;
+}
+#menu {
+    opacity: 1;
+}
+
+.navBackground {
+    padding-left: 3.2em;
+    transition: padding-left 100ms linear;
+}
+
+@media (min-width: 580px) {
+    #hamMenu {
+        opacity: 0;
+        width: 0px;
+        transition: opacity, width 100ms linear;
+    }
+    #menu {
+        /* opacity: 0; */
+        /* transition: opacity 100ms linear; */
+    }
+    .navBackground {
+        padding-left: 1.6em;
+        transition: padding-left 100ms linear;
+    }
+}
+/* @media only all and (min-width: 600px) {
+    #menu {
+        display: none;
+    }
+    #menuToggle {
+        display: none;
+    }
+} */
+
+@keyframes slide-out-x {
+    0% { transform: translateX(0%);}
+    100% { transform: translateX(-200%);}
+}
+
+@-webkit-keyframes slide-out-x {
+    0% { -webkit-transform: translateX(0%);}
+    100% { -webkit-transform: translateX(-200%); }
+}
+
+@keyframes slide-in-x {
+    100% { transform: translateX(0%); }
+}
+
+@-webkit-keyframes slide-in-x {
+    100% { -webkit-transform: translateX(0%); }
+}
+
+@keyframes disappear {
+    100% { display: none; }
+}
+
+@-webkit-keyframes disappear {
+    100% { display: none; }
+}

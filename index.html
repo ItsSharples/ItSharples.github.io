@@ -2,12 +2,16 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--  -->
+    <meta name="color" content="#171b20">
+    <meta name="theme-color" content="#171b20">
 
     <title>Sharples' Corner</title>
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="navlist.css">
     <link rel="stylesheet" href="footlist.css">
+    <link rel="stylesheet" href="hamburger.css">
 
     <!-- Favicons -->
     <link rel="icon" href="images/favicon/favicon.ico" sizes="any">
@@ -16,10 +20,19 @@
 
     <!-- Scripts -->
     <script src="scrollZoom.js"></script>
+    <script src="buttonPress.js" defer></script>
 </head>
 <header>
     <nav id="navbar">
         <ul class="navlist">
+            <li id="hamMenu">
+                <input type="checkbox" id="menuButton">
+                <div id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </li>
             <li class="left">
                 <ul>
                     <li>
@@ -48,7 +61,16 @@
     </nav>
 </header>
 <body>
+<div id="background-colour">
     <div class="subbody">
+        <div>
+            <input type="checkbox" id="showMenu" style="display:none">
+            <ul id="menu">
+                <li><a>Home</a></li>
+                <li><a>Projects</a></li>
+                <li><a>Contact</a></li>
+            </ul>
+        </div>
         <input type="checkbox" id="toggle"/>
         <div class="box">
             This is a large quantity of rather random text, that I wrote myself. I can't believe that I decided to do this instead of just getting a Lorum Ipsum generator, or just copying Wikipedia Articles.
@@ -70,6 +92,7 @@
             Talent she for lively eat led sister. Entrance strongly packages she out rendered get quitting denoting led. Dwelling confined improved it he no doubtful raptures. Several carried through an of up attempt gravity. Situation to be at offending elsewhere distrusts if. Particular use for considered projection cultivated. Worth of do doubt shall it their. Extensive existence up me contained he pronounce do. Excellence inquietude assistance precaution any impression man sufficient. 
         </div>
     </div>
+</div>
 </body>
 <footer>
     <ul class="footlist">

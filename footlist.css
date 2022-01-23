@@ -1,8 +1,12 @@
 .footlist {
     justify-content: center;
     padding: 5px;
+    margin: 0;
+    bottom: -3px;
+    margin-bottom: 5px;
     display: flex;
     position: relative;
+    padding-inline-start: 0px;
     z-index: 1000 !important;
 }
 .footlist li {
