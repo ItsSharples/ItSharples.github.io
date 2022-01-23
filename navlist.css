@@ -67,6 +67,22 @@
     }
 }
 
+#topNav {
+    opacity: 0;
+    transition: opacity 100ms linear;
+    animation: slide-out 0.5s forwards;
+    -webkit-animation: slide-out 0.5s forwards;
+    z-index: 10;
+}
+@media (min-width: 580px) {
+    #topNav {
+        opacity: 1;
+        transition: opacity 100ms linear;
+        transform: translateY(0%);
+        animation: slide-in 0.5s forwards;
+        -webkit-animation: slide-in 0.5s forwards;
+    } 
+}
 
 @keyframes slide-out {
     100% { transform: translateY(200%); }
@@ -76,4 +92,10 @@
     100% { -webkit-transform: translateY(200%); }
 }
 
+@keyframes slide-in {
+    100% { transform: translateY(0%); }
+}
 
+@-webkit-keyframes slide-in {
+    100% { -webkit-transform: translateY(0%); }
+}
