@@ -1,17 +1,28 @@
 
+/* Mobile */
+:root {
+    min-width: 0;
+}
+
 .navlist {
+    position: relative;
+    padding: 0.8em 0px;
+    justify-content: flex-start;
+    /* space-between; */
+
     display: flex;
     box-sizing: border-box;
     width: 100%;
-    justify-content: flex-start;
     z-index: 100;
     margin: 0;
-    
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .navlist ul {
     display: flex;
     box-sizing: border-box;
-    justify-content: flex-end;
+    justify-content: flex-start;
     padding: 0px;
 }
 .navlist li {
@@ -21,7 +32,6 @@
     font-weight: bold;
     text-align: center;
     white-space: nowrap;
-    
 }
 .navlist li > * {
     margin-right: 0.8em;
@@ -30,52 +40,40 @@
     text-decoration: none;
     color: #1ac;
 }
+.navlist ul li:last-child > *{
+    margin-right: 0.0em;
+}
 .navlist img {
     height: 2em;
-    width: auto;
+    width: 2em;
     padding: 0px;
     border-radius: 0.16em;
     vertical-align: baseline;
 }
-#iconDiv {
-    background: white;
-}
-.iconTxt {
+
+.left {
+    padding-left: 5em;
     position: relative;
-    transition: opacity 500ms linear;
-    z-index: -1;
-    overflow:hidden;
-    transform: translateY(0%);
-    -webkit-transform: translateY(0%);
+    display: block;
+    justify-content: flex-end;
 }
 
-@media only all and (max-width: 810px) {
-    .iconTxt {
-        opacity: 0;
-        transition: opacity 250ms linear;
-
-        animation: slide-out 0.5s forwards;
-        -webkit-animation: slide-out 0.5s forwards;
-    }
-}
-@media only all and (max-width: 790px) {
-    .iconTxt {
-        display: none;
-    }
-}
-/* Mobile */
-:root {
-    min-width: 0;
-}
 #topNav {
     opacity: 0;
+    position: relative;
     transition: opacity 100ms linear;
     animation: slide-out 0.5s forwards;
     -webkit-animation: slide-out 0.5s forwards;
     z-index: 10;
 }
-.navlist {
-    padding: 0.8em 0px 0.8em 0.8em;
+.navBackground {
+    padding-left: 3.2em;
+    transition: padding-left 100ms linear;
+}
+@media (min-width: 470px) {
+    #topNav {
+        width: 30vw;
+    }
 }
 /* Tablets */
 @media (min-width: 480px) {
@@ -83,14 +81,21 @@
         min-width: 470px;
     }
     #topNav {
+        position: relative;
         opacity: 1;
-        transition: opacity 100ms linear;
-        transform: translateY(0%);
+
+        width: auto;
+        transform: translateX(0%);
         animation: slide-in 0.5s forwards;
         -webkit-animation: slide-in 0.5s forwards;
     }
     .navlist {
-        padding: 0.8em 0px 0.8em 1.6em;
+        justify-content: space-between;
+        position: relative;
+        padding: 0.8em;
+    }
+    .navBackground {
+        padding-left: 1.6em;
     }
 }
 /* Screens */
@@ -98,24 +103,52 @@
     :root {
         min-width: 560px;
     }
+   
 }
+/* Title */
+#iconTxt {
+    display: none;
 
-.spacer {
-    width: 0;
-    transition: width 1s linear;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: clip;
+    word-wrap: hidden;
+
+    animation: none;
+
+    position: relative;
+    z-index: -1;
+
+    transform: translateY(0%);
+    -webkit-transform: translateY(0%);
 }
-@media (min-width: 580px) {
-    .spacer {
-        width: 100%;
-        transition: width 1s linear;
+@media (min-width: 670px) {
+    #iconTxt {
+        display: initial;
+        opacity: 0;
+
+        animation: hide-txt 0.5s forwards;
+        -webkit-animation: hide-txt 0.5s forwards;
+        
+        transition: opacity 500ms linear;
     }
 }
+@media (min-width: 810px) {
+#iconTxt {
+    opacity: 1;
+    animation: none;
+}
+}
+/* End Title */
+
 @keyframes slide-out {
-    100% { transform: translateY(200%); }
+    99% { transform: translateY(200%); }
+    100% { transform: translateY(200%); width:0; }
 }
 
 @-webkit-keyframes slide-out {
-    100% { -webkit-transform: translateY(200%); }
+    99% { -webkit-transform: translateY(200%); }
+    100% { -webkit-transform: translateY(200%); width:0; }
 }
 
 @keyframes slide-in {
@@ -124,4 +157,14 @@
 
 @-webkit-keyframes slide-in {
     100% { -webkit-transform: translateY(0%); }
+}
+
+@keyframes hide-txt {
+    50% { width:100%; transform: translateY(200%); }
+    100% {width:0; transform: translateY(200%);}
+}
+
+@-webkit-keyframes hide-txt {
+    50% { width:100%; -webkit-transform: translateY(200%); }
+    100% {width:0; -webkit-transform: translateY(200%);}
 }

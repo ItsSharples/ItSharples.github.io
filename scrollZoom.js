@@ -28,7 +28,7 @@ const debounce = (fn) => {
   // Reads out the scroll position and stores it in the data attribute
   // so we can use it in our stylesheets
   const storeScroll = () => {
-    document.documentElement.dataset.scroll = Math.max(window.scrollY, 0);
+    document.documentElement.dataset.scroll = Math.max(window.scrollY - 20, 0);
   }
   
   // Listen for new scroll events, here we debounce our `storeScroll` function

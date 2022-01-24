@@ -110,6 +110,7 @@ html:not([data-scroll='0']) input{
     width: 90%;
     margin: auto;
     z-index: 5;
+    min-height: calc(100vh - 125px);
 }
 
 ul .left {

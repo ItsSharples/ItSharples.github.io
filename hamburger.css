@@ -15,12 +15,25 @@
   display: flex;
   position: relative;
   min-height: 100%;
-
-
   z-index: 95;
+
+  margin-left: 20px;
+  
   
   -webkit-user-select: none;
   user-select: none;
+
+  width: 0;
+  opacity: 0;
+  margin-right: 0;
+  transform: translateX(0);
+  overflow: hidden;
+
+  /* transition: 
+        font-size 100ms linear, */
+        /* top 100ms linear; */
+        /* opacity 100ms linear,
+        width 300ms linear 100ms; */
 }
 #hamMenu ul {
     display: block;
@@ -44,10 +57,11 @@
 } */
 
 
-#hamMenu input
+#menuButton
 {
     position: absolute;
     display: block;
+
     width: 2em;
     height: 2em;
     padding: 0px;
@@ -66,46 +80,56 @@
 /*
  * Just a quick hamburger
  */
- #hamburger {
+#hamburger {
     position: relative;
     padding: 0px;
-    margin: 0px;
-    width: 2em;
-    height: 1.08em;
+    width: 1.4em;
+    height: 1.26em;
 
-    padding-top: 0.56em;
-    padding-bottom: .36em;
+    margin: 0;
+    padding-left: 7.5px;
+    padding-right: 0.3em;
+    padding-top:   9.25px;
+    padding-bottom: .37em;
     z-index: 1;
     transform: translate(0%, 0%);
 
-    transition: top, left, width, height 100ms linear;
- }
-#hamburger span
-{
-  display: block;
-  width: 1.32em;
-  height: 0.16em;
-  margin: auto;
-  margin-bottom: 0.2em;
-  position: relative;
+    overflow: hidden;
 
-  background: #cdcdcd;
-  border-radius: 3px;
-  z-index: 1;
-  transform-origin: 0.16em 0px;
-  
-  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
-              background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
-              opacity 0.55s ease;
+    transition: 
+        width 100ms linear, 
+        height 100ms linear;
+}
+#hamburger span {
+    display: block;
+    font-size: 25px;
+    width: 1.4em;
+    height: 0.19em;
+
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0.23em;
+
+    position: relative;
+
+    background: #cdcdcd;
+    border-radius: 3px;
+    z-index: 1;
+    transform-origin: 0.16em 0px;
+
+    transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+                background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+                opacity 0.55s ease,
+                width 100ms ease;
 }
 
-#hamburger > span:first-child
-{
-  transform-origin: 0% 0%;
+#hamburger > span:first-child {
+    margin-top: 0.12em;
+    transform-origin: 0% 0%;
 }
-#hamburger > span:last-child
-{
-  transform-origin: 0% 100%;
+#hamburger > span:last-child {
+    margin-bottom: 0.11em;
+    transform-origin: 0% 100%;
 }
 
 /* 
@@ -115,7 +139,7 @@
 #menuButton:checked ~ #hamburger > span
 {
   opacity: 1;
-  transform: rotate(45deg) translate(-2px, -1px);
+  transform: rotate(45deg) translate(-0.08em, -0.04em);
   /* background: #232323; */
 }
 
@@ -133,7 +157,7 @@
  */
 #menuButton:checked ~ #hamburger > span:last-child
 {
-  transform: rotate(-45deg) translate(0, -1px);
+  transform: rotate(-45deg) translate(0, -0.04em);
 }
 
 /*
@@ -148,14 +172,13 @@
 
     margin: 0px;
     padding: 0px;
-    z-index: 98;
+    z-index: 5;
     min-height: calc(100% - 20px);
     width: 300px;
 
     overflow: visible;
     word-wrap: nowrap;
     
-
     background: #ededed;
     box-shadow: 0 0 1em rgba(23, 27, 32, 0.2);
 
@@ -164,7 +187,9 @@
     /* to stop flickering of text in safari */
 
     transform-origin: 0% 0%;
-    transition: font-size 100ms linear, opacity 100ms linear, transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+    transition: font-size 100ms linear, 
+                opacity 100ms linear, 
+                transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
 }
 
 #menu li
@@ -173,67 +198,40 @@
   font-size: 25px;
 }
 
-/*
- * And let's slide it in from the left
- */
-#menu {  
-    transform: translate(-100%, 0);
-    
- }
-#showMenu:checked ~ #menu
-{
-    transform: none;
-}
+
 
 #hamMenu {
     font-size: 25px;
-    transition: font-size 100ms linear, top 100ms linear;
 }
 html:not([data-scroll='0']) #hamMenu{
     font-size: 20px;
-    transition: font-size 100ms linear, top 100ms linear;
 }
 
-
-#hamMenu
-{
-    transition: opacity, width 100ms linear;
+#hamMenu {
+    animation: hamburger-appear 100ms ease-in 0.1s forwards;
+    -webkit-animation: hamburger-appear 100ms ease-in 0.1s forwards;
+    z-index: 1;
 }
-#hamMenu input {
-    transition: z-index 100ms linear;
-}
-#menu {
-    opacity: 1;
-}
-
-.navBackground {
-    padding-left: 3.2em;
-    transition: padding-left 100ms linear;
-}
-
-@media (min-width: 580px) {
+@media (min-width: 480px) {
     #hamMenu {
-        opacity: 0;
-        width: 0px;
-        transition: opacity, width 100ms linear;
-    }
-    #menu {
-        /* opacity: 0; */
-        /* transition: opacity 100ms linear; */
-    }
-    .navBackground {
-        padding-left: 1.6em;
-        transition: padding-left 100ms linear;
+        animation: hamburger-disappear 100ms ease-in 0s forwards;
+        -webkit-animation: hamburger-disappear 100ms ease-in 0s forwards;
+        z-index: -1;
+        margin: 0;
     }
 }
-/* @media only all and (min-width: 600px) {
-    #menu {
-        display: none;
+
+/*
+ * And let's slide it in from the left
+ */
+ #menu {  
+    transform: translate(-100%, 0);
+ }
+ @media (max-width: 480px) {
+    #showMenu:checked ~ #menu {
+        transform: none;
     }
-    #menuToggle {
-        display: none;
-    }
-} */
+}
 
 @keyframes slide-out-x {
     0% { transform: translateX(0%);}
@@ -246,17 +244,43 @@ html:not([data-scroll='0']) #hamMenu{
 }
 
 @keyframes slide-in-x {
+    0% { transform: translateX(-200%);}
     100% { transform: translateX(0%); }
 }
 
 @-webkit-keyframes slide-in-x {
+    0% { transform: translateX(-200%);}
     100% { -webkit-transform: translateX(0%); }
 }
 
-@keyframes disappear {
-    100% { display: none; }
+@keyframes hamburger-disappear {
+    100% { 
+        transform: translateX(-100%);
+        opacity: 0;
+        width: 0;
+        }
+    }
+@keyframes hamburger-appear {
+    100% { 
+        transform: translateX(0%);
+        opacity: 1;
+        width: 2em;
+        margin-right: 0.4em;
+    }
 }
 
-@-webkit-keyframes disappear {
-    100% { display: none; }
+@-webkit-keyframes hamburger-disappear {
+    100% { 
+        -webkit-transform: translateX(-100%);
+        opacity: 0;
+        width: 0;
+    }
+}
+@-webkit-keyframes hamburger-appear {
+    100% { 
+        -webkit-transform: translateX(0%);
+        opacity: 1;
+        width: 2em;
+        margin-right: 0.4em;
+    }
 }
