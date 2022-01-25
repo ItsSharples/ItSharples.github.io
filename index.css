@@ -105,7 +105,7 @@ html:not([data-scroll='0']) input{
     }
 }
 
-.subbody {
+#subbody {
     max-width: 900px;
     width: 90%;
     margin: auto;

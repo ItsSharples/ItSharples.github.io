@@ -3,11 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--  -->
+    <!-- Safari Colour Things -->
     <meta name="color" content="#171b20">
     <meta name="theme-color" content="#171b20">
-
+    <!-- Data -->
+    <meta name="author" content="Sharples">
+    
     <title>Sharples' Corner</title>
+    <base href="/">
+    <!-- CSS -->
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="navlist.css">
     <link rel="stylesheet" href="footlist.css">
@@ -53,9 +57,9 @@
             </li>
             <li id="topNav">
                 <ul>
-                    <li><a>Home</a></li>
-                    <li><a>Projects</a></li>
-                    <li><a>Contact</a></li>
+                    <li><a href="./">Home</a></li>
+                    <li><a href="./projects/">Projects</a></li>
+                    <li><a href="./contact.html">Contact</a></li>
                 </ul>
             </li>
         </ul>
@@ -63,15 +67,15 @@
 </header>
 <body>
 <div id="background-colour">
-    <div class="subbody">
-        <div>
-            <input type="checkbox" id="showMenu" style="display:none">
-            <ul id="menu">
-                <li><a>Home</a></li>
-                <li><a>Projects</a></li>
-                <li><a>Contact</a></li>
-            </ul>
-        </div>
+    <div>
+        <input type="checkbox" id="showMenu" style="display:none">
+        <ul id="menu">
+            <li><a href="./">Home</a></li>
+            <li><a href="./projects/">Projects</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+        </ul>
+    </div>
+    <div id="subbody">
         <input type="checkbox" id="toggle"/>
         <div class="box">
             This is a large quantity of rather random text, that I wrote myself. I can't believe that I decided to do this instead of just getting a Lorum Ipsum generator, or just copying Wikipedia Articles.
