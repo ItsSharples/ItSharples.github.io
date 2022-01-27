@@ -1,12 +1,25 @@
 
 :root{
-    color-scheme: dark;
+    color-scheme: light;
     font: .9em/1.2 Arial, Helvetica, sans-serif;
-    color: rgb(206, 206, 206);
+    
     min-width: 560px;
 
     scroll-behavior: smooth;
     overscroll-behavior-x: auto;
+
+    --white-text: rgb(206, 206, 206);
+    --nav-background: rgb(24, 24, 24);
+    --background: rgb(206, 206, 206);
+
+    --font-size-normal: 25px;
+    --font-size-shrunk: 20px;
+
+
+
+
+
+    color: var(--white-text);
 }
 
 @media (prefers-color-scheme: light) {
@@ -15,7 +28,7 @@
 }
 
 body {
-    background: rgb(24, 24, 24);
+    background: var(--nav-background);
     /* //rgb(10, 15, 20); */
     margin: 0 auto;
     padding: 0;
@@ -39,7 +52,7 @@ footer {
     position: relative;
     width: 100%;
     height: 100%;
-    background: rgb(24, 24, 24);
+    background: var(--nav-background);
     z-index: 10;
     /* margin-top: 1px; */
 }
@@ -58,29 +71,29 @@ header {
 }
 
 body {
-    font-size: 25px;
+    font-size: var(--font-size-normal);
     transition: font-size 100ms linear;
 }
 
 header {
-    font-size: 25px;
+    font-size: var(--font-size-normal);
     transition: font-size 100ms linear;
 }
 html:not([data-scroll='0']) header{
-    font-size: 20px;
+    font-size: var(--font-size-shrunk);
     transition: font-size 100ms linear;
 }
 
 input {
-    font-size: 25px;
+    font-size: var(--font-size-normal);
     transition: font-size 100ms linear;
 }
 html:not([data-scroll='0']) input{
-    font-size: 20px;
+    font-size: var(--font-size-shrunk);
     transition: font-size 100ms linear;
 }
 
-@media (max-width: 00px) {
+/* @media (max-width: 00px) {
     body {
         font-size: 15px;
         transition: font-size 100ms linear;
@@ -103,7 +116,7 @@ html:not([data-scroll='0']) input{
         font-size: 10px;
         transition: font-size 100ms linear;
     }
-}
+} */
 
 #subbody {
     max-width: 900px;
@@ -111,6 +124,7 @@ html:not([data-scroll='0']) input{
     margin: auto;
     z-index: 5;
     min-height: calc(100vh - 125px);
+    color: initial;
 }
 
 ul .left {
@@ -142,4 +156,9 @@ ul .left {
 }
 #toggle:checked + div {
     display: none;
+}
+
+.title {
+    margin-top: 0;
+    padding-top: 0.67em; 
 }

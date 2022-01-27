@@ -6,7 +6,7 @@
 
 .navlist {
     position: relative;
-    padding: 0.8em 0px;
+    padding: 0.8em 0;
     justify-content: flex-start;
     /* space-between; */
 
@@ -23,7 +23,7 @@
     display: flex;
     box-sizing: border-box;
     justify-content: flex-start;
-    padding: 0px;
+    padding: 0;
 }
 .navlist li {
     list-style: none;
@@ -46,7 +46,7 @@
 .navlist img {
     height: 2em;
     width: 2em;
-    padding: 0px;
+    padding: 0;
     border-radius: 0.16em;
     vertical-align: baseline;
 }
