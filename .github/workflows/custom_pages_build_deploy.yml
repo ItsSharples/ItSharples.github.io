@@ -62,7 +62,7 @@ jobs:
       - name: Run a multi-line script
         uses: actions/deploy-pages@v1-beta
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
           timeout: 600000
           error_count: 10
           reporting_interval: 1000
