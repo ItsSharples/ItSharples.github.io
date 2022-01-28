@@ -57,6 +57,8 @@ jobs:
       id-token: write
       contents: read
       pages: write
+      
+    environment: github-pages
     
     steps:
       - uses: actions/deploy-pages@v1-beta
@@ -64,6 +66,7 @@ jobs:
       - name: Run a multi-line script
         uses: actions/deploy-pages@v1-beta
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           timeout: 600000
           error_count: 10
           reporting_interval: 1000
