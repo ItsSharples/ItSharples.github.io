@@ -2,16 +2,12 @@ _site/
 .sass-cache/
 .jekyll-cache/
 .jekyll-metadata
+.venv
 
 .DS_Store
 scratch.*
 
 # Exclude everything in projects/data
 projects/data/*
-projects/data/CGD/*
-projects/data/**/*.zip
-projects/data/**/Conrad*
-# Needing all of these sucks so much lol
-!projects/data
-!projects/data/CGD
-!projects/data/CGD/QualityAssurance
+# Exclude the files that my SSG will generate
+projects/**/index.html
