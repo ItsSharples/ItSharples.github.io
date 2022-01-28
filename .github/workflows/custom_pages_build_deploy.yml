@@ -53,6 +53,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     
+    permissions:
+      id-token: write
+    
     steps:
       - uses: actions/deploy-pages@v1-beta
       
