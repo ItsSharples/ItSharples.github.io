@@ -1,0 +1,68 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the ultimate branch
+  push:
+    branches: [ ultimate ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - uses: actions/upload-artifact@main
+
+      # Runs a single command using the runners shell
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+            ref: ultimate
+            submodules: recursive
+            repository: ItsSharples/itssharples.github.io
+            token: ${{ secrets.GITHUB_TOKEN }}
+            ssh-strict: true
+            persist-credentials: true
+            clean: true
+            fetch-depth: 1
+            lfs: false
+      
+      - name: Touch
+        run: touch artifact.tar && tar --dereference --hard-dereference -cvf artifact.tar --exclude=.git --exclude=artifact.tar .
+      
+      - name: Upload Artifact
+        uses: actions/upload-artifact@main
+        with:
+            name: github-pages
+            path: ./artifact.tar
+            if-no-files-found: warn
+
+
+      # Runs a set of commands using the runners shell
+
+          
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/deploy-pages@v1-beta
+      
+      - name: Run a multi-line script
+        uses: actions/deploy-pages@v1-beta
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          timeout: 600000
+          error_count: 10
+          reporting_interval: 1000
+    
