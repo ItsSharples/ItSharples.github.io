@@ -55,6 +55,8 @@ jobs:
     
     permissions:
       id-token: write
+      contents: read
+      pages: write
     
     steps:
       - uses: actions/deploy-pages@v1-beta
