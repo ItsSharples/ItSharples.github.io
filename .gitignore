@@ -9,3 +9,5 @@ scratch.*
 
 # Exclude everything in projects/data
 projects/data/*
+# Exclude the files that my SSG will generate
+projects/**/index.html
