@@ -19,6 +19,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
+      - name: Build page with Jekyll
+        uses: actions/jekyll-build-pages@v1-beta
+        with:
+          source: ./
+          destination: ./_site
+          future: false
       - name: Archive build output
         run: tar --dereference --hard-dereference --directory _site/ -cvf artifact.tar .
       - name: Upload Artifact
