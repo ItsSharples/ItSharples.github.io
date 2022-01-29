@@ -41,8 +41,6 @@ jobs:
       id-token: write
       contents: read
       pages: write
-      deployments: write
-      
     steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1-beta
