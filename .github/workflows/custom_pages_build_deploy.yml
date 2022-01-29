@@ -61,9 +61,7 @@ jobs:
     environment: github-pages
     
     steps:
-      - uses: actions/deploy-pages@v1-beta
-      
-      - name: Run a multi-line script
+      - name: Deploy Pages
         uses: actions/deploy-pages@v1-beta
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
