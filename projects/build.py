@@ -33,13 +33,13 @@ def createProjectPreview(template: str, yaml: defaultdict, commandPattern: re.Pa
         yaml["titlecard-url"] = f"{yaml['url']}/titlecard.png"
     return replaceCommands(template, yaml, commandPattern)
 
-def writeProjectsOverview(projects: str, overviewTemplate: str, commandPattern: re.Pattern):
+def writeProjectsOverview(into, projects: str, overviewTemplate: str, commandPattern: re.Pattern):
     keypairs = defaultdict(str)
     keypairs['projects'] = projects
 
     newFile = replaceCommands(overviewTemplate, keypairs, commandPattern)
 
-    with open("projects/index.html", "w") as out:
+    with open(os.path.join(into, "projects/index.html"), "w") as out:
         out.write(newFile)
 
 def writeProject(project: str, url: str, projectTemplate: str, commandPattern: re.Pattern):
@@ -50,7 +50,7 @@ def writeProject(project: str, url: str, projectTemplate: str, commandPattern: r
     with open(url, "w") as out:
         out.write(newFile)
 
-def writeProjects(
+def writeProjects(into: str,
     yamlPattern: re.Pattern, commandPattern: re.Pattern,
     projectTemplate: str, previewTemplate: str):
     projectList: list[str] = []
@@ -77,11 +77,11 @@ def writeProjects(
         md.build_parser()
         markdown = md.convert(markdownString);
         
-        writeProject(markdown, f"{yaml['url']}/index.html", projectTemplate, commandPattern)
+        writeProject(markdown, os.path.join(into, yaml['url'], "index.html"), projectTemplate, commandPattern)
     return projectList
 
 
-def buildProjects():
+def buildProjects(into: str = ""):
     commandPattern = re.compile(r"{{([^}}]+)}}")
     yamlPattern = re.compile(r"---([^---]+)---")
 
@@ -94,9 +94,5 @@ def buildProjects():
     with open("templates/projects_template.html", "r") as file:
         overviewTemplate = file.read()
 
-    projectList = writeProjects(yamlPattern, commandPattern, projectTemplate, previewTemplate)
-    writeProjectsOverview('\n'.join(projectList), overviewTemplate, commandPattern)
-
-
-def testPath():
-    print(buildPath)
+    projectList = writeProjects(into, yamlPattern, commandPattern, projectTemplate, previewTemplate)
+    writeProjectsOverview(into, '\n'.join(projectList), overviewTemplate, commandPattern)
