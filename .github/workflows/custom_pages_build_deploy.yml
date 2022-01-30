@@ -26,13 +26,7 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
       - name: Run Build
-        run: python build.py
-      - name: Build page with Jekyll
-        uses: actions/jekyll-build-pages@v1-beta
-        with:
-          source: ./
-          destination: ./_site
-          future: false
+        run: python build.py -o ./_site
       - name: Archive build output
         run: tar --dereference --hard-dereference --directory _site/ -cvf artifact.tar .
       - name: Upload Artifact
