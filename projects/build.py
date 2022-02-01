@@ -2,7 +2,6 @@ import re, os
 from collections import defaultdict
 from markdown import Markdown
 
-
 def replaceCommands(template: str, dict: dict, commandPattern: re.Pattern):
     # Is there a better way to reconstruct the template?
     match = re.search(commandPattern, template)
