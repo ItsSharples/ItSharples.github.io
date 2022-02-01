@@ -14,19 +14,10 @@ parser.add_argument('-t', '--types', metavar='type', type=str, dest='types', def
 parser.add_help = True
 args = parser.parse_args()
 
-
-
-# Move all files to the build path
-print(args.buildPath)
-print(args.types)
-
 dots = ['.venv', '.jekyll-cache', '.git', '.github', '__pycache__']
 userDefined: list[str] = [args.buildPath, 'scratch', 'data', 'templates']
 exclude = set(dots)
 exclude = exclude.union(userDefined)
-
-print(exclude)
-
 
 def searchDirForExtensions(path, forExtensions: set[str] = defaultTypes, exclude: set[str] = exclude):
     out: list[tuple[list, str]] = []
@@ -35,7 +26,6 @@ def searchDirForExtensions(path, forExtensions: set[str] = defaultTypes, exclude
 
     usedDirs = []
     for root, dirs, files in os.walk(path):
-        print(root, dirs, files)
         dirs[:] = set(dirs) - exclude
         for file in files:
             if os.path.splitext(file)[1][1:] in forExtensions:
@@ -56,7 +46,7 @@ for dir in set(dirs):
         continue
 # Add the leaves
 for move in toMove:
-    # print(move)
+    print(f"Moving {move}")
     shutil.copyfile(move, os.path.join('.', args.buildPath, move[2:]))
 
 

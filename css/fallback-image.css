@@ -13,6 +13,8 @@
     /* Setting the Transform forces the image above everything else */
     transform: translate(0%, 0%);
     border-radius: inherit;
+    width: 100%;
+    height: 100%;
 }
 .fallback-image img[src=null] {
     /* Keep the Layout, but just avoid mentioning it's existence */
