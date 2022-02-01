@@ -38,17 +38,18 @@ dirs, toMove = searchDirForExtensions(".", set(args.types), exclude)
 
 shutil.rmtree(args.buildPath, ignore_errors=True)
 os.mkdir(args.buildPath)
+
 # Rebuild the Tree
 for dir in set(dirs):
     try:
         os.makedirs(os.path.join('.', args.buildPath, dir[2:]))
     except FileExistsError:
         continue
+
 # Add the leaves
 for move in toMove:
     print(f"Moving {move}")
     shutil.copyfile(move, os.path.join('.', args.buildPath, move[2:]))
-
 
 # Build the projects
 projects.build.buildProjects(args.buildPath)
