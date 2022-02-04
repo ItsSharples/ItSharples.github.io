@@ -1,29 +1,54 @@
-import re, os
+import re, os, ast
 from collections import defaultdict
 from markdown import Markdown
 
 from .TreeNode import TreeNode
 from .Project  import Project
-
-
-
-def get_n_tabs(n):
-    return ' '*n
-    # return '\t'*n
-
+from .SafeEval import safe_eval
 
 def readIntoString(url: str): 
     with open(url, "r") as file: return file.read()
 def writeStringInto(string: str, url: str):
     with open(url, "w") as out: out.write(string)
 
-def createHTML(keypairs: dict, template: str, commandPattern: re.Pattern):
+def normalise(string: str):
+    return string.strip().lower()
+def createHTML(keypairs: dict[str, str], template: str, patterns: dict[str, re.Pattern]):
     # Is there a better way to reconstruct the template?
-    match = re.search(commandPattern, template)
+    commandPattern = patterns['command']
+    calculatePattern = patterns['calculate']
+    operatorPattern = patterns['operations']
+
+    match = commandPattern.search(template)
     while match:
-        new_value = keypairs[match[1].strip().lower()]
-        template = template[:match.start(0)] + new_value + template[match.end(0):]
-        match = re.search(commandPattern, template)
+        todoCalculate = calculatePattern.search(normalise(match[1]))
+        if todoCalculate:
+            # Inside Calculations, the values change meaning from just strings to potential values
+            value = todoCalculate[1]
+            # Safety Check, only evaluate if exists in a very limited subset of python
+            operators = operatorPattern.search(value)
+
+            if operators:
+                normalLeft = normalise(operators['left'])
+                normalRight = normalise(operators['right'])
+                # Convert left and right to values, if possible
+                left = keypairs[normalLeft] if normalLeft in keypairs else normalLeft
+                right = keypairs[normalRight] if normalRight in keypairs else normalRight
+
+                left = int(left) if left.isnumeric() else left
+                right = int(right) if right.isnumeric() else right
+
+                operator = normalise(operators['operator'])
+
+                computation = ''.join([str(left), str(operator), str(right)])
+
+                value = value[:operators.start()] + str(safe_eval(computation)) + value[operators.end():]
+
+        else:
+            value = keypairs[normalise(match[1])]
+
+        template = template[:match.start(0)] + str(value) + template[match.end(0):]
+        match = commandPattern.search(template)
     return template
 
 def searchDir(path: str, forExtension: str = ".html"):
@@ -41,16 +66,22 @@ def searchDir(path: str, forExtension: str = ".html"):
             continue
     return out
 
-def createProjectPreview(template: str, yaml: defaultdict, commandPattern: re.Pattern):
+def createProjectPreview(template: str, yaml: defaultdict(str), patterns: dict[str, re.Pattern]):
     if "titlecard-url" not in yaml.keys():
         yaml["titlecard-url"] = f"{yaml['url']}/titlecard.png"
-    return createHTML(yaml, template, commandPattern)
+    return createHTML(yaml, template, patterns)
 
-def writeTemplate(keypairs: defaultdict(str), url: str,  template: str, commandPattern: re.Pattern):
-    writeStringInto(createHTML(keypairs, template, commandPattern), url)
+def writeTemplate(keypairs: defaultdict(str), url: str,  template: str, patterns: dict[str, re.Pattern]):
+    writeStringInto(createHTML(keypairs, template, patterns), url)
 
-def createProjects( yamlPattern: re.Pattern, commandPattern: re.Pattern,
-                    projectTemplate: str, previewTemplate: str):
+def createProjects( patterns: dict[str, re.Pattern],
+                    templates: dict[str, str]):
+
+    previewTemplate = templates['preview']
+    projectTemplate = templates['project']
+
+    yamlPattern = patterns["yaml"]
+
     projectTree = TreeNode(None)
     projects = searchDir("projects", ".md")
     for project in projects:
@@ -60,9 +91,9 @@ def createProjects( yamlPattern: re.Pattern, commandPattern: re.Pattern,
         # Just Markdown
         match len(a):
             case 1:
-                markdown = a[0]
+                markdownString = a[0]
             case 2:
-                _, markdown = a
+                _, markdownString = a
             case 3:
                 _, yamlString, markdownString = a
 
@@ -75,10 +106,10 @@ def createProjects( yamlPattern: re.Pattern, commandPattern: re.Pattern,
         groups: list[str] = os.path.normpath(yaml["url"]).split(os.sep)
         currNode = projectTree
         for group in groups:
-            currNode = currNode.__getitem__(group)
+            currNode = currNode[group]
         
-        preview = createProjectPreview(previewTemplate, yaml, commandPattern)
-        page = createHTML(defaultdict(str, [('content', md.convert(markdownString))]), projectTemplate, commandPattern)
+        preview = createProjectPreview(previewTemplate, yaml, patterns)
+        page = createHTML(defaultdict(str, [('content', md.convert(markdownString))]), projectTemplate, patterns)
 
         project = Project(url= yaml['url'], preview= preview, page= page, isHTML= True)
         currNode.append(project)
@@ -90,7 +121,9 @@ def createProjects( yamlPattern: re.Pattern, commandPattern: re.Pattern,
 def buildProjects(into: str = ""):
     patternStrings = {
         'command': r"{{([^}}]+)}}",
-        'yaml': r"---([^---]+)---"
+        'calculate': r"calc\((.+)\)",
+        'yaml': r"---([^---]+)---",
+        'operations': r"(?P<left>.+)(?P<operator>[/*-+])(?P<right>.+)"
     }
     templatePaths = {
         'preview': "templates/project_listitem_template.html",
@@ -102,16 +135,7 @@ def buildProjects(into: str = ""):
     patterns = {pattern: re.compile(patternStrings[pattern]) for pattern in patternStrings}
     templates = {path: readIntoString(templatePaths[path]) for path in templatePaths}
 
-
-    previewTemplate = templates['preview']
-    projectTemplate = templates['project']
-    overviewTemplate = templates['overview']
-    groupTemplate = templates['group']
-
-    commandPattern = patterns['command']
-    yamlPattern = patterns["yaml"]
-
-    projects: TreeNode = createProjects(yamlPattern, commandPattern, projectTemplate, previewTemplate)
+    projects: TreeNode = createProjects(patterns, templates)
 
     projectList: list[Project] = []
     groupDict: defaultdict[str, list[Project]] = defaultdict(list)
@@ -122,17 +146,21 @@ def buildProjects(into: str = ""):
         groupDict[group].append(project)
         projectList.append(project)
 
+    overviewTemplate = templates['overview']
+    groupTemplate = templates['group']
 
     previewContent = '\n'.join([createHTML(defaultdict(str,
-        [('content', '\n'.join([project.preview for project in groupDict[group]])),
-         ('name', group)
-        ]), groupTemplate, commandPattern)
+        [
+         ('content', '\n'.join([project.preview for project in groupDict[group]])),
+         ('name', group),
+         ('depth', '1')
+        ]), groupTemplate, patterns)
         for group in groupDict])
 
     # Write the Preview Page
     previewPage = createHTML(
         defaultdict(str, [('content', previewContent)]),
-        overviewTemplate, commandPattern)
+        overviewTemplate, patterns)
 
     for project in projectList:
         writeStringInto(project.page, os.path.join(into, project.url, "index.html"))

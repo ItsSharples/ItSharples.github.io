@@ -1,6 +1,10 @@
 from dataclasses import dataclass, field
 from collections import defaultdict
 from .Project import Project
+
+def get_n_tabs(n):
+    return ' '*n
+    
 @dataclass
 class TreeNode:
     parent: 'TreeNode' = field(default= None, repr=False)
@@ -13,6 +17,12 @@ class TreeNode:
         if self.parent == None:
             return [self.name]
         return self.parent.fullName + [self.name]
+    
+    @property
+    def depth(self) -> int:
+        if self.parent == None:
+            return 0
+        return self.parent.depth + 1;
         
     def __getitem__(self, key):
         if key not in self.childNodes.keys():
