@@ -1,4 +1,4 @@
-import re, os, ast
+import re, os
 from collections import defaultdict
 from markdown import Markdown
 
@@ -52,9 +52,9 @@ def createHTML(keypairs: dict[str, str], template: str, patterns: dict[str, re.P
     return template
 
 def searchDir(path: str, forExtension: str = ".html"):
-    out: list[tuple[list, str]] = []
+    out: list[str] = []
     if os.path.isfile(path):
-        out.append(path.name)
+        out.append(path)
     for project in os.scandir(path):
         if project.name == "data":
             continue
@@ -66,12 +66,12 @@ def searchDir(path: str, forExtension: str = ".html"):
             continue
     return out
 
-def createProjectPreview(template: str, yaml: defaultdict(str), patterns: dict[str, re.Pattern]):
+def createProjectPreview(template: str, yaml: defaultdict[str, str], patterns: dict[str, re.Pattern]):
     if "titlecard-url" not in yaml.keys():
         yaml["titlecard-url"] = f"{yaml['url']}/titlecard.png"
     return createHTML(yaml, template, patterns)
 
-def writeTemplate(keypairs: defaultdict(str), url: str,  template: str, patterns: dict[str, re.Pattern]):
+def writeTemplate(keypairs: defaultdict[str, str], url: str,  template: str, patterns: dict[str, re.Pattern]):
     writeStringInto(createHTML(keypairs, template, patterns), url)
 
 def createProjects( patterns: dict[str, re.Pattern],
@@ -82,7 +82,7 @@ def createProjects( patterns: dict[str, re.Pattern],
 
     yamlPattern = patterns["yaml"]
 
-    projectTree = TreeNode(None)
+    projectTree: TreeNode[Project] = TreeNode(None)
     projects = searchDir("projects", ".md")
     for project in projects:
         with open(project, "r") as file:
@@ -114,7 +114,8 @@ def createProjects( patterns: dict[str, re.Pattern],
         project = Project(url= yaml['url'], preview= preview, page= page, isHTML= True)
         currNode.append(project)
 
-    return projectTree
+    # We can ignore 'Base' node, and pretend we start at 'projects'
+    return projectTree.getBranch('projects').rename('Projects')
 
 
 
@@ -135,27 +136,83 @@ def buildProjects(into: str = ""):
     patterns = {pattern: re.compile(patternStrings[pattern]) for pattern in patternStrings}
     templates = {path: readIntoString(templatePaths[path]) for path in templatePaths}
 
-    projects: TreeNode = createProjects(patterns, templates)
+    projects: TreeNode[Project] = createProjects(patterns, templates)
 
     projectList: list[Project] = []
-    groupDict: defaultdict[str, list[Project]] = defaultdict(list)
-    for name, project in projects:
-        # Ignore past 'projects', as this is where we expect them to be (Past 'Base' and 'projects')
-        # And then ignore the last one, because that's the final folder
-        group = os.path.join(*name[2:-1])
-        groupDict[group].append(project)
-        projectList.append(project)
+    groupDict: defaultdict[str, list[tuple[TreeNode, str, list[Project]]]] = defaultdict(list)
+    groupPreviews: list[str] = []
 
     overviewTemplate = templates['overview']
     groupTemplate = templates['group']
 
-    previewContent = '\n'.join([createHTML(defaultdict(str,
-        [
-         ('content', '\n'.join([project.preview for project in groupDict[group]])),
-         ('name', group),
-         ('depth', '1')
-        ]), groupTemplate, patterns)
-        for group in groupDict])
+    # Convert the projects Tree into groups of groups of data
+    def convertIntoHTML(projects: TreeNode[Project]):
+        htmlOut = ""
+        if projects.childNodes:
+            # Get Preview of childNode
+            groupHtml = ''.join([convertIntoHTML(childNode) for childNode in projects.childNodes.values()])
+            
+            if projects.parent == None: 
+                pass # We cover the title elsewhere in the html
+            else:
+                groupHtml = createHTML(defaultdict(str,
+                    [
+                    ('content', groupHtml),
+                    ('name', projects.name),
+                    ('depth', str(projects.depth))
+                    ]), groupTemplate, patterns)
+
+            htmlOut += groupHtml
+
+        if projects.content:
+            # Get Preview of contents
+            projectsHtml = ''.join([project.preview for project in projects.content])
+
+            # If you want to add the title to the project list
+            # projectsHtml= createHTML(defaultdict(str,
+            #     [
+            #     ('content', projectsHtml),
+            #     ('name', projects.name),
+            #     ('depth', str(projects.depth))
+            #     ]), groupTemplate, patterns)
+
+            htmlOut += projectsHtml
+
+        return htmlOut
+    # groups = TreeNode(None)
+    # list(filter(None, projects.mapNodes(lambda node:
+    #     currNode = groups
+    #     location = node.fullName
+    #     i = 0
+    #     while location[i] in currNode:
+    #         currNode = currNode[location[i]]
+    #         i += 1
+    #     currNode.append((
+    #             node,
+    #             str(node.depth),
+    #             node.content)
+    #     )
+    #     if node.content else None
+    #     )
+    # ))
+
+    # for i in groupDict:
+    #     print(i)
+    #     for a in groupDict[i]:
+    #         print(a[0].fullName)
+        
+        # Ignore 'projects', as this is where we expect them to be (Past 'Base' and 'projects')
+        # And then ignore the last one, because that's the final folder
+        #projectList += projects
+
+    #     groupPreviews.append(createHTML(defaultdict(str,
+    #     [
+    #      ('content', '\n'.join([project.preview for project in projects])),
+    #      ('name', group),
+    #      ('depth', depth)
+    #     ]), groupTemplate, patterns))
+
+    previewContent = convertIntoHTML(projects)
 
     # Write the Preview Page
     previewPage = createHTML(

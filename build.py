@@ -19,8 +19,8 @@ userDefined: list[str] = [args.buildPath, 'scratch', 'data', 'templates']
 exclude = set(dots)
 exclude = exclude.union(userDefined)
 
-def searchDirForExtensions(path, forExtensions: set[str] = defaultTypes, exclude: set[str] = exclude):
-    out: list[tuple[list, str]] = []
+def searchDirForExtensions(path, forExtensions: set[str] = set(defaultTypes), exclude: set[str] = exclude):
+    out: list[str] = []
     if os.path.isfile(path):
         out.append(path.name)
 
@@ -34,7 +34,7 @@ def searchDirForExtensions(path, forExtensions: set[str] = defaultTypes, exclude
         usedDirs.append(root)
     return usedDirs, out
 
-dirs, toMove = searchDirForExtensions(".", set(args.types), exclude)
+dirs, toCopy = searchDirForExtensions(".", set(args.types), exclude)
 
 shutil.rmtree(args.buildPath, ignore_errors=True)
 os.mkdir(args.buildPath)
@@ -47,9 +47,10 @@ for dir in set(dirs):
         continue
 
 # Add the leaves
-for move in toMove:
-    print(f"Moving {move}")
-    shutil.copyfile(move, os.path.join('.', args.buildPath, move[2:]))
+for copy in toCopy:
+    to = os.path.join('.', args.buildPath, copy[2:])
+    print(f"Copying {copy} to {to}")
+    shutil.copyfile(copy, to)
 
 # Build the projects
 projects.build.buildProjects(args.buildPath)
