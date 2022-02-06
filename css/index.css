@@ -119,9 +119,10 @@ html:not([data-scroll='0']) input{
 } */
 
 #subbody {
-    max-width: 900px;
+    max-width: 950px;
     width: 90%;
     margin: auto;
+    margin-bottom: 1em;
     z-index: 5;
     min-height: calc(100vh - 125px);
     color: initial;

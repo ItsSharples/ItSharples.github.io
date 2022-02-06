@@ -16,7 +16,8 @@
     width: 450px;
     height: 254px;
 
-    margin-bottom: 1em;
+    margin:0;
+    /* margin-bottom: 1em; */
     border-radius: 5px;
 }
 

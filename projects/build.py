@@ -127,7 +127,7 @@ def buildProjects(into: str = ""):
         'operations': r"(?P<left>.+)(?P<operator>[/*-+])(?P<right>.+)"
     }
     templatePaths = {
-        'preview': "templates/project_listitem_template.html",
+        'preview': "templates/project_preview_template.html",
         'project': "templates/project_template.html",
         'overview': "templates/projects_template.html",
         'group': "templates/project_group_template.html"

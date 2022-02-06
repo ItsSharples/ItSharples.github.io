@@ -1,4 +1,6 @@
-<div role="group">
+<div role="group" class="group depth-{{ depth }}">
     <h{{ calc(depth + 1)}}>{{ Name }}</h{{ calc(depth + 1) }}>
-    {{ Content }}
+    <ul class="group">
+        {{ Content }}
+    </ul>
 </div>
