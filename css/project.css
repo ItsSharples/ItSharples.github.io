@@ -2,7 +2,9 @@
 #projectList {
     padding: 0;
     margin: 0;
+    align-content: flex-start;
 }
+
 .project {
     list-style: none;
 
@@ -17,24 +19,33 @@
     margin-bottom: 1em;
     border-radius: 5px;
 }
+
 .project a {
     border-radius: inherit;
 }
-.project div > p{
+.project div > p {
     position: absolute;
     margin: 0;
     padding-left: 1em;
     padding-bottom: 1em;
+    padding-top: .25em;
     left: 0;
     bottom: 0;
 
     width: calc(100% - 1em);
     height: auto;
+    background-color: rgba(0,0,0, 0.5);
 
     vertical-align: baseline;
     text-align: left;
     color: var(--white-text);
+
+    backdrop-filter: blur(1em) ;
+    -webkit-backdrop-filter: blur(1em) ;
+
     border-radius: inherit;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 .project div {
     position: absolute;
@@ -43,30 +54,21 @@
     height: 100%;
     opacity: 0;
     border-radius: inherit;
+
+    transition: opacity .25s ease-in;
 }
 .project:hover div{
-    animation: fade-in 2s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
-    -webkit-animation: fade-in 0.25s ease-in forwards;
+    opacity: 1;
 }
 
-@keyframes fade-in {
-    0% {
-        opacity: 0;
-        box-shadow: 0 0 0 0 rgb(0, 0, 0) inset;
-    }
-    100% { 
-
-        box-shadow: 0.5em -0.5em 1em 0 rgba(75, 75, 75, 0.7) inset; 
-    }
+.project{
+    transition: 
+        transform  .2s ease-in, 
+        box-shadow .2s ease-in;
+    transform: translate(0, 0);
+    box-shadow: 0 0 10px 0 black;
 }
-
-@-webkit-keyframes fade-in {
-    0% {
-        opacity: 0;
-        box-shadow: 0 0 0 0 rgb(0, 0, 0) inset;
-    }
-    100% {
-        opacity: 1;
-        box-shadow: 1em -1.5em 1em -0.5em rgba(0,0,0,0.8) inset;
-    }
+.project:hover{
+    transform: translate(.2em, -.2em);
+    box-shadow: -.2em .2em 10px 0 black;
 }
