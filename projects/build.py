@@ -180,14 +180,16 @@ def buildProjects(into: str = ""):
 
         return htmlOut
 
-    previewContent = convertIntoHTML(projects)
-    projectList = list(filter(None, projects.mapContent(lambda project: project)))
+    # List is so that it actions the map
+    list(filter(None, projects.mapContent(lambda project: 
+        writeStringInto(project.page, os.path.join(into, project.url, "index.html"))
+    )))
 
     # Write the Preview Page
     previewPage = createHTML(
-        defaultdict(str, [('content', previewContent)]),
+        defaultdict(str, [('content', convertIntoHTML(projects))]),
         overviewTemplate, patterns)
-
-    for project in projectList:
-        writeStringInto(project.page, os.path.join(into, project.url, "index.html"))
     writeStringInto(previewPage, os.path.join(into, "projects/index.html"))
+
+    
+    
