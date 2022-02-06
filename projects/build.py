@@ -179,40 +179,9 @@ def buildProjects(into: str = ""):
             htmlOut += projectsHtml
 
         return htmlOut
-    # groups = TreeNode(None)
-    # list(filter(None, projects.mapNodes(lambda node:
-    #     currNode = groups
-    #     location = node.fullName
-    #     i = 0
-    #     while location[i] in currNode:
-    #         currNode = currNode[location[i]]
-    #         i += 1
-    #     currNode.append((
-    #             node,
-    #             str(node.depth),
-    #             node.content)
-    #     )
-    #     if node.content else None
-    #     )
-    # ))
-
-    # for i in groupDict:
-    #     print(i)
-    #     for a in groupDict[i]:
-    #         print(a[0].fullName)
-        
-        # Ignore 'projects', as this is where we expect them to be (Past 'Base' and 'projects')
-        # And then ignore the last one, because that's the final folder
-        #projectList += projects
-
-    #     groupPreviews.append(createHTML(defaultdict(str,
-    #     [
-    #      ('content', '\n'.join([project.preview for project in projects])),
-    #      ('name', group),
-    #      ('depth', depth)
-    #     ]), groupTemplate, patterns))
 
     previewContent = convertIntoHTML(projects)
+    projectList = list(filter(None, projects.mapContent(lambda project: project)))
 
     # Write the Preview Page
     previewPage = createHTML(
