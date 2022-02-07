@@ -27,28 +27,27 @@ def createHTML(keypairs: dict[str, str], template: str, patterns: dict[str, re.P
         value: str; query: str; result: str
         query, value, result = todoCompute['query'], todoCompute['value'], todoCompute['result']
         span = todoCompute.span()
+        editedTemplate = False
         match(query):
             case "if":
                 if(keypairs[value]):
-                    print(f"Success, {result}")
                     template = template[:span[0]] + result + template[span[1]:]
-                else:
-                    print(f"Failure, {value}")
-                    # Remove the failed case
-                    template = template[:span[0]] + template[span[1]:]
+                    editedTemplate = True
 
             case "foreach":
                 name, _, lst = value.split()
                 if(keypairs[lst]):
                     out = [createHTML(defaultdict(str, [tuple([name.strip(), item.strip()])]), result, patterns) for item in keypairs[lst]]
-                    template = template[:span[0]] + "\n".join(out) + template[span[1]:]
-                else:
-                    template = template[:span[0]] + template[span[1]:]
+                    template = template[:span[0]] + ",\n".join(out) + template[span[1]:]
+                    editedTemplate = True
             case _:
                 print(query)
                 pass
         
-
+        if not editedTemplate:
+            # Remove the failed case
+            template = template[:span[0]] + template[span[1]:]
+    
         todoCompute = computePattern.search(normalise(template))
 
         
@@ -84,7 +83,7 @@ def createHTML(keypairs: dict[str, str], template: str, patterns: dict[str, re.P
 
         template = template[:match.start(0)] + str(value) + template[match.end(0):]
         match = commandPattern.search(template)
-    return template
+    return template.strip()
 
 def searchDir(path: str, forExtension: str = ".html"):
     out: list[str] = []

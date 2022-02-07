@@ -7,16 +7,19 @@
         width=450 height=254>
     </picture>
     <div>
-        <p>{{name}}</p>
-        {%if(tags)%{
-            <ul>
-            {%foreach(tag in tags)%{
-                <li>
-                    {{ tag }}
-                </li>
-            }%endforeach%}
-            </ul>
-        }%endif%}
+        <div class="infobar">
+            <p>{{name}}</p>
+            {%if(tags)%{
+                <ul class="tag-list">
+                Tags: 
+                {%foreach(tag in tags)%{
+                    <li class="tag">
+                        {{ tag }}
+                    </li>
+                }%endforeach%}
+                </ul>
+            }%endif%}
+        </div>
     </div>
     </a>
 </li>
