@@ -1,8 +1,18 @@
 ---
-  name: Superflat
+name: Superflat
+tags:
+- Single Player
+- Group Project
+- Top Down
+- Atarilike
+skills:
+- Unity
+concepts:
+- Heavy Restriction
+
 ---
 
-# Gaming
+# Superflat
 This is just markdown
 ## Other Stuff
 With some headers

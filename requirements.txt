@@ -1,1 +1,2 @@
 Markdown>=3.3.6
+pyYaml>=5.3.1

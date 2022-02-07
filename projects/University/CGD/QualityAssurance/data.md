@@ -1,9 +1,14 @@
 ---
-alt: Steve
-this: is
-a: load
-of: keys
 name: Quality Assurance
+tags:
+- Single Player
+- Group Project
+skills:
+- Unity
+- FMod
+- BFXR
+concepts:
+- Feel
 ---
 
 Beep Bepp

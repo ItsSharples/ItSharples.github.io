@@ -3,7 +3,7 @@ _site/
 .jekyll-cache/
 .jekyll-metadata
 .venv
-
+.obsidian
 *.pyc
 
 .DS_Store

@@ -1,6 +1,7 @@
 import re, os
 from collections import defaultdict
 from markdown import Markdown
+import yaml
 
 from .TreeNode import TreeNode
 from .Project  import Project
@@ -17,8 +18,42 @@ def createHTML(keypairs: dict[str, str], template: str, patterns: dict[str, re.P
     # Is there a better way to reconstruct the template?
     commandPattern = patterns['command']
     calculatePattern = patterns['calculate']
+    computePattern = patterns['compute']
     operatorPattern = patterns['operations']
 
+    # First rebuild the template with any computations there may be
+    todoCompute = computePattern.search(normalise(template))
+    while todoCompute:
+        value: str; query: str; result: str
+        query, value, result = todoCompute['query'], todoCompute['value'], todoCompute['result']
+        span = todoCompute.span()
+        match(query):
+            case "if":
+                if(keypairs[value]):
+                    print(f"Success, {result}")
+                    template = template[:span[0]] + result + template[span[1]:]
+                else:
+                    print(f"Failure, {value}")
+                    # Remove the failed case
+                    template = template[:span[0]] + template[span[1]:]
+
+            case "foreach":
+                name, _, lst = value.split()
+                if(keypairs[lst]):
+                    out = [createHTML(defaultdict(str, [tuple([name.strip(), item.strip()])]), result, patterns) for item in keypairs[lst]]
+                    template = template[:span[0]] + "\n".join(out) + template[span[1]:]
+                else:
+                    template = template[:span[0]] + template[span[1]:]
+            case _:
+                print(query)
+                pass
+        
+
+        todoCompute = computePattern.search(normalise(template))
+
+        
+
+    # Then build the template with the values
     match = commandPattern.search(template)
     while match:
         todoCalculate = calculatePattern.search(normalise(match[1]))
@@ -74,6 +109,9 @@ def createProjectPreview(template: str, yaml: defaultdict[str, str], patterns: d
 def writeTemplate(keypairs: defaultdict[str, str], url: str,  template: str, patterns: dict[str, re.Pattern]):
     writeStringInto(createHTML(keypairs, template, patterns), url)
 
+def yamlToDict(yamlStr: str) -> defaultdict:
+    return defaultdict(str, yaml.safe_load(yamlStr))
+
 def createProjects( patterns: dict[str, re.Pattern],
                     templates: dict[str, str]):
 
@@ -86,22 +124,13 @@ def createProjects( patterns: dict[str, re.Pattern],
     projects = searchDir("projects", ".md")
     for project in projects:
         with open(project, "r") as file:
-            a = re.split(yamlPattern, file.read())
-        yamlString, markdownString = "", ""
-        # Just Markdown
-        match len(a):
-            case 1:
-                markdownString = a[0]
-            case 2:
-                _, markdownString = a
-            case 3:
-                _, yamlString, markdownString = a
-
-        yaml = defaultdict(str, [tuple(row.split(':')) for row in yamlString.strip().splitlines()])
-        yaml["url"] = os.path.dirname(project)
+            a = re.match(yamlPattern, file.read())
 
         md = Markdown()
         md.build_parser()
+
+        yaml, markdown = yamlToDict(a['yaml']), md.convert(a['markdown'])
+        yaml["url"] = os.path.dirname(project)
 
         groups: list[str] = os.path.normpath(yaml["url"]).split(os.sep)
         currNode = projectTree
@@ -109,7 +138,7 @@ def createProjects( patterns: dict[str, re.Pattern],
             currNode = currNode[group]
         
         preview = createProjectPreview(previewTemplate, yaml, patterns)
-        page = createHTML(defaultdict(str, [('content', md.convert(markdownString))]), projectTemplate, patterns)
+        page = createHTML(defaultdict(str, [('content', markdown)]), projectTemplate, patterns)
 
         project = Project(url= yaml['url'], preview= preview, page= page, isHTML= True)
         currNode.append(project)
@@ -121,9 +150,10 @@ def createProjects( patterns: dict[str, re.Pattern],
 
 def buildProjects(into: str = ""):
     patternStrings = {
-        'command': r"{{([^}}]+)}}",
-        'calculate': r"calc\((.+)\)",
-        'yaml': r"---([^---]+)---",
+        'command': r"{{(?P<command>[^}}]+)}}",
+        'calculate': r"calc\((?P<calculation>.+)\)",
+        'compute': r"{%[ ]*(?P<query>.+)[(](?P<value>[^)]+)[)][ ]*%{(?P<result>.+)}%[ ]*end(?P=query)[ ]*%}",
+        'yaml': r"---(?P<yaml>.+)---(?P<markdown>.*)",
         'operations': r"(?P<left>.+)(?P<operator>[/*-+])(?P<right>.+)"
     }
     templatePaths = {
@@ -133,7 +163,7 @@ def buildProjects(into: str = ""):
         'group': "templates/project_group_template.html"
     }
 
-    patterns = {pattern: re.compile(patternStrings[pattern]) for pattern in patternStrings}
+    patterns = {pattern: re.compile(patternStrings[pattern], flags=re.DOTALL) for pattern in patternStrings}
     templates = {path: readIntoString(templatePaths[path]) for path in templatePaths}
 
     projects: TreeNode[Project] = createProjects(patterns, templates)

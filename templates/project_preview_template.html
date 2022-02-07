@@ -8,6 +8,15 @@
     </picture>
     <div>
         <p>{{name}}</p>
+        {%if(tags)%{
+            <ul>
+            {%foreach(tag in tags)%{
+                <li>
+                    {{ tag }}
+                </li>
+            }%endforeach%}
+            </ul>
+        }%endif%}
     </div>
     </a>
 </li>
