@@ -1,0 +1,33 @@
+
+sourceDir: '.'
+destinationDir: '_site'
+templateDir: templates
+
+includeFiles: [
+  png,
+  html,
+  js,
+  css
+]
+
+excludeFolders: [
+  scratch,
+  data,
+  templates
+]
+
+# This contains every pattern that the program can use
+patterns: {
+  command: '{{(?P<command>[^}}]+)}}',
+  calculate: 'calc\((?P<calculation>.+)\)',
+  compute: '{%[ ]*(?P<query>.+)[(](?P<value>[^)]+)[)][ ]*%{(?P<result>.+)}%[ ]*end(?P=query)[ ]*%}',
+  yaml: '---(?P<yaml>.+?)-{3}(?P<markdown>.*)',
+  operations: '(?P<left>.+)(?P<operator>[/*-+])(?P<right>.+)'
+}
+
+templates : {
+  preview: 'project_preview_template.html',
+  project: 'project_template.html',
+  overview: 'projects_template.html',
+  group: 'project_group_template.html'
+}

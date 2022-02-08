@@ -26,7 +26,7 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
       - name: Run Build
-        run: python build.py -o _site
+        run: python python/build.py -c _config.yml
       - name: Archive build output
         run: tar --dereference --hard-dereference --directory _site/ -cvf artifact.tar .
       - name: Upload Artifact

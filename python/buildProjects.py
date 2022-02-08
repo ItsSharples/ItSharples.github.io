@@ -109,10 +109,9 @@ def writeTemplate(keypairs: defaultdict[str, str], url: str,  template: str, pat
     writeStringInto(createHTML(keypairs, template, patterns), url)
 
 def yamlToDict(yamlStr: str) -> defaultdict:
-    return defaultdict(str, yaml.safe_load(yamlStr))
+    return defaultdict(str, yaml.safe_load(yamlStr.strip()))
 
-def createProjects( patterns: dict[str, re.Pattern],
-                    templates: dict[str, str]):
+def createProjects(source: str, patterns: dict[str, re.Pattern], templates: dict[str, str]):
 
     previewTemplate = templates['preview']
     projectTemplate = templates['project']
@@ -120,7 +119,7 @@ def createProjects( patterns: dict[str, re.Pattern],
     yamlPattern = patterns["yaml"]
 
     projectTree: TreeNode[Project] = TreeNode(None)
-    projects = searchDir("projects", ".md")
+    projects = searchDir(os.path.join(source, "projects"), ".md")
     for project in projects:
         with open(project, "r") as file:
             a = re.match(yamlPattern, file.read())
@@ -130,6 +129,9 @@ def createProjects( patterns: dict[str, re.Pattern],
 
         yaml, markdown = yamlToDict(a['yaml']), md.convert(a['markdown'])
         yaml["url"] = os.path.dirname(project)
+        yaml["ignore"] = bool(yaml['ignore'])
+
+        if yaml["ignore"]: continue
 
         groups: list[str] = os.path.normpath(yaml["url"]).split(os.sep)
         currNode = projectTree
@@ -145,80 +147,57 @@ def createProjects( patterns: dict[str, re.Pattern],
     # We can ignore 'Base' node, and pretend we start at 'projects'
     return projectTree.getBranch('projects').rename('Projects')
 
+# Convert the projects Tree into groups of groups of data
+def convertIntoHTML(projects: TreeNode[Project], patterns: dict[str, re.Pattern], templates: dict[str, str]):
+    htmlOut = ""
+    if projects.childNodes:
+        # Get Preview of childNode
+        groupHtml = ''.join([convertIntoHTML(childNode, patterns, templates) for childNode in projects.childNodes.values()])
+        
+        if projects.parent == None: 
+            pass # We cover the title elsewhere in the html
+        else:
+            groupHtml = createHTML(defaultdict(str,
+                [
+                ('content', groupHtml),
+                ('name', projects.name),
+                ('depth', str(projects.depth))
+                ]), templates['group'], patterns)
 
+        htmlOut += groupHtml
 
-def buildProjects(into: str = ""):
-    patternStrings = {
-        'command': r"{{(?P<command>[^}}]+)}}",
-        'calculate': r"calc\((?P<calculation>.+)\)",
-        'compute': r"{%[ ]*(?P<query>.+)[(](?P<value>[^)]+)[)][ ]*%{(?P<result>.+)}%[ ]*end(?P=query)[ ]*%}",
-        'yaml': r"---(?P<yaml>.+)---(?P<markdown>.*)",
-        'operations': r"(?P<left>.+)(?P<operator>[/*-+])(?P<right>.+)"
-    }
-    templatePaths = {
-        'preview': "templates/project_preview_template.html",
-        'project': "templates/project_template.html",
-        'overview': "templates/projects_template.html",
-        'group': "templates/project_group_template.html"
-    }
+    if projects.content:
+        # Get Preview of contents
+        projectsHtml = ''.join([project.preview for project in projects.content])
 
-    patterns = {pattern: re.compile(patternStrings[pattern], flags=re.DOTALL) for pattern in patternStrings}
-    templates = {path: readIntoString(templatePaths[path]) for path in templatePaths}
+        # If you want to add the title to the project list
+        # projectsHtml= createHTML(defaultdict(str,
+        #     [
+        #     ('content', projectsHtml),
+        #     ('name', projects.name),
+        #     ('depth', str(projects.depth))
+        #     ]), groupTemplate, patterns)
 
-    projects: TreeNode[Project] = createProjects(patterns, templates)
+        htmlOut += projectsHtml
 
-    projectList: list[Project] = []
-    groupDict: defaultdict[str, list[tuple[TreeNode, str, list[Project]]]] = defaultdict(list)
-    groupPreviews: list[str] = []
+    return htmlOut
 
-    overviewTemplate = templates['overview']
-    groupTemplate = templates['group']
+def buildProjects(
+    patternStrings: dict[str, str], templatePaths: dict[str, str],
+    source: str = ".", destination: str = "_site", templateFolder: str = "templates"):
 
-    # Convert the projects Tree into groups of groups of data
-    def convertIntoHTML(projects: TreeNode[Project]):
-        htmlOut = ""
-        if projects.childNodes:
-            # Get Preview of childNode
-            groupHtml = ''.join([convertIntoHTML(childNode) for childNode in projects.childNodes.values()])
-            
-            if projects.parent == None: 
-                pass # We cover the title elsewhere in the html
-            else:
-                groupHtml = createHTML(defaultdict(str,
-                    [
-                    ('content', groupHtml),
-                    ('name', projects.name),
-                    ('depth', str(projects.depth))
-                    ]), groupTemplate, patterns)
+    patterns =  {pattern: re.compile(patternStrings[pattern], flags=re.DOTALL) for pattern in patternStrings}
+    templates = {path: readIntoString(os.path.join(templateFolder, templatePaths[path])) for path in templatePaths}
 
-            htmlOut += groupHtml
-
-        if projects.content:
-            # Get Preview of contents
-            projectsHtml = ''.join([project.preview for project in projects.content])
-
-            # If you want to add the title to the project list
-            # projectsHtml= createHTML(defaultdict(str,
-            #     [
-            #     ('content', projectsHtml),
-            #     ('name', projects.name),
-            #     ('depth', str(projects.depth))
-            #     ]), groupTemplate, patterns)
-
-            htmlOut += projectsHtml
-
-        return htmlOut
+    projects = createProjects(source, patterns, templates)
 
     # List is so that it actions the map
     list(filter(None, projects.mapContent(lambda project: 
-        writeStringInto(project.page, os.path.join(into, project.url, "index.html"))
+        writeStringInto(project.page, os.path.join(destination, project.url, "index.html"))
     )))
 
     # Write the Preview Page
     previewPage = createHTML(
-        defaultdict(str, [('content', convertIntoHTML(projects))]),
-        overviewTemplate, patterns)
-    writeStringInto(previewPage, os.path.join(into, "projects/index.html"))
-
-    
-    
+        defaultdict(str, [('content', convertIntoHTML(projects, patterns, templates))]),
+        templates['overview'], patterns)
+    writeStringInto(previewPage, os.path.join(destination, "projects/index.html"))
