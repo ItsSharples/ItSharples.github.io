@@ -3,9 +3,9 @@ from collections import defaultdict
 from markdown import Markdown
 import yaml
 
-from .TreeNode import TreeNode
-from .Project  import Project
-from .SafeEval import safe_eval
+from TreeNode import TreeNode
+from Project  import Project
+from SafeEval import safe_eval
 
 def readIntoString(url: str): 
     with open(url, "r") as file: return file.read()

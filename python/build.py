@@ -1,7 +1,7 @@
 import argparse, os, shutil, yaml
 from dataclasses import dataclass, field
 
-from python.buildProjects import buildProjects
+from buildProjects import buildProjects
 
 @dataclass
 class IncludeExclude():
