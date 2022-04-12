@@ -9,9 +9,6 @@ else
 }
 
 
-document.getElementById("auth-button").onclick = () => {
-    authenticate()
-}
 
 function runConfig() {
     document.getElementById("auth-content").innerHTML = "CONFIG MODE"
@@ -28,7 +25,9 @@ function runChat(hash) {
     document.getElementById("auth-content").innerHTML = "Chatbot mode" + params.access_token.toString()
 }
 
-function authenticate() {
+
+document.getElementById("auth-button").onclick = () => {
+
     const url = "https://id.twitch.tv/oauth2/authorize";
     const client_id = "kf48fc5oafct9wqb1jf3lrsfurujq2";
     const redirect_uri = "https://itssharples.github.io/chatbox";
