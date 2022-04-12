@@ -2,4 +2,4 @@
 
 
 const oauth = document.location.hash
-document.getElementById(id).innerHTML = oauth.toString()
+document.getElementById("subbody").innerHTML = oauth.toString()
