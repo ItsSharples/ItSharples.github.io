@@ -26,7 +26,8 @@ function runChat(hash) {
 }
 
 
-document.getElementById("auth-button").onclick = () => {
+
+function authenticate() {
     console.log("Clicked!");
     const url = "https://id.twitch.tv/oauth2/authorize";
     const client_id = "kf48fc5oafct9wqb1jf3lrsfurujq2";
@@ -38,6 +39,7 @@ document.getElementById("auth-button").onclick = () => {
         "&redirect_uri=" + redirect_uri + 
         "&scope=" + scope +
         "&state=" + state,
-        "Authenticate with Twitch"
+        "Authenticate with Twitch",
+        'width=800, height=600'
     )
 }
