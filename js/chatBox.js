@@ -8,8 +8,13 @@ else
     runConfig();
 }
 
+
+document.getElementById("auth-button").onclick = () => {
+    authenticate()
+}
+
 function runConfig() {
-    document.getElementById("subbody").innerHTML = "CONFIG MODE"
+    document.getElementById("auth-content").innerHTML = "CONFIG MODE"
 }
 
 function runChat(hash) {
@@ -20,7 +25,7 @@ function runChat(hash) {
     });
     console.log(params); //Here are the params to use
 
-    document.getElementById("subbody").innerHTML = "Chatbot mode" + params.access_token.toString()
+    document.getElementById("auth-content").innerHTML = "Chatbot mode" + params.access_token.toString()
 }
 
 function authenticate() {
