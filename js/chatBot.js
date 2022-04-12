@@ -34,6 +34,7 @@ function authenticate() {
         "&redirect_uri=" + redirect_uri + 
         "&scope=" + scope +
         "&state=" + state,
-        "Authenticate with Twitch"
+        "Authenticate with Twitch",
+        'width=800, height=600'
     )
 }
