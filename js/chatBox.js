@@ -1,10 +1,9 @@
-
 // Assume the popup by the menubar
 const isPopup = !window.menubar.visible;
-
-
+// Does the window have a hash (The response metadata-ish bit)
 if(window.location.hash)
 {
+    // Break the hash down into a dict (From https://stackoverflow.com/a/47628324)
     var params = {}
     window.location.hash.substring(1).split('&').map(hk => {
         let temp = hk.split('=');
@@ -15,30 +14,34 @@ if(window.location.hash)
         localStorage.setItem("access_token", params.access_token);
         window.close();
     }
-    runChat(params);
+    chatVisuals(params);
 }
 else
 {
-    runConfig();
+    if(localStorage.getItem("access_token"))
+    {
+        configVisuals();
+    }
+    else
+    {
+        signInVisuals();
+    }
+    
 }
 
-
-
-function runConfig() {
+function configVisuals() {
     document.getElementById("auth-content").innerHTML = "CONFIG MODE"
 }
 
-function runChat(params) {
+function chatVisuals(params) {
 
     console.log(params); //Here are the params to use
 
     document.getElementById("auth-content").innerHTML = "Chatbox mode" + params.access_token.toString()
 }
 
-
 document.getElementById("auth-button").onclick = () => {authenticate();}
 function authenticate() {
-    console.log("Clicked!");
     const url = "https://id.twitch.tv/oauth2/authorize";
     const client_id = "kf48fc5oafct9wqb1jf3lrsfurujq2";
     const redirect_uri = "https://itssharples.github.io/chatbox";
