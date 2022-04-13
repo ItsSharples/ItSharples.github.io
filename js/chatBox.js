@@ -1,6 +1,11 @@
 
+// Assume the popup by the menubar
+const isPopup = !window.menubar.visible;
+
+
 if(window.location.hash)
 {
+    if(isPopup){window.close();}
     runChat(window.location.hash.substring(1));
 }
 else
@@ -22,7 +27,7 @@ function runChat(hash) {
     });
     console.log(params); //Here are the params to use
 
-    document.getElementById("auth-content").innerHTML = "Chatbot mode" + params.access_token.toString()
+    document.getElementById("auth-content").innerHTML = "Chatbox mode" + params.access_token.toString()
 }
 
 
@@ -40,6 +45,6 @@ function authenticate() {
         "&scope=" + scope +
         "&state=" + state,
         "Authenticate with Twitch",
-        'width=800, height=600'
+        'scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no'
     )
 }
