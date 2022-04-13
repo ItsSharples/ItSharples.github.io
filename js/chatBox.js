@@ -1,5 +1,5 @@
 // Assume the popup by the menubar
-const isPopup = !window.menubar.visible;
+const isPopup = !window.menubar.visible || window.isPopup;
 // Does the window have a hash (The response metadata-ish bit)
 if(window.location.hash)
 {
@@ -28,9 +28,8 @@ else
     }
     
 }
-document.getElementById("auth-content").innerHTML = "Access Token: " + localStorage.getItem("access_token").toString();
 function configVisuals() {
-    document.getElementById("auth-content").innerHTML = "Config Mode";
+    document.getElementById("auth-content").innerHTML = "Access Token: " + localStorage.getItem("access_token").toString();
 }
 
 function chatVisuals(params) {
@@ -40,19 +39,24 @@ function chatVisuals(params) {
     document.getElementById("auth-content").innerHTML = "Chatbox Mode";
 }
 
-document.getElementById("auth-button").onclick = () => {authenticate();}
+function signInVisuals() {
+    document.getElementById("auth-button").onclick = () => {authenticate();}
+}
+
+
 function authenticate() {
     const url = "https://id.twitch.tv/oauth2/authorize";
     const client_id = "kf48fc5oafct9wqb1jf3lrsfurujq2";
     const redirect_uri = "https://itssharples.github.io/chatbox";
     const scope = "chat%3Aread";
-    const state = "ThisIsSpooky";
-    window.open(url + "?response_type=token" +
+    const state = Math.random().toPrecision(21).toString(36);
+    var popup = window.open(url + "?response_type=token" +
         "&client_id=" + client_id +
         "&redirect_uri=" + redirect_uri + 
         "&scope=" + scope +
         "&state=" + state,
         "Authenticate with Twitch",
         'scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=400,height=530'
-    )
+    );
+    popup.isPopup = true;
 }
