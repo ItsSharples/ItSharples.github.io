@@ -9,6 +9,9 @@
     overscroll-behavior-x: auto;
 
     --white-text: rgb(206, 206, 206);
+    --blue: rgb(17,170,204);
+    --dark-blue: rgb(12, 127, 153);
+    --very-dark-blue: rgb(10, 106, 127);
     --nav-background: rgb(24, 24, 24);
     --background: rgb(206, 206, 206);
 

@@ -1,0 +1,30 @@
+button {
+    cursor: pointer;
+}
+
+
+button.flat {
+    display:inline-block;
+    padding:0.2em 1.45em;
+    margin:0.1em;
+    border:0.15em solid var(--blue);
+    box-sizing: border-box;
+    text-decoration:none;
+    font-weight:400;
+    color:#000000;
+    background-color:var(--blue);
+    text-align:center;
+    position:relative;
+}
+button.flat:hover{
+    border-color:var(--very-dark-blue);;
+}
+button.flat:active{
+    background-color:var(--dark-blue);
+}
+@media all and (max-width:30em){
+    button.flat{
+    display:block;
+    margin:0.2em auto;
+    }
+} 

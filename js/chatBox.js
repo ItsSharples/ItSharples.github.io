@@ -28,16 +28,16 @@ else
     }
     
 }
-
+document.getElementById("auth-content").innerHTML = "Access Token: " + localStorage.getItem("access_token").toString();
 function configVisuals() {
-    document.getElementById("auth-content").innerHTML = "CONFIG MODE"
+    document.getElementById("auth-content").innerHTML = "Config Mode";
 }
 
 function chatVisuals(params) {
 
     console.log(params); //Here are the params to use
 
-    document.getElementById("auth-content").innerHTML = "Chatbox mode" + params.access_token.toString()
+    document.getElementById("auth-content").innerHTML = "Chatbox Mode";
 }
 
 document.getElementById("auth-button").onclick = () => {authenticate();}
@@ -53,6 +53,6 @@ function authenticate() {
         "&scope=" + scope +
         "&state=" + state,
         "Authenticate with Twitch",
-        'scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no'
+        'scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=400,height=530'
     )
 }

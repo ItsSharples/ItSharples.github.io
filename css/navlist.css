@@ -38,7 +38,7 @@
 }
 .navlist li > a {
     text-decoration: none;
-    color: #1ac;
+    color: var(--blue);
 }
 .navlist ul li:last-child > *{
     margin-right: 0.0em;
