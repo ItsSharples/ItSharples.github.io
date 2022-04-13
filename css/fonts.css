@@ -1,0 +1,12 @@
+/* Twitch Roobert Font */
+@font-face { font-family: 'roobert'; src: url("/assets/fonts/roobert/Roobert-Light.otf") format("opentype"); font-weight: 300; font-style: normal; font-stretch: normal; }
+@font-face { font-family: 'roobert'; src: url("/assets/fonts/roobert/Roobert-Regular.otf") format("opentype"); font-weight: 400; font-style: normal; font-stretch: normal; }
+@font-face { font-family: 'roobert'; src: url("/assets/fonts/roobert/Roobert-Medium.otf") format("opentype"); font-weight: 500; font-style: normal; font-stretch: normal; }
+@font-face { font-family: 'roobert'; src: url("/assets/fonts/roobert/Roobert-SemiBold.otf") format("opentype"); font-weight: 600; font-style: normal; font-stretch: normal; }
+@font-face { font-family: 'roobert'; src: url("/assets/fonts/roobert/Roobert-Bold.otf") format("opentype"); font-weight: 700; font-style: normal; font-stretch: normal; }
+@font-face { font-family: 'roobert'; src: url("/assets/fonts/roobert/Roobert-Heavy.otf") format("opentype"); font-weight: 900; font-style: normal; font-stretch: normal; }
+
+
+.twitch {
+    font-family: 'roobert', sans-serif;
+}

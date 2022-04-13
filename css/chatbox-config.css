@@ -1,0 +1,19 @@
+:root{
+    --background: var(--nav-background);
+}
+#subbody {
+    max-width: 100%;
+    width: 99.9vw;
+    padding-left: 0vw;
+    padding-right: 0vw;
+    margin: 0;
+    align-content: stretch;
+}
+#content {
+    position: relative;
+    height: 50vh;
+    background-color: black;
+
+    display: block;
+    align-content: center;
+}

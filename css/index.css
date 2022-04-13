@@ -10,11 +10,15 @@
 
     --white-text: rgb(206, 206, 206);
     --blue: rgb(17,170,204);
-    --dark-blue: rgb(12, 127, 153);
-    --very-dark-blue: rgb(10, 106, 127);
+    --blue-dark: rgb(12, 127, 153);
+    --blue-very-dark: rgb(10, 106, 127);
     --nav-background: rgb(24, 24, 24);
     --background: rgb(206, 206, 206);
 
+    --twitch-white: rgb(240, 240, 255);
+    --twitch-purple: rgb(145,70,255);
+    --twitch-purple-dark: rgb(116, 56, 204);
+    --twitch-purple-very-dark: rgb(101, 48, 178);
     --font-size-normal: 25px;
     --font-size-shrunk: 20px;
 
@@ -43,7 +47,7 @@ body {
     grid-template-rows: auto 1fr auto; */
 }
 #background-colour {
-    background-color: rgb(206, 206, 206);
+    background-color: var(--background);
     margin: 0;
     padding-bottom: 0.1em;
     /* position: relative; */
@@ -125,7 +129,7 @@ html:not([data-scroll='0']) input{
     max-width: 950px;
     width: 90%;
     margin: auto;
-    margin-bottom: 1em;
+    margin-bottom: .1em;
     z-index: 5;
     min-height: calc(100vh - 125px);
     color: initial;
