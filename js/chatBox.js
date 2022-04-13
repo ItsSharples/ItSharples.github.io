@@ -1,5 +1,5 @@
 // Assume the popup by the menubar
-const isPopup = !window.menubar.visible || window.isPopup;
+const isPopup = (window.opener && window.opener !== window) || !window.menubar.visible;
 // Does the window have a hash (The response metadata-ish bit)
 if(window.location.hash)
 {
@@ -50,7 +50,8 @@ function authenticate() {
     const redirect_uri = "https://itssharples.github.io/chatbox";
     const scope = "chat%3Aread";
     const state = Math.random().toPrecision(21).toString(36);
-    var popup = window.open(url + "?response_type=token" +
+    window.open(url +
+        "?response_type=token" +
         "&client_id=" + client_id +
         "&redirect_uri=" + redirect_uri + 
         "&scope=" + scope +
@@ -58,5 +59,4 @@ function authenticate() {
         "Authenticate with Twitch",
         'scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=400,height=530'
     );
-    popup.isPopup = true;
 }
