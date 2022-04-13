@@ -5,8 +5,17 @@ const isPopup = !window.menubar.visible;
 
 if(window.location.hash)
 {
-    if(isPopup){window.close();}
-    runChat(window.location.hash.substring(1));
+    var params = {}
+    window.location.hash.substring(1).split('&').map(hk => {
+        let temp = hk.split('=');
+        params[temp[0]] = temp[1]
+    });
+
+    if(isPopup) {
+        localStorage.setItem("access_token", params.access_token);
+        window.close();
+    }
+    runChat(params);
 }
 else
 {
@@ -19,12 +28,8 @@ function runConfig() {
     document.getElementById("auth-content").innerHTML = "CONFIG MODE"
 }
 
-function runChat(hash) {
-    var params = {}
-    hash.split('&').map(hk => {
-        let temp = hk.split('=');
-        params[temp[0]] = temp[1]
-    });
+function runChat(params) {
+
     console.log(params); //Here are the params to use
 
     document.getElementById("auth-content").innerHTML = "Chatbox mode" + params.access_token.toString()
