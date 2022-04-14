@@ -1,32 +1,42 @@
-// Assume the popup by the menubar
-const isPopup = (window.opener && window.opener !== window) || !window.menubar.visible;
-// Does the window have a hash (The response metadata-ish bit)
-if(window.location.hash)
-{
-    // Break the hash down into a dict (From https://stackoverflow.com/a/47628324)
-    var params = {}
-    window.location.hash.substring(1).split('&').map(hk => {
-        let temp = hk.split('=');
-        params[temp[0]] = temp[1]
-    });
 
-    if(isPopup) {
-        localStorage.setItem("access_token", params.access_token);
-        window.close();
-    }
-    chatVisuals(params);
+function reset() {
+    document.getElementById("config-body").hidden = true;
+    document.getElementById("auth-body").hidden = true;
 }
-else
-{
-    if(localStorage.getItem("access_token"))
+function refresh() {
+    // Assume the popup by the menubar
+    const isPopup = (window.opener && window.opener !== window) || !window.menubar.visible;
+    // Does the window have a hash (The response metadata-ish bit)
+    if(window.location.hash)
     {
-        configVisuals();
+        // Break the hash down into a dict (From https://stackoverflow.com/a/47628324)
+        var params = {}
+        window.location.hash.substring(1).split('&').map(hk => {
+            let temp = hk.split('=');
+            params[temp[0]] = temp[1]
+        });
+
+        if(isPopup) {
+            localStorage.setItem("access_token", params.access_token);
+            
+        }
+        chatVisuals(params);
     }
     else
     {
-        signInVisuals();
+        if(localStorage.getItem("access_token"))
+        {
+            configVisuals();
+        }
+        else
+        {
+            signInVisuals();
+        }
     }
-    
+
+    if(isPopup) {
+        window.close();
+    }
 }
 
 function chatVisuals(params) {
@@ -67,3 +77,10 @@ function authenticate() {
         'scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=400,height=530'
     );
 }
+
+
+
+
+
+window.addEventListener('storage', () => {reset();refresh();});
+refresh();
