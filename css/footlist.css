@@ -19,6 +19,6 @@
 }
 .footlist li > a {
     text-decoration: none;
-    color: #1ac;
+    color: var(--footer-text);
     
 }

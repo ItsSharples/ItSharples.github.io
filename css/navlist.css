@@ -18,6 +18,8 @@
     flex-wrap: nowrap;
     white-space: nowrap;
     overflow: hidden;
+
+    color: var(--header-text);
 }
 .navlist ul {
     display: flex;
