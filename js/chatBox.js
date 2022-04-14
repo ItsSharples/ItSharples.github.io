@@ -28,9 +28,6 @@ else
     }
     
 }
-function configVisuals() {
-    document.getElementById("auth-content").innerHTML = "Access Token: " + localStorage.getItem("access_token").toString();
-}
 
 function chatVisuals(params) {
 
@@ -39,7 +36,17 @@ function chatVisuals(params) {
     document.getElementById("auth-content").innerHTML = "Chatbox Mode";
 }
 
+
+function configVisuals() {
+    document.getElementById("config-body").hidden = false;
+
+    document.getElementById("auth-content").innerHTML = "Access Token: " + localStorage.getItem("access_token").toString();
+}
+
+
 function signInVisuals() {
+    document.getElementById("auth-body").hidden = false;
+
     document.getElementById("auth-button").onclick = () => {authenticate();}
 }
 

@@ -10,3 +10,7 @@
 .twitch {
     font-family: 'roobert', sans-serif;
 }
+
+.light-text {
+    color: var(--white-text);
+}
