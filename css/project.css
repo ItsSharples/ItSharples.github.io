@@ -38,7 +38,7 @@
 
     vertical-align: baseline;
     text-align: left;
-    color: var(--white-text);
+    color: var(--light-text);
 
     backdrop-filter: blur(1em) ;
     -webkit-backdrop-filter: blur(1em) ;
@@ -62,13 +62,14 @@
 }
 
 .project{
+    --project-colour: black;
     transition: 
         transform  .2s ease-in, 
         box-shadow .2s ease-in;
     transform: translate(0, 0);
-    box-shadow: 0 0 10px 0 black;
+    box-shadow: 0 0 10px 0 var(--project-colour);
 }
 .project:hover{
     transform: translate(.2em, -.2em);
-    box-shadow: -.2em .2em 10px 0 black;
+    box-shadow: -.2em .2em 10px 0 var(--project-colour);
 }
