@@ -9,11 +9,26 @@
     margin: 0;
     align-content: stretch;
 }
-#content {
+#auth-body {
     position: relative;
-    height: 50vh;
     background-color: black;
 
-    display: block;
+    display: flex;
     align-content: center;
+
+    justify-content: center;
+    font-size: small;
+}
+
+#demo {
+    --demo-family: system-ui;
+    --demo-size: 15;
+    font-family: var(--demo-family);
+    font-size: var(--demo-size);
+}
+#emoteSources {
+    display: none;
+}
+#emoteSources option::before {
+    content: content;
 }

@@ -62,11 +62,11 @@ function signInVisuals() {
 
 
 function authenticate() {
-    const url = "https://id.twitch.tv/oauth2/authorize";
-    const client_id = "kf48fc5oafct9wqb1jf3lrsfurujq2";
-    const redirect_uri = "https://itssharples.github.io/chatbox";
-    const scope = "chat%3Aread";
-    const state = Math.random().toPrecision(21).toString(36);
+    let url = "https://id.twitch.tv/oauth2/authorize";
+    let client_id = "kf48fc5oafct9wqb1jf3lrsfurujq2";
+    let redirect_uri = "https://itssharples.github.io/chatbox";
+    let scope = "chat%3Aread";
+    let state = Math.random().toPrecision(21).toString(36);
     window.open(url +
         "?response_type=token" +
         "&client_id=" + client_id +
@@ -78,9 +78,79 @@ function authenticate() {
     );
 }
 
+const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+  
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+  
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+  
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+  
+    const blob = new Blob(byteArrays, {type: contentType});
+    return blob;
+  }
 
+function getFormJSON(form) {
+    const data = new FormData(form);
+    return Array.from(data.keys()).reduce((result, key) => {
+        if (result[key]) {
+        result[key] = data.getAll(key)
+        return result
+        }
+        result[key] = data.get(key);
+        return result;
+    }, {});
+};
+function JSONtoBase64(json) {
+    return btoa(JSON.stringify(json));
+}
+function Base64ToJSON(b64Data) {
+    return JSON.parse(atob(b64Data));
+}
+async function updateDemotext()  {
+    document.getElementById("demo").style.setProperty("--demo-family", document.getElementById("fontFamily").value);
+    document.getElementById("demo").style.setProperty("--demo-size", document.getElementById("fontSize").value + "pt");
+    
+    // const objson = getFormJSON(document.getElementById("config-form"));
+    // const b64 = JSONtoBase64(objson);
+    // const json = Base64ToJSON(b64);
+    // console.log(objson);
+    // console.log(b64);
+    // console.log(json);
+}
 
+function HexEncode(str){
+    var hex, i;
 
+    var result = "";
+    for (i=0; i<str.length; i++) {
+        hex = str.charCodeAt(i).toString(36);
+        result += ("000"+hex).slice(-4);
+    }
 
+    return result
+}
+
+function HexDecode(str){
+    var j;
+    var hexes = str.match(/.{1,4}/g) || [];
+    var back = "";
+    for(j = 0; j<hexes.length; j++) {
+        back += String.fromCharCode(parseInt(hexes[j], 36));
+    }
+
+    return back;
+}
+
+document.getElementById("fontFamily").addEventListener('input', ()=>{updateDemotext();});
+document.getElementById("fontSize").addEventListener('input', ()=>{updateDemotext();});
 window.addEventListener('storage', () => {reset();refresh();});
 refresh();

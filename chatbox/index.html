@@ -81,12 +81,42 @@
     </div>
     <div id="subbody">
     <div id="content">
-        <div id="config-body" hidden>
-            <div id="auth-content" class="light-text"></div>
+        <div id="config-body">
+            <form id="config-form">
+                <fieldset>
+                    <legend>Emotes</legend>
+                    <label>Enable Emotes:
+                        <input type="checkbox" id="enableEmotes" name="enableEmotes">
+                    </label>
+                    <label>Use Emotes from:
+                        <label>Twitch <input type="checkbox" id="emoteSourceTwitch" name="emoteSources"></label>
+                        <label>FFZ <input type="checkbox" id="emoteSourceFFZ" name="emoteSources"></label>
+                        <label>BetterTTV <input type="checkbox" id="emoteSourceBTTV" name="emoteSources"></label>
+                    </label>
+                    <label>Emote Only:
+                        <input type="checkbox" name="emoteOnly">
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>Font</legend>
+                    <label>Font Family:
+                        <input type="text" id="fontFamily" name="fontFamily" value="system-ui" required>
+                    </label>
+                    <label>Font Size:
+                        <input type="number" id="fontSize" name="fontSize" value="15" min="1" oninput="validity.valid||(value=value*-1);" required>
+                    </label>
+                    <p id="demo">
+                        Hello this is text
+                    </p>
+                </fieldset>
+            </form>
         </div>
         <div id="auth-body" hidden>
-            <div id="auth-content"></div>
-
+            <div id="auth-content">
+                In order to function, this program requires you to Authenticate with Twitch (via OAuth).
+                <br>
+                It will only ask for chat:read access, and stores this key in Local Storage.
+            </div>
             <button id="auth-button" class="flat">
                 <div class="twitch">Authenticate with Twitch</div>
                 <!-- Taken from brand.twitch.tv/assets/glitch/white.svg -->
@@ -101,6 +131,9 @@
                     </g>
                 </svg>
             </button>
+
+            <a hidden href="https://www.twitch.tv/settings/connections">Disable Key (Requires Sign In to Twitch and User Interaction)</a>
+
         </div>
     </div>
     <div id="preview">
