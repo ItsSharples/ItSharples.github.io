@@ -19,6 +19,8 @@
 
     <link rel="stylesheet" href="/css/fonts.css">
     <link rel="stylesheet" href="/css/interaction.css">
+
+    <link rel="stylesheet" href="/css/chatbox.css">
     <link rel="stylesheet" href="/css/chatbox-config.css">
     <!-- Favicons -->
     <link rel="icon" href="/images/favicon/favicon.ico" sizes="any">
@@ -26,7 +28,234 @@
     <!-- Scripts -->
     <script src="/js/scrollZoom.js"></script>
     <script src="/js/buttonPress.js" defer></script>
+
+    <script src="/js/external/tmi.min.js"></script>
     <script src="/js/chatBox.js" defer></script>
+
+    <script>
+        let client_id = "kf48fc5oafct9wqb1jf3lrsfurujq2";
+        let token = localStorage.access_token;
+
+        let channel_name = "sharples";
+        const client = new tmi.Client({ options: { skipUpdatingEmotesets:true },
+            identity: {
+                username: client_id,
+                password: 'oauth:'+token
+            },
+        channels: [ channel_name ]
+        });
+
+        client.connect();
+
+        getChannelID(channel_name);
+
+        function getChannelID(name) {
+            fetch(`https://api.twitch.tv/helix/users?login=${name}`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Client-Id": client_id
+            }
+            }).then(response => response.json()).then(data => data.data[0].id).then(id => getGlobalBadges(id));
+        }
+
+        function getGlobalBadges(id) {
+            fetch("https://api.twitch.tv/helix/chat/badges/global", {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Client-Id": client_id
+            }
+            }).then(response => response.json()).then(data => getChannelBadges(id, data.data));
+        }
+
+        function getChannelBadges(id, globalBadges) {
+            fetch(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${id}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Client-Id": client_id
+            }
+            }).then(response => response.json()).then(data => getGlobalEmotes(id, globalBadges, data.data));
+        }
+
+        function getGlobalEmotes(id, globalBadges, channelBadges) {
+            fetch(`https://api.twitch.tv/helix/chat/emotes/global`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Client-Id": client_id
+            }
+            }).then(response => response.json()).then(data => getChannelEmotes(id, globalBadges, channelBadges, data.data));   
+        }
+
+        function getChannelEmotes(id, globalBadges, channelBadges, globalEmotes) {
+            fetch(`https://api.twitch.tv/helix/chat/emotes?broadcaster_id=${id}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Client-Id": client_id
+            }
+            }).then(response => response.json()).then(data => listenToMessage(id, globalBadges, channelBadges, globalEmotes, data.data));
+        }
+
+        function listenToMessage(id, globalBadges, channelBadges, globalEmotes, channelEmotes) {
+
+            function setIdEquals(name){return (object, index, array) => object.set_id == name;}
+            function getBadgesFor(name){
+                let badges = (channelBadges.find(setIdEquals(name)) ?? {'versions': []}).versions;
+                globalBadges.find(setIdEquals(name)).versions.forEach(element => {
+                    if (!badges.find((value, index, obj) => value.id == element.id))
+                    { badges.push(element); }
+                });
+                return badges;
+            }
+            function IdEquals(name){return (object, index, array) => object.id == name;}
+            function getEmotes(){
+                let emotes = channelEmotes;
+                globalEmotes.forEach(element => {
+                    if (!emotes.find((value, index, obj) => value.id == element.id))
+                    { emotes.push(element); }
+                });
+                return emotes;
+            }
+
+            const subscriberBadges = getBadgesFor("subscriber");
+            const bitsBadges = getBadgesFor("bits");
+            const emoteCache = getEmotes();
+
+            function naturalSort(a, b) {
+                let [al, ar] = a.split("-");
+                let [bl, br] = b.split("-");
+                return al.localeCompare(bl, undefined, {
+                    numeric: true,
+                    sensitivity: 'base'
+                });
+            }
+
+            client.on('message', (channel, tags, message, self) => {
+                //console.log(tags);
+                const msg = document.createElement("div");
+                const badges = document.createElement("div");
+                for(badge in tags.badges)
+                {
+                    let num = tags.badges[badge];
+
+                    var badgeNode = document.createElement("div");
+                    badgeNode.innerText = badge;
+                    switch (badge) {
+                        case "subscriber": {
+                            let badge = subscriberBadges.find((value, index, obj) => value.id == num);
+                            let imgURL = badge.image_url_4x;
+                            const img = document.createElement("img");
+                            img.src = imgURL;
+                            badgeNode = img;
+                            break;
+                        }
+                        case "bits": {
+                            let badge = bitsBadges.find((value, index, obj) => value.id == num);
+                            let imgURL = badge.image_url_4x;
+                            const img = document.createElement("img");
+                            img.src = imgURL;
+                            badgeNode = img;
+                            break;
+                        }
+                        default:
+                            let badgeData = globalBadges.find(setIdEquals(badge));
+                            if(badgeData)
+                            {
+                                let imgData = badgeData.versions.find(IdEquals(num));
+                                if(imgData)
+                                {
+                                    let imgURL = imgData.image_url_4x;
+                                    const img = document.createElement("img");
+                                    img.src = imgURL;
+                                    badgeNode = img;
+                                }
+                            }
+                            break;
+                    }
+                    badges.insertBefore(badgeNode, null);
+                }
+                const name = document.createElement("span");
+                name.innerText = tags['display-name'];
+                name.style = `color:${tags.color}`;
+                const text = document.createElement("div");
+                text.id = "message"
+
+                const colon = document.createElement("span");
+                colon.innerText = ": ";
+                text.insertBefore(colon, null);
+
+                let lastElement = null;
+                if(tags.emotes)
+                {
+                    function cutOut(array, start, end) {return [xs.slice(0, start), xs.slice(end)]};
+                    
+                    let emotesToReplace = [];
+                    for (emote in tags.emotes) {
+                        let locations= tags.emotes[emote];
+                        let image = emoteCache.find(IdEquals(emote));
+                        var imgURL = "";
+                        if(!image) {
+                            let theme = "light";
+                            let scale = "3.0";
+                            imgURL = `https://static-cdn.jtvnw.net/emoticons/v2/${emote}/default/${theme}/${scale}`;
+                        }
+                        else
+                        {
+                            imgURL = image.images.url_4x;
+                        }
+
+                        locations.forEach((value, index, array) =>
+                        {
+                            let [start, end] = value.split("-")
+                            emotesToReplace.push([parseInt(end), parseInt(start), imgURL]);
+                        });
+                    }
+                    for(config in emotesToReplace.sort((a,b)=>{return a[0] < b[0]})) {
+                        let [end, start, imgURL] = emotesToReplace[config];
+                        const endTxt = message.slice(end+1);
+                        let rstTxt = message.slice(0, start);
+
+                        if (endTxt) {
+                            const txt = document.createElement("span");
+                            txt.innerText = endTxt;
+                            text.insertBefore(txt, lastElement);
+                            lastElement = txt;
+                        };
+                        {
+                            const emote = document.createElement("img");
+                            emote.src = imgURL;
+                            text.insertBefore(emote, lastElement);
+                            lastElement = emote;
+                        }
+                        message = rstTxt;
+                    }
+                }
+                if (message) {
+                    const txt = document.createElement("div");
+                    txt.innerText = message;
+                    text.insertBefore(txt, lastElement);
+                }
+
+                msg.id = "chat-message";
+                msg.insertBefore(text, null);
+                msg.insertBefore(name, text);
+                msg.insertBefore(badges, name);
+
+                document.getElementById("preview").insertBefore(msg, null);
+
+            });
+        }
+	
+        // let token = localStorage.access_token;
+        // const client = new tmi.Client({ options: { debug: true, skipUpdatingEmotesets:true },
+        //     identity: {
+        //         username: 'kf48fc5oafct9wqb1jf3lrsfurujq2',
+        //         password: 'oauth:'+token
+        //     },
+        //     channels: [ 'Sharples' ]});
+        // client.connect().catch(console.error);
+        // client.on('message');
+    </script>
+
+    <!-- <script type="module" src="/js/chatBox-irc.js" defer></script> -->
     <!-- Other -->
     <link rel="manifest" href="/manifest.webmanifest">
 </head>
@@ -87,24 +316,24 @@
                     <legend>Emotes</legend>
                     <label>Enable Emotes:
                         <input type="checkbox" id="enableEmotes" name="enableEmotes">
-                    </label>
+                    </label><br>
                     <label>Use Emotes from:
                         <label>Twitch <input type="checkbox" id="emoteSourceTwitch" name="emoteSources"></label>
                         <label>FFZ <input type="checkbox" id="emoteSourceFFZ" name="emoteSources"></label>
                         <label>BetterTTV <input type="checkbox" id="emoteSourceBTTV" name="emoteSources"></label>
-                    </label>
+                    </label><br>
                     <label>Emote Only:
                         <input type="checkbox" name="emoteOnly">
-                    </label>
+                    </label><br>
                 </fieldset>
                 <fieldset>
                     <legend>Font</legend>
                     <label>Font Family:
                         <input type="text" id="fontFamily" name="fontFamily" value="system-ui" required>
-                    </label>
+                    </label><br>
                     <label>Font Size:
                         <input type="number" id="fontSize" name="fontSize" value="15" min="1" oninput="validity.valid||(value=value*-1);" required>
-                    </label>
+                    </label><br>
                     <p id="demo">
                         Hello this is text
                     </p>
@@ -136,9 +365,7 @@
 
         </div>
     </div>
-    <div id="preview">
-
-    </div>
+    <div id="preview"></div>
 
     </div>
 </div>

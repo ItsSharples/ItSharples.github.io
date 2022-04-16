@@ -123,9 +123,11 @@ html:not([data-scroll='0']) header{
 
 input {
     font-size: var(--font-size-normal);
+}
+header input {
     transition: font-size 100ms linear;
 }
-html:not([data-scroll='0']) input{
+html:not([data-scroll='0']) header input{
     font-size: var(--font-size-shrunk);
     transition: font-size 100ms linear;
 }

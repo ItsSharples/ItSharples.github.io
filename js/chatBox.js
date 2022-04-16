@@ -117,7 +117,10 @@ function Base64ToJSON(b64Data) {
 }
 async function updateDemotext()  {
     document.getElementById("demo").style.setProperty("--demo-family", document.getElementById("fontFamily").value);
-    document.getElementById("demo").style.setProperty("--demo-size", document.getElementById("fontSize").value + "pt");
+    document.getElementById("demo").style.setProperty("--demo-size", document.getElementById("fontSize").value + "px");
+    
+    document.getElementById("preview").style.setProperty("--font-family", document.getElementById("fontFamily").value);
+    document.getElementById("preview").style.setProperty("--font-size", document.getElementById("fontSize").value + "px");
     
     // const objson = getFormJSON(document.getElementById("config-form"));
     // const b64 = JSONtoBase64(objson);
