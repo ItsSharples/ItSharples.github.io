@@ -38,13 +38,7 @@
     
 }
 #chat-message #message {
-    display: inline-block;
-    float:left;
-    height:auto;
-    width:fit-content;
-    flex-wrap: nowrap;
-    overflow: hidden;
-    align-content: stretch;
+    display: flex;
 }
 #chat-message img {
     height: var(--font-size);
