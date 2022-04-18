@@ -304,7 +304,7 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
         for(triple in emotesToReplace.sort((a,b)=>{return a[0] < b[0]})) {
                 let [end, start, imgURL] = emotesToReplace[triple];
                 const endTxt = message.slice(end+1);
-                let rstTxt = message.slice(0, start);
+                message = message.slice(0, start);
 
                 if(!config.emoteOnly) {
                 if (endTxt) {
@@ -321,7 +321,7 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
                     text.insertBefore(emote, lastElement);
                     lastElement = emote;
                 };
-                message = rstTxt;
+                
             }
         }
         if(!config.emoteOnly) {
