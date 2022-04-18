@@ -15,6 +15,7 @@
 
     width: 450px;
     height: 254px;
+    aspect-ratio: 450/254;
 
     margin:0;
     /* margin-bottom: 1em; */
@@ -23,17 +24,27 @@
 .project * {
     border-radius: inherit;
 }
+
+@media (max-width: 540px) {
+    .project {
+        width: 225px;
+        height: 127px;
+    }
+}
+
 .project .infobar {
     position: absolute;
     margin: 0;
     padding-left: 1em;
+    padding-right: .2em;
     padding-bottom: .75em;
     padding-top: .25em;
     left: 0;
     bottom: 0;
 
-    width: calc(100% - 1em);
+    width: calc(100% - 1.2em);
     height: auto;
+    aspect-ratio: 450/0;
     background-color: rgba(0,0,0, 0.5);
 
     vertical-align: baseline;
