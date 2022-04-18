@@ -301,7 +301,7 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
             emotesToReplace = emotesToReplace.concat(replaceEmotesReverse.reverse());
         }
 
-        for(triple in emotesToReplace.sort((a,b)=>{return a[0] < b[0]})) {
+        for(triple in emotesToReplace.sort((a,b)=>{return b[0] - a[0]})) {
                 let [end, start, imgURL] = emotesToReplace[triple];
                 const endTxt = message.slice(end+1);
                 message = message.slice(0, start);
