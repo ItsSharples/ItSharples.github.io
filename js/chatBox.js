@@ -116,30 +116,14 @@ function Base64ToJSON(b64Data) {
     return JSON.parse(atob(b64Data));
 }
 async function updateDemotext()  {
+    const fontSize = document.getElementById("fontSize").value;
     document.getElementById("demo").style.setProperty("--demo-family", document.getElementById("fontFamily").value);
-    document.getElementById("demo").style.setProperty("--demo-size", document.getElementById("fontSize").value + "px");
+    document.getElementById("demo").style.setProperty("--demo-size", fontSize + "px");
     
     document.getElementById("preview").style.setProperty("--font-family", document.getElementById("fontFamily").value);
-    document.getElementById("preview").style.setProperty("--font-size", document.getElementById("fontSize").value + "px");
     
-    // const objson = getFormJSON(document.getElementById("config-form"));
-    // const b64 = JSONtoBase64(objson);
-    // const json = Base64ToJSON(b64);
-    // console.log(objson);
-    // console.log(b64);
-    // console.log(json);
-}
-
-function HexEncode(str){
-    var hex, i;
-
-    var result = "";
-    for (i=0; i<str.length; i++) {
-        hex = str.charCodeAt(i).toString(36);
-        result += ("000"+hex).slice(-4);
-    }
-
-    return result
+    document.getElementById("preview").style.setProperty("--font-height",  fontSize + "px");
+    document.getElementById("preview").style.setProperty("--font-height-half",  (fontSize/2) + "px");
 }
 
 function HexDecode(str){

@@ -8,6 +8,8 @@
     padding-right: 0vw;
     margin: 0;
     align-content: stretch;
+
+    height: 100%;
 }
 #auth-body {
     position: relative;
@@ -18,6 +20,8 @@
 
     justify-content: center;
     font-size: small;
+
+    clear:both;
 }
 
 #demo {
@@ -25,10 +29,19 @@
     --demo-size: 15;
     font-family: var(--demo-family);
     font-size: var(--demo-size);
+
+    margin: 0;
 }
 #emoteSources {
     display: none;
 }
 #emoteSources option::before {
     content: content;
+}
+
+label {
+    vertical-align: middle;
+}
+input[type=checkbox] {
+    vertical-align: middle;
 }
