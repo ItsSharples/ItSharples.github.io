@@ -102,7 +102,6 @@
 }
 #hamburger span {
     display: block;
-    font-size: 25px;
     width: 1.4em;
     height: 0.19em;
 
@@ -195,16 +194,15 @@
 #menu li
 {
   padding: 10px 0;
-  font-size: 25px;
 }
 
 
 
 #hamMenu {
-    font-size: 25px;
+    font-size: var(--font-size-normal);
 }
 html:not([data-scroll='0']) #hamMenu{
-    font-size: 20px;
+    font-size: var(--font-size-shrunk);
 }
 
 #hamMenu {
