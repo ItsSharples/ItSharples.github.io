@@ -20,7 +20,6 @@ function refresh() {
             localStorage.setItem("access_token", params.access_token);
             
         }
-        chatVisuals(params);
     }
     else
     {
@@ -137,7 +136,10 @@ function HexDecode(str){
     return back;
 }
 
-document.getElementById("fontFamily").addEventListener('input', ()=>{updateDemotext();});
-document.getElementById("fontSize").addEventListener('input', ()=>{updateDemotext();});
+let config = false;
+if(config) {
+    document.getElementById("fontFamily").addEventListener('input', ()=>{updateDemotext();});
+    document.getElementById("fontSize").addEventListener('input', ()=>{updateDemotext();});
+}
 window.addEventListener('storage', () => {reset();refresh();});
 refresh();

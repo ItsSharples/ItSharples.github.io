@@ -44,3 +44,18 @@
 #chat-message img {
     height: var(--font-height-half);
 }
+
+#chatbox {
+    background: transparent;
+    --font-height-half: calc(var(--font-height) / 2);
+    --nav-background: transparent;
+
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+
+    width:100vw;
+
+    overflow-x: clip;
+    overflow-y: hidden;
+}
