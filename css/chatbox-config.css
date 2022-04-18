@@ -45,3 +45,20 @@ label {
 input[type=checkbox] {
     vertical-align: middle;
 }
+
+#chatbox {
+    grid-column: 2;
+    width: 100%;
+    max-height: 90vh;
+    --font-family: system-ui;
+
+    display:flex;
+    justify-content: flex-end;
+    flex-direction: column;
+
+    margin-left: 2em;
+
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+}

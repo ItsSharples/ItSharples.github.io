@@ -2,70 +2,81 @@ let client_id = "kf48fc5oafct9wqb1jf3lrsfurujq2";
 var client;
 if(location.hash)
 {
-    // work out what the hash means
-    const config = Base64ToJSON(location.hash.substring(1));
-    config.enableEmotes = true;
-    config.emotesTwitch = true;
-    config.emotesBTTV = true;
-    config.emoteOnly = false;
-    config.fontSize = 15;
-
-    config.customEmotes = ("emotesBTTV" in config) || ("emotes7TV" in config) || ("emotesFFZ" in config);
-
-    console.log(config);
-
-    document.querySelector("#chatbox").style.setProperty("--font-height", `${config.fontSize} px`);
-
-    client = new tmi.Client({ options: { skipUpdatingEmotesets:true },
-        identity: {
-            username: client_id,
-            password: 'oauth:'+ config.access_token
-        },
-        channels: [ config.channel_name ]
-    });
-
-    client.connect();
-
-    (async() => {
-        var channel_id = await getChannelID(config)
-
-        var badges = [];
-        badges = badges.concat(await getGlobalBadges(config, channel_id));
-        badges = badges.concat(await getChannelBadges(config, channel_id));
-
-        var emotes = [];
-        var customEmotes = [];
-        if("enableEmotes" in config) {
-            if("emotesTwitch" in config) {
-                emotes = emotes.concat(await getGlobalEmotes(config, channel_id));
-                emotes = emotes.concat(await getChannelEmotes(config, channel_id));
-            }
-            if(config.customEmotes)
-            {
-                if("emotesBTTV" in config) {
-                    customEmotes = customEmotes.concat(await getBTTVChannelEmotes(config, channel_id));
-                }
-
-                if("emotes7TV" in config) {
-                }
-
-                if("emotesFFZ" in config) {
-                }
-            }
-        
-        }
-        
-
-        listenToMessage(config, channel_id, badges, emotes, customEmotes);
-        setInterval(() => {window.scrollBy({'top': window.innerHeight,'behavior': 'instant'});}, 1000);
-    })()
+    connectToTwitch(location.hash.substring(1))
 }
 else {
-    sendToConfigurator();
+    if(document.getElementById("config"))
+    {
+        connectToTwitch("eyJhY2Nlc3NfdG9rZW4iOiI3aWgwN2FvYWpwY3N6dGMyaHVkdHRtemw2Yjc1dDkiLCJjaGFubmVsX25hbWUiOiJzaGFycGxlcyJ9")
+    }
+    else {
+        sendToConfigurator();
+    }
 }
 
+function connectToTwitch(hash){
+        // work out what the hash means
+        const config = Base64ToJSON(hash);
+        config.enableEmotes = true;
+        config.emotesTwitch = true;
+        config.emotesBTTV = true;
+        config.emoteOnly = false;
+        config.fontSize = 15;
+    
+        config.customEmotes = ("emotesBTTV" in config) || ("emotes7TV" in config) || ("emotesFFZ" in config);
+    
+        console.log(config);
+    
+        document.querySelector("#chatbox").style.setProperty("--font-height", `${config.fontSize} px`);
+    
+        client = new tmi.Client({ options: { skipUpdatingEmotesets:true },
+            identity: {
+                username: client_id,
+                password: 'oauth:'+ config.access_token
+            },
+            channels: [ config.channel_name ]
+        });
+    
+        client.connect();
+    
+        (async() => {
+            var channel_id = await getChannelID(config)
+    
+            var badges = [];
+            badges = badges.concat(await getGlobalBadges(config, channel_id));
+            badges = badges.concat(await getChannelBadges(config, channel_id));
+    
+            var emotes = [];
+            var customEmotes = [];
+            if("enableEmotes" in config) {
+                if("emotesTwitch" in config) {
+                    emotes = emotes.concat(await getGlobalEmotes(config, channel_id));
+                    emotes = emotes.concat(await getChannelEmotes(config, channel_id));
+                }
+                if(config.customEmotes)
+                {
+                    if("emotesBTTV" in config) {
+                        customEmotes = customEmotes.concat(await getBTTVChannelEmotes(config, channel_id));
+                    }
+    
+                    if("emotes7TV" in config) {
+                    }
+    
+                    if("emotesFFZ" in config) {
+                    }
+                }
+            
+            }
+            
+    
+            listenToMessage(config, channel_id, badges, emotes, customEmotes);
+            setInterval(() => {window.scrollBy({'top': window.innerHeight,'behavior': 'instant'});}, 1000);
+        })()
+}
 
-function sendToConfigurator() { window.location.href = "/chatbox"; }
+function sendToConfigurator(){
+    window.location.href = "/chatbox";
+}
 function JSONtoBase64(json) { return btoa(JSON.stringify(json)); }
 function Base64ToJSON(b64Data) { return JSON.parse(atob(b64Data)); }
 
