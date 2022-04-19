@@ -21,14 +21,22 @@ function connectToTwitch(hash){
         config.emotesTwitch = true;
         config.emotesBTTV = true;
         config.emoteOnly = false;
+
+        config.fontFamily = "system-ui";
+
         config.fontSize = 15;
-    
+        config.badgeSize = 15;
+        config.emoteSize = 15;
+
         config.customEmotes = ("emotesBTTV" in config) || ("emotes7TV" in config) || ("emotesFFZ" in config);
     
         console.log(config);
+
+        document.getElementById("chatbox").style.setProperty("--font-family", config.fontFamily);
     
-        document.querySelector("#chatbox").style.setProperty("--font-height", `${config.fontSize} px`);
-    
+        document.getElementById("chatbox").style.setProperty("--font-height",  config.fontSize + "px");
+        document.getElementById("chatbox").style.setProperty("--font-height-half",  (config.fontSize/2) + "px");
+
         client = new tmi.Client({ options: { skipUpdatingEmotesets:true },
             identity: {
                 username: client_id,
@@ -148,6 +156,11 @@ function getBTTVChannelEmotes(config, id) {
             let newEmote = {};
             newEmote["name"] = emote["code"];
             newEmote["url"] = `https://cdn.betterttv.net/emote/${emote.id}/3x`;
+            let imgSet = [];
+            for(scale of ["1x", "2x", "3x"]) {
+                imgSet.push(`https://cdn.betterttv.net/emote/${emote.id}/${scale} ${scale}`);
+            }
+            newEmote["imgSet"] = imgSet;
             output.push(newEmote);
         }
         return output;
@@ -205,7 +218,7 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
         if(!config.emoteOnly) {
         
         const badges = document.createElement("div");
-        for(badge in tags.badges)
+        for(const badge in tags.badges)
         {
             let num = tags.badges[badge];
 
@@ -215,16 +228,20 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
                 case "subscriber": {
                     let badge = subscriberBadges.find((value, index, obj) => value.id == num);
                     let imgURL = badge.image_url_4x;
+                    let imgSet = `${imgData.image_url_1x} 1x, ${imgData.image_url_2x} 2x, ${imgData.image_url_4x} 4x`;
                     const img = document.createElement("img");
                     img.src = imgURL;
+                    img.srcset = imgSet;
                     badgeNode = img;
                     break;
                 }
                 case "bits": {
                     let badge = bitsBadges.find((value, index, obj) => value.id == num);
                     let imgURL = badge.image_url_4x;
+                    let imgSet = `${imgData.image_url_1x} 1x, ${imgData.image_url_2x} 2x, ${imgData.image_url_4x} 4x`;
                     const img = document.createElement("img");
                     img.src = imgURL;
+                    img.srcset = imgSet;
                     badgeNode = img;
                     break;
                 }
@@ -236,8 +253,10 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
                         if(imgData)
                         {
                             let imgURL = imgData.image_url_4x;
+                            let imgSet = `${imgData.image_url_1x} 1x, ${imgData.image_url_2x} 2x, ${imgData.image_url_4x} 4x`;
                             const img = document.createElement("img");
                             img.src = imgURL;
+                            img.srcset = imgSet;
                             badgeNode = img;
                         }
                     }
@@ -251,12 +270,15 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
         name.innerText = tags['display-name'];
         name.style = `color:${tags.color}`;
 
+        name.className = "name";
+        badges.className = "badges";
+
         msg.insertBefore(name, null);
         msg.insertBefore(badges, name);
         }
         
         const text = document.createElement("div");
-        text.id = "message"
+        text.className = "message"
 
 
         const colon = document.createElement("span");
@@ -268,24 +290,24 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
         let emotesToReplace = [];
         if(tags.emotes)
         {
-            for (emote in tags.emotes) {
+            for (const emote in tags.emotes) {
                 let locations = tags.emotes[emote];
                 let image = emoteCache.find(IdEquals(emote));
                 var imgURL = "";
-                if(!image) {
-                    let theme = "light";
-                    let scale = "3.0";
-                    imgURL = `https://static-cdn.jtvnw.net/emoticons/v2/${emote}/default/${theme}/${scale}`;
-                }
-                else
-                {
-                    imgURL = image.images.url_4x;
+
+                let theme = "light";
+                // let imgScale = "3.0";
+                // imgURL = `https://static-cdn.jtvnw.net/emoticons/v2/${emote}/default/${theme}/${imgScale}`;
+
+                imgSet = [];
+                for(const scale of ["1", "2", "3"]) {
+                    imgSet.push(`https://static-cdn.jtvnw.net/emoticons/v2/${emote}/default/${theme}/${scale}.0 ${scale}x`);
                 }
 
                 locations.forEach((value, index, array) =>
                 {
                     let [start, end] = value.split("-")
-                    emotesToReplace.push([parseInt(end), parseInt(start), imgURL]);
+                    emotesToReplace.push([parseInt(end), parseInt(start), imgSet]);
                 });
             }
         }
@@ -293,7 +315,7 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
         if(config.customEmotes)
         {
             let replaceEmotesReverse = []
-            for(index in customEmotes)
+            for(const index in customEmotes)
             {
                 let emote = customEmotes[index];
                 let position = 0;
@@ -303,7 +325,7 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
                     if(position != -1)
                     {
                         let [start, end] = [position, position + emote.name.length];
-                        replaceEmotesReverse.push([end, start, emote.url]);
+                        replaceEmotesReverse.push([end, start, emote.imgSet]);
                         position = end;
                     }
                 } while (position != -1);
@@ -312,8 +334,8 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
             emotesToReplace = emotesToReplace.concat(replaceEmotesReverse.reverse());
         }
 
-        for(triple in emotesToReplace.sort((a,b)=>{return b[0] - a[0]})) {
-                let [end, start, imgURL] = emotesToReplace[triple];
+        for(const triple in emotesToReplace.sort((a,b)=>{return b[0] - a[0]})) {
+                let [end, start, imgSet] = emotesToReplace[triple];
                 const endTxt = message.slice(end+1);
                 message = message.slice(0, start);
 
@@ -328,7 +350,7 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
                 if(config.enableEmotes)
                 {
                     const emote = document.createElement("img");
-                    emote.src = imgURL;
+                    emote.srcset = imgSet;
                     text.insertBefore(emote, lastElement);
                     lastElement = emote;
                 };
@@ -343,7 +365,7 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
         }
         }
 
-        msg.id = "chat-message";
+        msg.className = "chat-message";
         msg.insertBefore(text, null);
 
         document.getElementById("chatbox").insertBefore(msg, null);

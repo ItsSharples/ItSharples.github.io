@@ -26,12 +26,11 @@
     <link rel="icon" href="assets/images/favicon/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="assets/images/favicon/apple-touch-icon.png">
     <!-- Scripts -->
-    <script src="/js/scrollZoom.js"></script>
-    <script src="/js/buttonPress.js" defer></script>
+    <script src="/js/scrollZoom.js" defer async></script>
+    <script src="/js/buttonPress.js" defer async></script>
 
     <script src="/js/external/tmi.min.js"></script>
-    <script src="/js/chatBox-config.js" defer></script>
-
+    <script src="/js/chatBox-config.js" defer async></script>
     <script src="/js/chatbox-content.js" defer async></script>
 
     <!-- Other -->
@@ -141,6 +140,9 @@
 
             <a hidden href="https://www.twitch.tv/settings/connections">Disable Key (Requires Sign In to Twitch and User Interaction)</a>
 
+        </div>
+        <div >
+            <input id="chatbox-url" type="text">
         </div>
     </div>
     <div id="chatbox"></div>

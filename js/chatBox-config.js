@@ -53,12 +53,20 @@ function configVisuals() {
     let config = {};
     config.access_token = localStorage.access_token;
     config.channel_name = "sharples";
+
     config.enableEmotes = true;
     config.emotesTwitch = true;
     config.emotesBTTV = true;
     config.emoteOnly = false;
+
+    config.fontFamily = "system-ui";
+
     config.fontSize = 15;
-    console.log(JSONtoBase64(config));
+    config.badgeSize = 15;
+    config.emoteSize = 15;
+
+    document.getElementById("chatbox-url").value = `${window.location.href}chatbox.html#${JSONtoBase64(config)}`;
+    document.getElementById("chatbox-url").style = "font-size: 15px; width: 100%";
 }
 
 function signInVisuals() {

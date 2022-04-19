@@ -10,7 +10,7 @@
     grid-column: 1;
 }
 
-#chat-message {
+.chat-message {
     display: flex;
     font-family: var(--font-family);
 
@@ -21,13 +21,13 @@
     align-content: flex-start;
     flex-wrap: nowrap;
 }
-#chat-message * {
+.chat-message * {
     vertical-align: bottom;
 }
-#chat-message #message {
+.chat-message .message {
     display: flex;
 }
-#chat-message img {
+.chat-message img {
     height: var(--font-height-half);
 }
 
