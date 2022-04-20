@@ -7,8 +7,7 @@ function refresh() {
     // Assume the popup by the menubar
     const isPopup = (window.opener && window.opener !== window) || !window.menubar.visible;
     // Does the window have a hash (The response metadata-ish bit)
-    if(window.location.hash)
-    {
+    if (window.location.hash) {
         // Break the hash down into a dict (From https://stackoverflow.com/a/47628324)
         var params = {}
         window.location.hash.substring(1).split('&').map(hk => {
@@ -16,23 +15,20 @@ function refresh() {
             params[temp[0]] = temp[1]
         });
 
-        if(isPopup) {
+        if (isPopup) {
             localStorage.setItem("access_token", params.access_token);
         }
     }
-    else
-    {
-        if(localStorage.getItem("access_token"))
-        {
+    else {
+        if (localStorage.getItem("access_token")) {
             configVisuals();
         }
-        else
-        {
+        else {
             signInVisuals();
         }
     }
 
-    if(isPopup) {
+    if (isPopup) {
         window.close();
     }
 }
@@ -57,6 +53,8 @@ function configVisuals() {
     config.enableEmotes = true;
     config.emotesTwitch = true;
     config.emotesBTTV = true;
+    config.emotesFFZ = false;
+    config.emotes7TV = false;
     config.emoteOnly = false;
 
     config.fontFamily = "system-ui";
@@ -72,7 +70,7 @@ function configVisuals() {
 function signInVisuals() {
     document.getElementById("auth-body").hidden = false;
 
-    document.getElementById("auth-button").onclick = () => {authenticate();}
+    document.getElementById("auth-button").onclick = () => { authenticate(); }
 }
 
 
@@ -85,7 +83,7 @@ function authenticate() {
     window.open(url +
         "?response_type=token" +
         "&client_id=" + client_id +
-        "&redirect_uri=" + redirect_uri + 
+        "&redirect_uri=" + redirect_uri +
         "&scope=" + scope +
         "&state=" + state,
         "Authenticate with Twitch",
@@ -99,22 +97,22 @@ function JSONtoBase64(json) {
 function Base64ToJSON(b64Data) {
     return JSON.parse(atob(b64Data));
 }
-async function updateDemotext()  {
+async function updateDemotext() {
     console.log("Update");
     const fontSize = document.getElementById("fontSize").value;
     document.getElementById("demo").style.setProperty("--demo-family", document.getElementById("fontFamily").value);
     document.getElementById("demo").style.setProperty("--demo-size", fontSize + "px");
-    
+
     document.getElementById("chatbox").style.setProperty("--font-family", document.getElementById("fontFamily").value);
-    
-    document.getElementById("chatbox").style.setProperty("--font-height",  fontSize + "px");
-    document.getElementById("chatbox").style.setProperty("--font-height-half",  (fontSize/2) + "px");
+
+    document.getElementById("chatbox").style.setProperty("--font-height", fontSize + "px");
+    document.getElementById("chatbox").style.setProperty("--font-height-half", (fontSize / 2) + "px");
 }
 
 let config = true;
-if(config) {
-    document.getElementById("fontFamily").addEventListener('input', ()=>{updateDemotext();});
-    document.getElementById("fontSize").addEventListener('input', ()=>{updateDemotext();});
+if (config) {
+    document.getElementById("fontFamily").addEventListener('input', () => { updateDemotext(); });
+    document.getElementById("fontSize").addEventListener('input', () => { updateDemotext(); });
 }
-window.addEventListener('storage', () => {reset();refresh();});
+window.addEventListener('storage', () => { reset(); refresh(); });
 refresh();
