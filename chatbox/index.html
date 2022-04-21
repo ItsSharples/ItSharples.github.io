@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,7 +9,7 @@
     <meta name="theme-color" content="#171b20">
     <!-- Data -->
     <meta name="author" content="Sharples">
-    
+
     <title>Sharples' Corner</title>
     <base href="/">
     <!-- CSS -->
@@ -50,14 +51,11 @@
                         </div>
                     </li>
                     <li id="navIcon">
-                        <img srcset=
-                                "assets/images/PIA21891/PIA21891x50.png 0.5x,
+                        <img srcset="assets/images/PIA21891/PIA21891x50.png 0.5x,
                                  assets/images/PIA21891/PIA21891x320.png 1x,
                                  assets/images/PIA21891/PIA21891x640.png 1.5x,
                                  assets/images/PIA21891/PIA21891.png 1000w"
-                            src="assets/images/PIA21891/PIA21891x50.png"
-                            alt="Header Logo"
-                            width="50px">
+                            src="assets/images/PIA21891/PIA21891x50.png" alt="Header Logo" width="50px">
                         </img>
                     </li>
                     <li id="iconTxt">
@@ -75,80 +73,122 @@
         </ul>
     </nav>
 </header>
+
 <body>
-<div id="background-colour">
-    <div>
-        <input type="checkbox" id="showMenu" style="display:none">
-        <ul id="menu">
-            <li><a href="./">Home</a></li>
-            <li><a href="./projects/">Projects</a></li>
-            <li><a href="./contact.html">Contact</a></li>
-        </ul>
-    </div>
-    <div id="subbody">
-    <div id="config">
-        <div id="config-body">
-            <form id="config-form">
-                <fieldset>
-                    <legend>Emotes</legend>
-                    <label>Enable Emotes:
-                        <input type="checkbox" id="enableEmotes" name="enableEmotes">
-                    </label><br>
-                    <label>Use Emotes from:
-                        <label>Twitch <input type="checkbox" id="emoteSourceTwitch" name="emoteSources"></label>
-                        <label>FFZ <input type="checkbox" id="emoteSourceFFZ" name="emoteSources"></label>
-                        <label>BetterTTV <input type="checkbox" id="emoteSourceBTTV" name="emoteSources"></label>
-                    </label><br>
-                    <label>Emote Only:
-                        <input type="checkbox" name="emoteOnly">
-                    </label><br>
-                </fieldset>
-                <fieldset>
-                    <legend>Font</legend>
-                    <label>Font Family:
-                        <input type="text" id="fontFamily" name="fontFamily" value="system-ui" required>
-                    </label><br>
-                    <label>Font Size:
-                        <input type="number" id="fontSize" name="fontSize" value="15" min="1" oninput="validity.valid||(value=value*-1);" required>
-                    </label><br>
-                    <p id="demo">
-                        Hello this is text
-                    </p>
-                </fieldset>
-            </form>
+    <div id="background-colour">
+        <div>
+            <input type="checkbox" id="showMenu" style="display:none">
+            <ul id="menu">
+                <li><a href="./">Home</a></li>
+                <li><a href="./projects/">Projects</a></li>
+                <li><a href="./contact.html">Contact</a></li>
+            </ul>
         </div>
-        <div id="auth-body" hidden>
-            <div id="auth-content">
-                In order to function, this program requires you to Authenticate with Twitch (via OAuth).
-                <br>
-                It will only ask for chat:read access, and stores this key in Local Storage.
+        <div id="subbody">
+            <div id="config">
+                <div id="config-body">
+                    <!-- Suppress Enter Submitting -->
+                    <form id="config-form" action="javascript:void(0)">
+                        <fieldset name="Channel">
+                            <legend>Channel</legend>
+
+                            <label>Channel Name:
+                                <input name="channelName" type="text" required>
+                            </label>
+                        </fieldset>
+                        <fieldset name="Emotes">
+                            <legend>Emotes</legend>
+                            <label>Enable Emotes:
+                                <input type="checkbox" id="enableEmotes" name="enableEmotes">
+                            </label>
+                            <label id="emoteOnlyInput">Emote Only:
+                                <input type="checkbox" id="emoteOnly" name="emoteOnly">
+                            </label><br>
+                            <label id="emoteList">Use Emotes from:
+                                <label>Twitch <input type="checkbox" id="emoteSourceTwitch" name="emotesTwitch"></label>
+                                <label>FFZ <input type="checkbox" id="emoteSourceFFZ" name="emotesFFZ"></label>
+                                <label>BetterTTV <input type="checkbox" id="emoteSourceBTTV" name="emotesBTTV"></label>
+                                <label>7TV <input type="checkbox" id="emoteSource7TV" name="emotes7TV"></label>
+                                <br>
+
+                            </label>
+
+                        </fieldset>
+                        <fieldset name="Messages">
+                            <legend>Messages</legend>
+                            <label>Font Family:
+                                <input type="text" id="fontFamily" name="fontFamily" value="system-ui" required>
+                            </label><br>
+                            <label>Font Size:
+                                <input type="number" id="fontSize" name="fontSize" value="15" min="1"
+                                    oninput="validity.valid||(value=value*-1);" required>
+                            </label><br>
+                            <label>Custom Sizes:<input type="checkbox" id="customSizes" name="customSizes"></label>
+                            <br>
+                            <label name="customSize">Badges Size:<input type="number" name="badgeSize" value="15" min="1"
+                                    oninput="validity.valid||(value=value*-1);"></label>
+                            <br name="customSize">
+                            <label name="customSize">Emote Size:<input type="number" name="emoteSize" value="15" min="1"
+                                    oninput="validity.valid||(value=value*-1);"></label>
+                            <p id="demo">
+                                Hello this is text
+                            </p>
+                        </fieldset>
+                        <fieldset name="Animation">
+                            <legend>Animation</legend>
+                            Currently this does not support Animation!
+                        </fieldset>
+                        <fieldset name="Data">
+                            <legend>Data</legend>
+
+                            <label>Remember Config:
+                                <input type="checkbox" id="rememberMe" name="rememberMe"></label>
+
+                            <div id="auth-body" hidden>
+                                <div id="auth-content">
+                                    In order to function, this program requires you to Authenticate with Twitch (via
+                                    OAuth).
+                                    <br>
+                                    It will only ask for chat:read access, and stores this key in Local Storage.
+                                </div>
+                                <button id="auth-button" class="flat">
+                                    <div class="twitch">Authenticate with Twitch</div>
+                                    <!-- Taken from brand.twitch.tv/assets/glitch/white.svg -->
+                                    <svg width="20px" viewBox="0 0 118 138" version="1.1"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+                                        <title>Twitch Glitch</title>
+                                        <desc>Created with Sketch.</desc>
+                                        <g id="logo-/-glitch-/-white" stroke="none" stroke-width="1" fill="none"
+                                            fill-rule="evenodd">
+                                            <g id="logo-/-glitch" transform="translate(0.000000, 0.000000)"
+                                                fill="#F9F9F9">
+                                                <path
+                                                    d="M117.605,0 L117.605,68.605 L73.503,112.704 L53.904,112.704 L29.401,137.207 L29.401,112.704 L2.7000624e-13,112.704 L2.7000624e-13,24.502 L24.5,0 L117.605,0 Z M107.805,9.801 L29.401,9.801 L29.401,83.304 L51.452,83.304 L51.452,100.454 L68.605,83.304 L88.206,83.304 L107.805,63.703 L107.805,9.801 Z M93.1042,26.9518 L93.1042,56.3518 L83.3042,56.3518 L83.3042,26.9518 L93.1042,26.9518 Z M66.1532,26.9518 L66.1532,56.3518 L56.3532,56.3518 L56.3532,26.9518 L66.1532,26.9518 Z"
+                                                    id="Combined-Shape" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </button>
+
+                                <a hidden href="https://www.twitch.tv/settings/connections">Disable Key (Requires Sign
+                                    In to Twitch and User Interaction)</a>
+
+                            </div>
+                            <div>
+                                <label>Use this URL:
+                                    <input id="chatbox-url" type="url" title="Chatbox URL" readonly="true"
+                                        onClick="this.setSelectionRange(0, this.value.length)"></label>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+
             </div>
-            <button id="auth-button" class="flat">
-                <div class="twitch">Authenticate with Twitch</div>
-                <!-- Taken from brand.twitch.tv/assets/glitch/white.svg -->
-                <svg width="20px" viewBox="0 0 118 138" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
-                    <title>Twitch Glitch</title>
-                    <desc>Created with Sketch.</desc>
-                    <g id="logo-/-glitch-/-white" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <g id="logo-/-glitch" transform="translate(0.000000, 0.000000)" fill="#F9F9F9">
-                            <path d="M117.605,0 L117.605,68.605 L73.503,112.704 L53.904,112.704 L29.401,137.207 L29.401,112.704 L2.7000624e-13,112.704 L2.7000624e-13,24.502 L24.5,0 L117.605,0 Z M107.805,9.801 L29.401,9.801 L29.401,83.304 L51.452,83.304 L51.452,100.454 L68.605,83.304 L88.206,83.304 L107.805,63.703 L107.805,9.801 Z M93.1042,26.9518 L93.1042,56.3518 L83.3042,56.3518 L83.3042,26.9518 L93.1042,26.9518 Z M66.1532,26.9518 L66.1532,56.3518 L56.3532,56.3518 L56.3532,26.9518 L66.1532,26.9518 Z" id="Combined-Shape"/>
-                        </g>
-                    </g>
-                </svg>
-            </button>
-
-            <a hidden href="https://www.twitch.tv/settings/connections">Disable Key (Requires Sign In to Twitch and User Interaction)</a>
+            <div id="chatbox"></div>
 
         </div>
-        <div >
-            <input id="chatbox-url" type="text">
-        </div>
     </div>
-    <div id="chatbox"></div>
-
-    </div>
-</div>
 </body>
 <footer>
     <ul class="footlist">
@@ -158,4 +198,5 @@
         <li><a href="https://twitter.com/ItsSharples" rel="nofollow">Twitter</a></li>
     </ul>
 </footer>
+
 </html>

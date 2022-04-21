@@ -20,12 +20,12 @@ function refresh() {
         }
     }
     else {
-        if (localStorage.getItem("access_token")) {
-            configVisuals();
-        }
-        else {
-            signInVisuals();
-        }
+        // if (localStorage.getItem("access_token")) {
+        //     configVisuals();
+        // }
+        // else {
+        //     signInVisuals();
+        // }
     }
 
     if (isPopup) {
@@ -41,29 +41,30 @@ function chatVisuals(params) {
 }
 
 
-function configVisuals() {
-    document.getElementById("config-body").hidden = false;
-
+function updateConfig(config) {
     document.getElementById("auth-content").innerHTML = "Access Token: " + localStorage.getItem("access_token").toString();
 
-    let config = {};
-    config.access_token = localStorage.access_token;
-    config.channel_name = "sharples";
+    // let config = {};
+    // config.accessToken = localStorage.access_token;
+    // config.channelName = "sharples";
 
-    config.enableEmotes = true;
-    config.emotesTwitch = true;
-    config.emotesBTTV = true;
-    config.emotesFFZ = false;
-    config.emotes7TV = false;
-    config.emoteOnly = false;
+    // config.enableEmotes = true;
+    // config.emotesTwitch = true;
+    // config.emotesBTTV = true;
+    // config.emotesFFZ = false;
+    // config.emotes7TV = false;
+    // config.emoteOnly = false;
 
-    config.fontFamily = "system-ui";
+    // config.fontFamily = "system-ui";
 
-    config.fontSize = 15;
-    config.badgeSize = 15;
-    config.emoteSize = 15;
+    // config.fontSize = 15;
+    // config.badgeSize = 15;
+    // config.emoteSize = 15;
 
-    document.getElementById("chatbox-url").value = `${window.location.href}chatbox.html#${JSONtoBase64(config)}`;
+    config = config;
+    sessionStorage.config = ConfigToBase64(config);
+
+    document.getElementById("chatbox-url").value = `${window.location.origin}/chatbox/chatbox.html#${ConfigToBase64(config)}`;
     document.getElementById("chatbox-url").style = "font-size: 15px; width: 100%";
 }
 
@@ -97,6 +98,67 @@ function JSONtoBase64(json) {
 function Base64ToJSON(b64Data) {
     return JSON.parse(atob(b64Data));
 }
+
+function ConfigToBase64(config) {
+    output = {}
+    output.token = config.accessToken;
+    output.channel = config.channelName;
+
+    output.emotes = config.enableEmotes;
+    output.enabled = {
+        'only' : config.emoteOnly,
+        'twitch' : config.emotesTwitch,
+        'bttv' : config.emotesBTTV,
+        'ffz' : config.emotesFFZ,
+        '7TV' : config.emotes7TV
+    }
+    output.font = {
+        'family' : config.fontFamily,
+        'font' : config.fontSize,
+        'badge' : config.badgeSize,
+        'emote' : config.emoteSize
+    }
+    return JSONtoBase64(output);
+}
+function Base64ToConfig(b64) {
+    input = Base64ToJSON(b64);
+    config = {};
+    config.accessToken = input.token;
+    config.channelName = input.channel;
+
+    config.enableEmotes = input.emotes;
+    config.emoteOnly = input.enabled.only;
+    config.emotesTwitch = input.enabled.twitch;
+    config.emotesBTTV = input.enabled.bttv;
+    config.emotesFFZ = input.enabled.ffz;
+    config.emotes7TV = input.enabled.stv;
+
+    config.fontFamily = input.font.family; 
+    config.fontSize = input.font.font; 
+    config.badgeSize = input.font.badge; 
+    config.emoteSize = input.font.emote; 
+
+    return config;
+}
+
+function UpdateHTMLForm(config) {
+    //eyJ0b2tlbiI6IjJ2dm10b2E1eDlqbmZkN3hhMmI1dmszZGdvcnRtYSIsImNoYW5uZWwiOiJzaGFycGxlcyIsImVtb3RlcyI6Im9uIiwiZW5hYmxlZCI6eyJvbmx5Ijp0cnVlLCJ0d2l0Y2giOiJvbiIsImJ0dHYiOiJvbiJ9LCJmb250Ijp7ImZhbWlseSI6InN5c3RlbS11aSIsImZvbnQiOiI1MCJ9fQ
+    for(item in config)
+    {
+        let element = document.getElementsByName(item)[0];
+        if(element) {
+            element.value = config[item];
+            if(element.type == "checkbox")
+            {
+                element.checked = !!config[item];
+            }
+        }
+
+    }
+}
+
+
+
 async function updateDemotext() {
     console.log("Update");
     const fontSize = document.getElementById("fontSize").value;
@@ -108,11 +170,59 @@ async function updateDemotext() {
     document.getElementById("chatbox").style.setProperty("--font-height", fontSize + "px");
     document.getElementById("chatbox").style.setProperty("--font-height-half", (fontSize / 2) + "px");
 }
+const changeVisibility = (element, value) => element.style.visibility = value ? 'visible' : 'hidden';
+const changeDisplay = (element, value) => element.style.display = value ? 'initial' : 'none';
+const setValue = (element, value) => element.value = value;
+const addEventListenerAndFire = (element, type, func) => { element.addEventListener(type, func); element.dispatchEvent(new Event(type)); }
 
-let config = true;
-if (config) {
-    document.getElementById("fontFamily").addEventListener('input', () => { updateDemotext(); });
-    document.getElementById("fontSize").addEventListener('input', () => { updateDemotext(); });
+
+
+var config = {}
+let load = false;
+
+if(sessionStorage.getItem("config"))
+{
+    config = Base64ToConfig(sessionStorage.config);
+    UpdateHTMLForm(config);
 }
-window.addEventListener('storage', () => { reset(); refresh(); });
+
+if (true) {
+    // addEventListenerAndFire(document.getElementById("fontFamily"), 'input', () => { updateDemotext(); });
+    // addEventListenerAndFire(document.getElementById("fontSize"), 'input', () => { updateDemotext(); });
+
+    addEventListenerAndFire(document.getElementById("customSizes"), 'change', (event) => {
+        document.getElementsByName("customSize").forEach((element) => {
+            changeDisplay(element, event.currentTarget.checked);
+            let inputNodes = element.getElementsByTagName("input");
+            for (var i = 0; i < inputNodes.length; ++i) {
+                var child = inputNodes[i];
+                setValue(child, document.getElementById("fontSize").value);
+            }
+        })
+    })
+
+    addEventListenerAndFire(document.getElementById("enableEmotes"), 'change', (event) => {
+        changeDisplay(document.getElementById("emoteList"), event.currentTarget.checked);
+        changeDisplay(document.getElementById("emoteOnlyInput"), event.currentTarget.checked);
+    })
+    let form = document.getElementById("config-form");
+    addEventListenerAndFire(form, 'change', (event) => {
+        updateDemotext()
+        submitForm(event);
+    })
+
+}
+
+addEventListenerAndFire(window, 'storage', () => refresh())
 refresh();
+
+
+function submitForm(event) {
+    event.preventDefault();
+
+    const data = new FormData(document.getElementById("config-form"));
+    const config = Object.fromEntries(data.entries());
+    config.accessToken = localStorage.access_token;
+
+    updateConfig(config)
+}

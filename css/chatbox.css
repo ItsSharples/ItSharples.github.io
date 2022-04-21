@@ -1,14 +1,6 @@
 
 
-#subbody {
-    display: grid;
-    width: 100%;
-    margin: 0;
-    grid-template-columns: 1fr 1fr;
-}
-#config {
-    grid-column: 1;
-}
+
 
 .chat-message {
     display: flex;

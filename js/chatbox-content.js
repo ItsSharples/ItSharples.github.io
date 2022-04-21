@@ -2,10 +2,16 @@ let client_id = "kf48fc5oafct9wqb1jf3lrsfurujq2";
 var client;
 if (location.hash) {
     connectToTwitch(location.hash.substring(1))
+    setInterval(() => { window.scrollBy({ 'top': window.innerHeight, 'behavior': 'instant' }); }, 1000);
 }
 else {
     if (document.getElementById("config")) {
-        connectToTwitch("eyJhY2Nlc3NfdG9rZW4iOiI3aWgwN2FvYWpwY3N6dGMyaHVkdHRtemw2Yjc1dDkiLCJjaGFubmVsX25hbWUiOiJzaGFycGxlcyJ9")
+        try {
+            connectToTwitch("eyJ0b2tlbiI6IjJ2dm10b2E1eDlqbmZkN3hhMmI1dmszZGdvcnRtYSIsImNoYW5uZWwiOiJzaGFycGxlcyIsImVtb3RlcyI6Im9uIiwiZW5hYmxlZCI6eyJvbmx5Ijp0cnVlLCJ0d2l0Y2giOiJvbiIsImJ0dHYiOiJvbiJ9LCJmb250Ijp7ImZhbWlseSI6InN5c3RlbS11aSIsImZvbnQiOiI1MCJ9fQ")
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
     else {
         sendToConfigurator();
@@ -14,7 +20,7 @@ else {
 
 function connectToTwitch(hash) {
     // work out what the hash means
-    const config = Base64ToJSON(hash);
+    const config = Base64ToConfig(hash);
 
     config.customEmotes = (!!config.emotesBTTV) || (!!config.emotes7TV) || (!!config.emotesFFZ);
 
@@ -29,9 +35,9 @@ function connectToTwitch(hash) {
         options: { skipUpdatingEmotesets: true },
         identity: {
             username: client_id,
-            password: 'oauth:' + config.access_token
+            password: 'oauth:' + config.accessToken
         },
-        channels: [config.channel_name]
+        channels: [config.channelName]
     });
 
     client.connect();
@@ -54,7 +60,7 @@ function connectToTwitch(hash) {
                 emotes = emotes.concat(await getGlobalEmotes(config, channel_id));
                 emotes = emotes.concat(await getChannelEmotes(config, channel_id));
             }
-            if (config.customEmotes) {
+            if (!!config.customEmotes) {
                 if (!!config.emotesBTTV) {
                     customEmotes = customEmotes.concat(await getBTTVChannelEmotes(config, channel_id));
                 }
@@ -72,7 +78,6 @@ function connectToTwitch(hash) {
 
 
         listenToMessage(config, channel_id, badges, emotes, customEmotes);
-        setInterval(() => { window.scrollBy({ 'top': window.innerHeight, 'behavior': 'instant' }); }, 1000);
     })()
 }
 
@@ -81,12 +86,52 @@ function sendToConfigurator() {
 }
 function JSONtoBase64(json) { return btoa(JSON.stringify(json)); }
 function Base64ToJSON(b64Data) { return JSON.parse(atob(b64Data)); }
+function ConfigToBase64(config) {
+    output = {}
+    output.token = config.accessToken;
+    output.channel = config.channelName;
 
+    output.emotes = config.enableEmotes;
+    output.enabled = {
+        'only': config.emoteOnly,
+        'twitch': config.emotesTwitch,
+        'bttv': config.emotesBTTV,
+        'ffz': config.emotesFFZ,
+        '7TV': config.emotes7TV
+    }
+    output.font = {
+        'family': config.fontFamily,
+        'font': config.fontSize,
+        'badge': config.badgeSize,
+        'emote': config.emoteSize
+    }
+    return JSONtoBase64(output);
+}
+function Base64ToConfig(b64) {
+    input = Base64ToJSON(b64);
+    config = {};
+    config.accessToken = input.token;
+    config.channelName = input.channel;
+
+    config.enableEmotes = input.emotes;
+    config.emoteOnly = input.enabled.only;
+    config.emotesTwitch = input.enabled.twitch;
+    config.emotesBTTV = input.enabled.bttv;
+    config.emotesFFZ = input.enabled.ffz;
+    config.emotes7TV = input.enabled.stv;
+
+    config.fontFamily = input.font.family;
+    config.fontSize = input.font.font;
+    config.badgeSize = input.font.badge;
+    config.emoteSize = input.font.emote;
+
+    return config;
+}
 
 async function getChannelID(config) {
-    return fetch(`https://api.twitch.tv/helix/users?login=${config.channel_name}`, {
+    return fetch(`https://api.twitch.tv/helix/users?login=${config.channelName}`, {
         headers: {
-            "Authorization": `Bearer ${config.access_token}`,
+            "Authorization": `Bearer ${config.accessToken}`,
             "Client-Id": client_id
         }
     })
@@ -97,7 +142,7 @@ async function getChannelID(config) {
 async function getGlobalBadges(config, id) {
     return fetch("https://api.twitch.tv/helix/chat/badges/global", {
         headers: {
-            "Authorization": `Bearer ${config.access_token}`,
+            "Authorization": `Bearer ${config.accessToken}`,
             "Client-Id": client_id
         }
     })
@@ -108,7 +153,7 @@ async function getGlobalBadges(config, id) {
 async function getChannelBadges(config, id) {
     return fetch(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${id}`, {
         headers: {
-            "Authorization": `Bearer ${config.access_token}`,
+            "Authorization": `Bearer ${config.accessToken}`,
             "Client-Id": client_id
         }
     })
@@ -119,7 +164,7 @@ async function getChannelBadges(config, id) {
 async function getGlobalEmotes(config, id) {
     return fetch(`https://api.twitch.tv/helix/chat/emotes/global`, {
         headers: {
-            "Authorization": `Bearer ${config.access_token}`,
+            "Authorization": `Bearer ${config.accessToken}`,
             "Client-Id": client_id
         }
     })
@@ -130,7 +175,7 @@ async function getGlobalEmotes(config, id) {
 async function getChannelEmotes(config, id) {
     return fetch(`https://api.twitch.tv/helix/chat/emotes?broadcaster_id=${id}`, {
         headers: {
-            "Authorization": `Bearer ${config.access_token}`,
+            "Authorization": `Bearer ${config.accessToken}`,
             "Client-Id": client_id
         }
     })
@@ -162,28 +207,28 @@ async function getBTTVChannelEmotes(config, id) {
 
 async function get7TVChannelEmotes(config, id) {
     return fetch(`https://api.7tv.app/v2/users/${id}/emotes`)
-    .then(response => response.json())
-    .then(data => data)
+        .then(response => response.json())
+        .then(data => data)
 }
 
 async function getFFZChannelEmotes(config, id) {
     return fetch(`https://api.frankerfacez.com/v1/room/id/${id}`)
-    .then(response => response.json())
-    .then(data => data.sets)
-    .then(sets => Object.values(sets)
-        .map(set =>  set.emoticons
-            .map(emote => {
-                console.log(emote);
-                let value = {};
-                value.name = emote.name;
-                let urls = Object.entries(emote.urls).map(
-                    ([scale, url], i) => `https:${url} ${scale}x`
-                  )
-                value.imgSet = urls;
-                return value
-            })
-        ))
-    
+        .then(response => response.json())
+        .then(data => data.sets)
+        .then(sets => Object.values(sets)
+            .map(set => set.emoticons
+                .map(emote => {
+                    console.log(emote);
+                    let value = {};
+                    value.name = emote.name;
+                    let urls = Object.entries(emote.urls).map(
+                        ([scale, url], i) => `https:${url} ${scale}x`
+                    )
+                    value.imgSet = urls;
+                    return value
+                })
+            ))
+
 }
 
 function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
