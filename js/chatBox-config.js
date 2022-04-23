@@ -100,7 +100,6 @@ function UpdateHTMLForm(config) {
 
 
 async function updateDemotext() {
-    console.log("Update");
     const fontSize = document.getElementById("fontSize").value;
     document.getElementById("demo").style.setProperty("--demo-family", document.getElementById("fontFamily").value);
     document.getElementById("demo").style.setProperty("--demo-size", fontSize + "px");
@@ -111,7 +110,7 @@ async function updateDemotext() {
     document.getElementById("chatbox").style.setProperty("--font-height-half", (fontSize / 2) + "px");
 }
 const changeVisibility = (element, value) => element.style.visibility = value ? 'visible' : 'hidden';
-const changeDisplay = (element, value) => element.style.display = value ? 'initial' : 'none';
+const changeDisplay = (element, value) => element.style.display = value ? '' : 'none';
 const setValue = (element, value) => element.value = value;
 const addEventListenerAndFire = (element, type, func) => { element.addEventListener(type, func); element.dispatchEvent(new Event(type)); }
 
