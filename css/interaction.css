@@ -6,22 +6,22 @@ button.flat {
     display:inline-flex;
     padding:0.2em;/* 1.45em;*/
     margin:0.1em;
-    border:0.15em solid var(--twitch-purple);
+    border:0.15em solid var(--colour);
     box-sizing: border-box;
     text-decoration:none;
     font-weight: 500;
     color: var(--twitch-white);
-    background-color:var(--twitch-purple);
+    background-color:var(--colour);
     text-align:center;
     position:relative;
 
     flex: 0 0 auto;
 }
 button.flat:hover{
-    border-color:var(--twitch-purple-very-dark);;
+    border-color:var(--colour-hover);;
 }
 button.flat:active{
-    background-color:var(--twitch-purple-dark);
+    background-color:var(--colour-active);
 }
 @media all and (max-width:30em){
     button.flat{

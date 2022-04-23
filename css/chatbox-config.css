@@ -73,3 +73,9 @@ input[type=checkbox] {
     background-color: antiquewhite;
 
 }
+
+.colour-twitch {
+    --colour: var(--twitch-purple);
+    --colour-hover: var(--twitch-purple-very-dark);
+    --colour-active: var(--twitch-purple-dark);
+}
