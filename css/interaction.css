@@ -29,11 +29,38 @@ button.flat:active{
     margin:0.2em auto;
     }
 }
-
-
-
 button.flat * {
     margin: 5px;
     align-self: center;
 }
 
+
+input[type=checkbox] {
+    appearance: none;
+    height: calc(1em - 0.15em);
+    width: calc(1em - 0.15em);
+}
+
+input[type=checkbox]::before {
+    
+    display: block;
+    content: "";
+
+    width: 100%;
+    height: 100%;
+
+    border-width: 0.15em;
+    border-radius: 5px;
+    border-style: solid;
+
+    color: inherit;
+    background-color: -webkit-control-background;
+    /* background-color: aliceblue; */
+
+    transition: background-color 250ms ease-in-out 0s,
+                border-color 250ms ease-in-out 0s;
+
+}
+input[type=checkbox]:checked::before {
+    background-color: var(--input-colour);
+}

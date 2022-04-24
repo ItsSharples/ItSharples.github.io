@@ -1,7 +1,6 @@
-:root{
-    --background: var(--nav-background);
+#background-colour {
+    padding-bottom: 0;
 }
-
 #config {
     grid-column: 1;
 }
@@ -16,6 +15,7 @@
     margin: 0;
 
     height: 100%;
+    background-color: var(--background);
 }
 #auth-body {
     position: relative;
@@ -45,12 +45,21 @@
     content: content;
 }
 
+
+
+
 label {
-    vertical-align: middle;
+    flex-direction: row;
+    align-items: center;
 }
-input[type=checkbox] {
-    vertical-align: middle;
+form input[type=checkbox] {
+    /* vertical-align: bottom; */
+    --form-control-color: #f00;
 }
+fieldset {
+    justify-content: space-between;
+}
+
 
 #chatbox {
     grid-column: 2;
@@ -74,8 +83,16 @@ input[type=checkbox] {
 
 }
 
-.colour-twitch {
-    --colour: var(--twitch-purple);
-    --colour-hover: var(--twitch-purple-very-dark);
-    --colour-active: var(--twitch-purple-dark);
+
+#emoteSourceTwitch {
+    --input-colour: var(--twitch-purple);
+}
+#emoteSourceFFZ {
+    --input-colour: var(--ffz-green);
+}
+#emoteSourceBTTV {
+    --input-colour: var(--bttv-blue);
+}
+#emoteSource7TV {
+    --input-colour: var(--stv-blue);
 }

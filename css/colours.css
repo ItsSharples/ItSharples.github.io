@@ -1,0 +1,62 @@
+:root {
+    --twitch-white: rgb(240, 240, 255);
+    --twitch-purple: rgb(145,70,255);
+    --twitch-purple-dark: rgb(116, 56, 204);
+    --twitch-purple-very-dark: rgb(101, 48, 178);
+
+    --blue: rgb(16, 169, 203);
+    --blue-dark: rgb(12, 127, 153);
+    --blue-very-dark: rgb(10, 106, 127);
+
+    --apple-blue: rgb(0, 64, 221);
+    --stv-blue: #007bff;
+    --bttv-blue: #1997c6;
+    --ffz-green: #0ce3ac;
+
+    --input-colour: var(--apple-blue);
+}
+
+/* Header and Footer*/
+:root {
+    --nav-text: rgb(17, 170, 204);
+    --nav-background: rgb(24, 24, 24);
+
+    --header-text: rgb(206, 206, 206);
+    --header-background: rgb(23, 27, 32);
+
+    --footer-text: rgb(17, 170, 204);
+
+    --light-text: rgb(206, 206, 206);
+    --dark-text: rgb(0, 0, 0);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+        --text: var(--light-text);
+        --background: rgb(48, 48, 48);
+
+        --box-text: var(--text);
+        --box-background: rgb(51, 119, 85);
+        --box-shadow: rgba(233, 233, 233, 0.25);
+        
+    }
+}
+@media (prefers-color-scheme: light) {
+    :root {
+        color-scheme: light;
+        --text: var(--dark-text);
+        --background: rgb(206, 206, 206);
+
+        --box-text: var(--light-text);
+        --box-background: rgb(131, 179, 155);
+        --box-shadow: rgba(233, 233, 233, 0.25);
+    }
+}
+
+.colour-twitch {
+    --colour: var(--twitch-purple);
+    --colour-hover: var(--twitch-purple-very-dark);
+    --colour-active: var(--twitch-purple-dark);
+}
+
