@@ -2,9 +2,39 @@ button {
   cursor: pointer;
 }
 
+/* Default Button Look */
+button[round] {
+  font-size: var(--font-size-normal);
+  height: calc(1.1em);
+  width: calc(1.1em);
+
+  color: text;
+
+  border-width: 0.15em;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: currentColor;
+
+  background-color: -webkit-control-background;
+  transition: background-color 100ms ease-in-out 0s,
+    border-color 50ms ease-in-out 0s, scale ease-in 100ms;
+}
+
+button[round]:hover { 
+  animation-name: none !important;
+  scale: 1.1;
+}
+button[round]:active:hover {
+  scale: 0.8;
+}
+
+
 /* Based on Buton 8 at https://fdossena.com/?p=html5cool/buttons/i.frag*/
 button.flat {
   display: inline-flex;
+  width: initial;
+  height: initial;
+  scale: 1 !important;
   padding: 0.2em;
   /* 1.45em;*/
   margin: 0.1em;
@@ -18,6 +48,7 @@ button.flat {
   position: relative;
 
   flex: 0 0 auto;
+  transition: none;
 }
 
 button.flat:hover {
@@ -48,30 +79,6 @@ input[type=checkbox] {
   margin-left: .3em;
 }
 
-button {
-  font-size: var(--font-size-normal);
-  height: calc(1.1em);
-  width: calc(1.1em);
-
-  color: text;
-
-  border-width: 0.15em;
-  border-radius: 5px;
-  border-style: solid;
-  border-color: currentColor;
-
-  background-color: -webkit-control-background;
-  transition: background-color 100ms ease-in-out 0s,
-    border-color 50ms ease-in-out 0s, scale ease-in 100ms;
-}
-
-button:hover { 
-  animation-name: none !important;
-  scale: 1.1;
-}
-button:active:hover {
-  scale: 0.8;
-}
 
 input:is([type=button], [type=checkbox]) {
   transition: scale ease-in 100ms;
