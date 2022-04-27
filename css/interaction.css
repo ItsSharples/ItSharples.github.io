@@ -149,7 +149,6 @@ input[type=checkbox]:focus::before {
 }
 input[type=checkbox][tick]:checked::after {
   content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12.1 10.1'%3E%3Cpath class='path' fill='none' stroke-linecap='square' stroke-linejoin='miter' stroke='white' stroke-width='2' d='M 1.5,6 L 3.5,7.5 L 8.5,1.5'/%3E%3C/svg%3E");
-  /* data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12.1 10.1'%3E%3Cpath class='path' fill='none' stroke-linecap='square' stroke-linejoin='miter' stroke='white' stroke-width='2' d='M 1.5,6 L 4.5,8.5 L 10.5,1.5'/%3E%3C/svg%3E"); */
 }
 input[type=checkbox][cross]:checked::after {
   content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12.1 10.1'%3E%3Cpath class='path' fill='none' stroke-linecap='square' stroke-linejoin='miter' stroke='white' stroke-width='2' d='M 1.5,8.5 L 8.5,1.5 M 1.5,1.5 L 8.5,8.5' /%3E%3C/svg%3E");
