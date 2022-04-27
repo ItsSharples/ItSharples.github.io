@@ -141,7 +141,7 @@ input[type=checkbox]::after {
 
 }
 
-input[type=checkbox]:checked::before {
+input[type=checkbox]:is(:checked, :indeterminate)::before {
   background-color: var(--input-colour);
 }
 input[type=checkbox]:focus::before {
