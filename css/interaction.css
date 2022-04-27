@@ -156,7 +156,9 @@ input[type=checkbox][cross]:checked::after {
 input[type=checkbox]:indeterminate::after {
   content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12.1 10.1'%3E%3Cpath class='path' fill='none' stroke-linecap='square' stroke-linejoin='miter' stroke='white' stroke-width='2' d='M 1.5,5 L 8.5,5'/%3E%3C/svg%3E");
 }
-
+input[type=checkbox]:checked::after {
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12.1 10.1'%3E%3Crect fill='white' stroke-linecap='square' stroke-linejoin='miter' stroke='white' width='3' height='3' x='3.5' y='3' rx='.2'/%3E%3C/svg%3E");
+}
 @keyframes checkmark-fill {
   from {
     stroke-dashoffset: 15;
