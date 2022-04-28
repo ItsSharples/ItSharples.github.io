@@ -71,8 +71,8 @@ else {
             }
             setupServer(b64Config);
             document.addEventListener('update-config', () => {
-                const config = sessionStorage.config;
-                state.loadChannelData(Base64ToJSON(config));
+                const config = Base64ToJSON(sessionStorage.config);
+                state.loadChannelData(config);
                 updateStyle(config);
             });
         }
