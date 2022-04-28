@@ -70,7 +70,11 @@ else {
                 b64Config = "eyJjaGFubmVsTmFtZSI6InNoYXJwbGVzIiwiZW5hYmxlRW1vdGVzIjoib24iLCJlbW90ZU9ubHkiOiJ0cnVlIiwiZW1vdGVzVHdpdGNoIjoib24iLCJlbW90ZXNCVFRWIjoib24iLCJmb250RmFtaWx5Ijoic3lzdGVtLXVpIiwiZm9udFNpemUiOiI1MCIsImJhZGdlU2l6ZSI6IjUwIiwiZW1vdGVTaXplIjoiNTAiLCJhY2Nlc3NUb2tlbiI6IjJ2dm10b2E1eDlqbmZkN3hhMmI1dmszZGdvcnRtYSJ9";
             }
             setupServer(b64Config);
-            document.addEventListener('update-config', () => state.loadChannelData(Base64ToJSON(sessionStorage.config)));
+            document.addEventListener('update-config', () => {
+                const config = sessionStorage.config;
+                state.loadChannelData(Base64ToJSON(config));
+                updateStyle(config);
+            });
         }
         catch (err) {
             console.log(err);
@@ -88,19 +92,23 @@ function setupServer(hash) {
     state.loadChannelData(config);
     listenToMessages(config);
 }
+function updateStyle(config) {
+    const style = document.getElementById("chatbox").style;
 
+    style.setProperty("--font-family", config.fontFamily);
+
+    style.setProperty("--font-height", config.fontSize + "px");
+    style.setProperty("--font-height-half", (config.fontSize / 2) + "px");
+
+    style.setProperty("--background-colour", config.backgroundColor ?? "transparent");
+}
 function setupWebpage(hash) {
-    // work out what the hash means
+    // Convert Hash to the JSON
     const config = Base64ToJSON(hash);
 
     config.customEmotes = (!!config.emotesBTTV) || (!!config.emotes7TV) || (!!config.emotesFFZ);
 
-    //console.log(config);
-
-    document.getElementById("chatbox").style.setProperty("--font-family", config.fontFamily);
-
-    document.getElementById("chatbox").style.setProperty("--font-height", config.fontSize + "px");
-    document.getElementById("chatbox").style.setProperty("--font-height-half", (config.fontSize / 2) + "px");
+    updateStyle(config);
 
     client?.disconnect();
     client = new tmi.Client({

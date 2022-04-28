@@ -1,6 +1,12 @@
 
 
-
+body {
+    margin: 0;
+    height: 100vh;
+}
+#subbody {
+    height: 100%;
+}
 
 .chat-message {
     display: flex;
@@ -24,15 +30,16 @@
 }
 
 #chatbox {
-    background: transparent;
+    background: var(--background-colour);
     --font-height-half: calc(var(--font-height) / 2);
-    --nav-background: transparent;
+    /* --nav-background: transparent; */
 
     display:flex;
     justify-content: flex-start;
     flex-direction: column;
 
-    width:100vw;
+    width: 100vw;
+    height: 100%;
 
     overflow-x: clip;
     overflow-y: hidden;
