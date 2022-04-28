@@ -84,12 +84,12 @@ else {
 
 
 function setupServer(hash) {
-    let config = connectToTwitch(hash);
+    let config = setupWebpage(hash);
     state.loadChannelData(config);
-    listenToMessage(config);
+    listenToMessages(config);
 }
 
-function connectToTwitch(hash) {
+function setupWebpage(hash) {
     // work out what the hash means
     const config = Base64ToJSON(hash);
 
@@ -224,7 +224,7 @@ async function getFFZChannelEmotes(config, id) {
 
 }
 
-function listenToMessage(config) {
+function listenToMessages(config) {
     function setIdEquals(name) { return (object, index, array) => object.set_id == name; }
 
     function IdEquals(name) { return (object, index, array) => object.id == name; }
