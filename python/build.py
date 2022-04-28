@@ -1,12 +1,16 @@
-import argparse, os, shutil, yaml
+import argparse
+import os
+import shutil
+import yaml
 from dataclasses import dataclass, field
-
 from buildProjects import buildProjects
+
 
 @dataclass
 class IncludeExclude():
     include: frozenset[str] = field(init=True)
     exclude: frozenset[str] = field(init=True)
+
 
 def setupParserAndParse():
     # Default Arguments
@@ -16,7 +20,8 @@ def setupParserAndParse():
     defaultTemplatesPath = "templates"
     defaultTypes = ["png", "html", "js", "css"]
     # Process Arguments
-    parser = argparse.ArgumentParser(description='Build this Website, and Move it to an output path.')
+    parser = argparse.ArgumentParser(
+        description='Build this Website, and Move it to an output path.')
     parser.add_argument('-c', '--config', metavar='config', type=str, dest='config', default=defaultConfigPath,
                         nargs='?', help=f"The location of the config file, if used. Default: {defaultConfigPath}")
     parser.add_argument('-o', '--output', metavar='path', type=str, dest='buildPath', const=None,
@@ -27,14 +32,14 @@ def setupParserAndParse():
                         nargs='?', help=f"The templates path relative to '.'. Default: {defaultTemplatesPath}")
     fileGroup = parser.add_argument_group('Files')
     fileGroup.add_argument('-i', '--include-types', metavar='type', type=str, dest='includeFiles', const=None,
-                        nargs='*', help=f"Types to include in the output path. Default: {defaultTypes}")
+                           nargs='*', help=f"Types to include in the output path. Default: {defaultTypes}")
     fileGroup.add_argument('--exclude-types', metavar='type', type=str, dest='excludeFiles', const=None,
-                        nargs='*', help=f"Types to exclude in the output path. Default: {None}")
+                           nargs='*', help=f"Types to exclude in the output path. Default: {None}")
     folderGroup = parser.add_argument_group('Folders')
     folderGroup.add_argument('--include-folders', metavar='folder', type=str, dest='includeFolders', const=None,
-                        nargs='*', help=f"Folders to include in the output path. Default: {None}")
+                             nargs='*', help=f"Folders to include in the output path. Default: {None}")
     folderGroup.add_argument('-e', '--exclude-folders', metavar='folder', type=str, dest='excludeFolders', const=None,
-                        nargs='*', help=f"Folders to exclude in the output path. Default: {'Files starting with .'}")
+                             nargs='*', help=f"Folders to exclude in the output path. Default: {'Files starting with .'}")
 
     parser.add_help = True
     args = parser.parse_args()
@@ -48,7 +53,8 @@ def setupParserAndParse():
     if args.buildPath == None:
         args.buildPath = yamlConfig.get("destinationDir", defaultBuildPath)
     if args.templatePath == None:
-        args.templatePath = yamlConfig.get("templatePath", defaultTemplatesPath)
+        args.templatePath = yamlConfig.get(
+            "templatePath", defaultTemplatesPath)
 
     if args.includeFiles == None:
         args.includeFiles = yamlConfig.get("includeFiles", defaultTypes)
@@ -59,9 +65,9 @@ def setupParserAndParse():
         args.includeFolders = yamlConfig.get("includeFolders", [])
     if args.excludeFolders == None:
         args.excludeFolders = yamlConfig.get("excludeFolders", [])
-    
-    args.excludeFolders = set(args.excludeFolders) | set(['__pycache__', 'python', args.buildPath])
 
+    args.excludeFolders = set(args.excludeFolders) | set(
+        ['__pycache__', 'python', args.buildPath])
 
     return args, yamlConfig
 
@@ -76,19 +82,18 @@ def main():
         print(f"KeyError: Missing {exception} from the config")
         raise
 
-
     folderConfig = IncludeExclude(
-        include = frozenset(args.includeFolders),
-        exclude = frozenset(args.excludeFolders)
+        include=frozenset(args.includeFolders),
+        exclude=frozenset(args.excludeFolders)
     )
 
     fileConfig = IncludeExclude(
-        include = frozenset(args.includeFiles),
-        exclude = frozenset(args.excludeFiles)
+        include=frozenset(args.includeFiles),
+        exclude=frozenset(args.excludeFiles)
     )
 
     def searchDirForExtensions(path: str,
-            fileConfig: IncludeExclude = fileConfig, folderConfig: IncludeExclude = folderConfig):
+                               fileConfig: IncludeExclude = fileConfig, folderConfig: IncludeExclude = folderConfig):
         out: list[str] = []
         if os.path.isfile(path):
             out.append(path.name)
@@ -98,24 +103,25 @@ def main():
             reinclude = set(dirs) & folderConfig.include
             # Exclude from dirs, all subdirs starting with . or in the exclude set,
             #   and then reinclude any that were excluded
-            dirs[:]  = (set(dirs)
-                        - set([dir for dir in dirs if dir.startswith('.')])
-                        - folderConfig.exclude) \
-                        | reinclude
+            dirs[:] = (set(dirs)
+                       - set([dir for dir in dirs if dir.startswith('.')])
+                       - folderConfig.exclude) \
+                | reinclude
 
             for file in files:
                 if file in fileConfig.exclude and not file in fileConfig.include:
                     continue
 
                 if os.path.splitext(file)[1][1:] in fileConfig.include:
-                    out.append(os.path.join(root, file));
+                    out.append(os.path.join(root, file))
 
             usedDirs.append(root)
         return usedDirs, out
 
     print(f"Building from {args.sourcePath} into {args.buildPath}")
 
-    dirs, toCopy = searchDirForExtensions(args.sourcePath, fileConfig, folderConfig)
+    dirs, toCopy = searchDirForExtensions(
+        args.sourcePath, fileConfig, folderConfig)
 
     # Delete the old contents at Destination
     shutil.rmtree(args.buildPath, ignore_errors=True)
@@ -123,8 +129,10 @@ def main():
 
     # Rebuild the Tree
     for dir in set(dirs):
-        try: os.makedirs(os.path.join('.', args.buildPath, dir[2:]))
-        except FileExistsError: continue
+        try:
+            os.makedirs(os.path.join('.', args.buildPath, dir[2:]))
+        except FileExistsError:
+            continue
 
     # Add the leaves
     for copy in toCopy:
@@ -133,7 +141,9 @@ def main():
         shutil.copyfile(copy, to)
 
     # Build the projects
-    buildProjects(patternStrings, templatePaths, args.sourcePath, args.buildPath, args.templatePath)
+    buildProjects(patternStrings, templatePaths, args.sourcePath,
+                  args.buildPath, args.templatePath)
+
 
 if __name__ == "__main__":
     main()

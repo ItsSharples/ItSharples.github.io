@@ -1,5 +1,8 @@
 # https://stackoverflow.com/a/68732605
-import ast, operator, math
+import ast
+import operator
+import math
+
 
 def safe_eval(s):
 
@@ -63,4 +66,3 @@ def safe_eval(s):
             raise SyntaxError(f"Bad syntax, {type(node)}")
 
     return _eval(tree)
-
