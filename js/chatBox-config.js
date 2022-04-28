@@ -105,12 +105,8 @@ async function updateDemotext() {
     const fontSize = document.getElementById("fontSize").value;
     document.getElementById("demo").style.setProperty("--demo-family", document.getElementById("fontFamily").value);
     document.getElementById("demo").style.setProperty("--demo-size", fontSize + "px");
-
-    document.getElementById("chatbox").style.setProperty("--font-family", document.getElementById("fontFamily").value);
-
-    document.getElementById("chatbox").style.setProperty("--font-height", fontSize + "px");
-    document.getElementById("chatbox").style.setProperty("--font-height-half", (fontSize / 2) + "px");
 }
+
 const changeVisibility = (element, value) => element.style.visibility = value ? 'visible' : 'hidden';
 const changeDisplay = (element, value) => element.style.display = value ? '' : 'none';
 const setValue = (element, value) => element.value = value;
@@ -118,7 +114,7 @@ const addEventListenerAndFire = (element, type, func) => { element.addEventListe
 
 
 
-var config = {}
+var config = {};
 let load = false;
 
 if (sessionStorage.getItem("config")) {
@@ -148,7 +144,7 @@ if (true) {
     })
     let form = document.getElementById("config-form");
     addEventListenerAndFire(form, 'change', (event) => {
-        updateDemotext()
+        updateDemotext();
         submitForm(event);
     })
 
@@ -165,5 +161,5 @@ function submitForm(event) {
     const config = Object.fromEntries(data.entries());
     config.accessToken = localStorage.access_token;
 
-    updateConfig(config)
+    updateConfig(config);
 }
