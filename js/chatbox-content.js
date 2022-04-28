@@ -1,49 +1,17 @@
-let client_id = "kf48fc5oafct9wqb1jf3lrsfurujq2";
-var client;
-if (location.hash) {
-    connectToTwitch(location.hash.substring(1))
-    setInterval(() => { window.scrollBy({ 'top': window.innerHeight, 'behavior': 'instant' }); }, 1000);
-}
-else {
-    if (document.getElementById("config")) {
-        try {
-            connectToTwitch("eyJjaGFubmVsTmFtZSI6InNoYXJwbGVzIiwiZW5hYmxlRW1vdGVzIjoib24iLCJlbW90ZU9ubHkiOiJ0cnVlIiwiZW1vdGVzVHdpdGNoIjoib24iLCJlbW90ZXNCVFRWIjoib24iLCJmb250RmFtaWx5Ijoic3lzdGVtLXVpIiwiZm9udFNpemUiOiI1MCIsImJhZGdlU2l6ZSI6IjUwIiwiZW1vdGVTaXplIjoiNTAiLCJhY2Nlc3NUb2tlbiI6IjJ2dm10b2E1eDlqbmZkN3hhMmI1dmszZGdvcnRtYSJ9")
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
-    else {
-        sendToConfigurator();
-    }
-}
 
-function connectToTwitch(hash) {
-    // work out what the hash means
-    const config = Base64ToJSON(hash);
+class twitchChannel {
+    constructor() { };
 
-    config.customEmotes = (!!config.emotesBTTV) || (!!config.emotes7TV) || (!!config.emotesFFZ);
+    // channel_id, badges, emotes, customEmotes
+    get channelID() { return this.m_channel_id; };
+    get badges() { return this.m_badges; };
+    get emotes() { return this.m_emotes; };
+    get customEmotes() { return this.m_customEmotes; };
+    get config() { return this.m_config; };
 
-    console.log(config);
-
-    document.getElementById("chatbox").style.setProperty("--font-family", config.fontFamily);
-
-    document.getElementById("chatbox").style.setProperty("--font-height", config.fontSize + "px");
-    document.getElementById("chatbox").style.setProperty("--font-height-half", (config.fontSize / 2) + "px");
-
-    client = new tmi.Client({
-        options: { skipUpdatingEmotesets: true },
-        identity: {
-            username: client_id,
-            password: 'oauth:' + config.accessToken
-        },
-        channels: [config.channelName]
-    });
-
-    client.connect();
-
-    (async () => {
-        var channel_id = await getChannelID(config)
+    async loadChannelData(config) {
+        console.log(config);
+        var channel_id = await getChannelID(config);
 
         var badges = [];
         badges = badges.concat(await getGlobalBadges(config, channel_id));
@@ -52,7 +20,7 @@ function connectToTwitch(hash) {
         var emotes = [];
         var customEmotes = [];
 
-        console.log(await get7TVChannelEmotes(config, "50030128"));
+        //console.log(await get7TVChannelEmotes(config, "50030128"));
         //console.log(await getFFZChannelEmotes(config, "50030128"));
 
         if (!!config.enableEmotes) {
@@ -64,21 +32,88 @@ function connectToTwitch(hash) {
                 if (!!config.emotesBTTV) {
                     customEmotes = customEmotes.concat(await getBTTVChannelEmotes(config, channel_id));
                 }
-
                 if (!!config.emotes7TV) {
                     customEmotes = customEmotes.concat(await get7TVChannelEmotes(config, "50030128"));
                 }
-                customEmotes = customEmotes.concat(await getFFZChannelEmotes(config, "50030128"));
                 if (!!config.emotesFFZ) {
                     customEmotes = customEmotes.concat(await getFFZChannelEmotes(config, "50030128"));
                 }
             }
-            console.log(customEmotes);
         }
 
+        this.m_config = config;
+        this.m_channel_id = channel_id;
+        this.m_badges = badges;
+        this.m_emotes = emotes;
+        this.m_customEmotes = customEmotes;
 
-        listenToMessage(config, channel_id, badges, emotes, customEmotes);
-    })()
+        console.log("Loaded Channel Data");
+    }
+}
+
+let client_id = "kf48fc5oafct9wqb1jf3lrsfurujq2";
+var client;
+var state;
+state = new twitchChannel();
+if (location.hash) {
+    setupServer(location.hash.substring(1))
+    setInterval(() => { window.scrollBy({ 'top': window.innerHeight, 'behavior': 'instant' }); }, 1000);
+}
+else {
+    if (document.getElementById("config")) {
+        try {
+            var b64Config;
+            if (!!sessionStorage.config) {
+                b64Config = sessionStorage.config;
+            }
+            else {
+                b64Config = "eyJjaGFubmVsTmFtZSI6InNoYXJwbGVzIiwiZW5hYmxlRW1vdGVzIjoib24iLCJlbW90ZU9ubHkiOiJ0cnVlIiwiZW1vdGVzVHdpdGNoIjoib24iLCJlbW90ZXNCVFRWIjoib24iLCJmb250RmFtaWx5Ijoic3lzdGVtLXVpIiwiZm9udFNpemUiOiI1MCIsImJhZGdlU2l6ZSI6IjUwIiwiZW1vdGVTaXplIjoiNTAiLCJhY2Nlc3NUb2tlbiI6IjJ2dm10b2E1eDlqbmZkN3hhMmI1dmszZGdvcnRtYSJ9";
+            }
+            setupServer(b64Config);
+            document.addEventListener('update-config', () => state.loadChannelData(Base64ToJSON(sessionStorage.config)));
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+    else {
+        sendToConfigurator();
+    }
+}
+
+
+
+function setupServer(hash) {
+    let config = connectToTwitch(hash);
+    state.loadChannelData(config);
+    listenToMessage(config);
+}
+
+function connectToTwitch(hash) {
+    // work out what the hash means
+    const config = Base64ToJSON(hash);
+
+    config.customEmotes = (!!config.emotesBTTV) || (!!config.emotes7TV) || (!!config.emotesFFZ);
+
+    //console.log(config);
+
+    document.getElementById("chatbox").style.setProperty("--font-family", config.fontFamily);
+
+    document.getElementById("chatbox").style.setProperty("--font-height", config.fontSize + "px");
+    document.getElementById("chatbox").style.setProperty("--font-height-half", (config.fontSize / 2) + "px");
+
+    client?.disconnect();
+    client = new tmi.Client({
+        options: { skipUpdatingEmotesets: true },
+        identity: {
+            username: client_id,
+            password: 'oauth:' + config.accessToken
+        },
+        channels: [config.channelName]
+    });
+
+    client.connect();
+    return config;
 }
 
 function sendToConfigurator() {
@@ -177,7 +212,6 @@ async function getFFZChannelEmotes(config, id) {
         .then(sets => Object.values(sets)
             .map(set => set.emoticons
                 .map(emote => {
-                    console.log(emote);
                     let value = {};
                     value.name = emote.name;
                     let urls = Object.entries(emote.urls).map(
@@ -190,11 +224,9 @@ async function getFFZChannelEmotes(config, id) {
 
 }
 
-function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
+function listenToMessage(config) {
     function setIdEquals(name) { return (object, index, array) => object.set_id == name; }
-    function getBadgesFor(name) {
-        return (badgesData.find(setIdEquals(name)) ?? []);
-    }
+
     function IdEquals(name) { return (object, index, array) => object.id == name; }
     function getEmotes() {
 
@@ -219,9 +251,6 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
         return twitchEmotes;
     }
 
-    const subscriberBadges = getBadgesFor("subscriber");
-    const bitsBadges = getBadgesFor("bits");
-    const emoteCache = getEmotes();
 
     function naturalSort(a, b) {
         let [al, ar] = a.split("-");
@@ -233,6 +262,17 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
     }
 
     client.on('message', (channel, tags, message, self) => {
+        const config = state.config;
+        const badgesData = state.badges;
+        const twitchEmotes = state.emotes;
+        const customEmotes = state.customEmotes;
+        function getBadgesFor(name) {
+            return (badgesData.find(setIdEquals(name)) ?? []);
+        }
+
+        const subscriberBadges = getBadgesFor("subscriber");
+        const bitsBadges = getBadgesFor("bits");
+        const emoteCache = twitchEmotes;
         // console.log(tags);
         // let pronouns = (async(username) => await fetch(`https://pronouns.alejo.io/api/users/${username}`)
         // .then(response => response.json())
@@ -309,7 +349,7 @@ function listenToMessage(config, id, badgesData, twitchEmotes, customEmotes) {
         let lastElement = null;
         if (config.enableEmotes) {
             let emotesToReplace = [];
-            if (tags.emotes) {
+            if (tags.emotes && !!config.emotesTwitch) {
                 for (const emote in tags.emotes) {
                     let locations = tags.emotes[emote];
                     let image = emoteCache.find(IdEquals(emote));

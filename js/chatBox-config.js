@@ -40,15 +40,19 @@ function chatVisuals(params) {
     document.getElementById("auth-content").innerHTML = "Chatbox Mode";
 }
 
-
+const updateEvent = new Event('update-config');
 function updateConfig(config) {
     config = config;
-    sessionStorage.config = JSONtoBase64(config);
+    const b64Config = JSONtoBase64(config);
+    sessionStorage.config = b64Config;
 
-    document.getElementById("auth-content").innerHTML = "Access Token: " + localStorage.getItem("access_token").toString();
+    document.getElementById("auth-content").innerHTML = "Access Token: " + localStorage.access_token.toString();
 
     document.getElementById("chatbox-url").value = `${window.location.origin}/chatbox/chatbox.html#${sessionStorage.config}`;
     document.getElementById("chatbox-url").style = "font-size: 15px; width: 100%";
+
+    updateEvent.value = b64Config;
+    document.dispatchEvent(updateEvent);
 }
 
 function signInVisuals() {
@@ -83,13 +87,11 @@ function Base64ToJSON(b64Data) {
 }
 
 function UpdateHTMLForm(config) {
-    for(item in config)
-    {
+    for (item in config) {
         let element = document.getElementsByName(item)[0];
-        if(element) {
+        if (element) {
             element.value = config[item];
-            if(element.type == "checkbox")
-            {
+            if (element.type == "checkbox") {
                 element.checked = !!config[item];
             }
         }
@@ -119,8 +121,7 @@ const addEventListenerAndFire = (element, type, func) => { element.addEventListe
 var config = {}
 let load = false;
 
-if(sessionStorage.getItem("config"))
-{
+if (sessionStorage.getItem("config")) {
     config = Base64ToJSON(sessionStorage.config);
     UpdateHTMLForm(config);
     updateConfig(config);
