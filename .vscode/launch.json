@@ -8,6 +8,14 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Build Website",
+            "type": "python",
+            "request": "launch",
             "program": "${cwd}/python/build.py",
             "console": "integratedTerminal",
             "justMyCode": true
