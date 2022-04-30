@@ -8,7 +8,7 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "python/build.py",
+            "program": "${cwd}/python/build.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }
