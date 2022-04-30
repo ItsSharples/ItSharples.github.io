@@ -87,7 +87,7 @@ html:not([data-scroll='0']) nav input{
     margin: auto;
     margin-bottom: .1em;
     z-index: 5;
-    min-height: calc(100vh - 125px);
+    min-height: calc(100vh - 5em);
 }
 
 ul .left {
