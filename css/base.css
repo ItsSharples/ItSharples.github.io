@@ -15,7 +15,7 @@
 }
 
 body {
-    background: var(--nav-background);
+    background-color: var(--nav-background);
     /* //rgb(10, 15, 20); */
     margin: 0 auto;
     padding: 0;
@@ -26,7 +26,7 @@ body {
     /* display: grid;
     grid-template-rows: auto 1fr auto; */
 }
-#background-colour {
+#background {
     background-color: var(--background);
     margin: 0;
     padding-bottom: 0.1em;
@@ -39,7 +39,7 @@ footer {
     position: relative;
     width: 100%;
     color: var(--nav-text);
-    background: var(--nav-background);
+    background-color: var(--nav-background);
     z-index: 10;
     /* margin-top: 1px; */
 }
@@ -51,7 +51,7 @@ nav {
     overscroll-behavior: none;
     overflow: hidden;
 
-    background: var(--header-background);
+    background-color: var(--header-background);
     box-shadow: 0 0 1em var(--header-background);
 
     z-index: 10;
@@ -61,7 +61,6 @@ body {
     font-size: var(--font-size-normal);
     transition: font-size 100ms linear;
 }
-
 nav {
     font-size: var(--font-size-normal);
     transition: font-size 100ms linear;
