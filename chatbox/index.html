@@ -13,7 +13,7 @@
     <title>Sharples' Corner</title>
     <base href="/">
     <!-- CSS -->
-    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/navlist.css">
     <link rel="stylesheet" href="/css/footlist.css">
     <link rel="stylesheet" href="/css/hamburger.css">
@@ -37,42 +37,42 @@
     <!-- Other -->
     <link rel="manifest" href="/manifest.webmanifest">
 </head>
-<header>
-    <nav id="navbar">
-        <ul class="navlist">
-            <li class="left">
-                <ul>
-                    <li id="hamMenu">
-                        <input type="checkbox" id="menuButton">
-                        <div id="hamburger">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </li>
-                    <li id="navIcon">
-                        <img srcset="assets/images/PIA21891/PIA21891x50.png 0.5x,
+
+<nav id="navbar">
+    <ul class="navlist">
+        <li class="left">
+            <ul>
+                <li id="hamMenu">
+                    <input type="checkbox" id="menuButton">
+                    <div id="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </li>
+                <li id="navIcon">
+                    <img srcset="assets/images/PIA21891/PIA21891x50.png 0.5x,
                                  assets/images/PIA21891/PIA21891x320.png 1x,
                                  assets/images/PIA21891/PIA21891x640.png 1.5x,
                                  assets/images/PIA21891/PIA21891.png 1000w"
-                            src="assets/images/PIA21891/PIA21891x50.png" alt="Header Logo" width="50px">
-                        </img>
-                    </li>
-                    <li id="iconTxt">
-                        Sharples' Corner
-                    </li>
-                </ul>
-            </li>
-            <li id="topNav">
-                <ul>
-                    <li><a href="./">Home</a></li>
-                    <li><a href="./projects/">Projects</a></li>
-                    <li><a href="./contact.html">Contact</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
-</header>
+                        src="assets/images/PIA21891/PIA21891x50.png" alt="Header Logo" width="50px">
+                    </img>
+                </li>
+                <li id="iconTxt">
+                    Sharples' Corner
+                </li>
+            </ul>
+        </li>
+        <li id="topNav">
+            <ul>
+                <li><a href="./">Home</a></li>
+                <li><a href="./projects/">Projects</a></li>
+                <li><a href="./contact.html">Contact</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
 
 <body>
     <div id="background-colour">
@@ -100,16 +100,17 @@
                             <legend>Emotes</legend>
                             <label>Enable Emotes:<input type="checkbox" id="enableEmotes" name="enableEmotes" tick>
                             </label>
-                            <label id="emoteOnlyInput">Emote Only:<input type="checkbox" id="emoteOnly" name="emoteOnly" cross>
+                            <label id="emoteOnlyInput">Emote Only:<input type="checkbox" id="emoteOnly" name="emoteOnly"
+                                    cross>
                             </label>
-                            <fieldset id="emoteList"> 
-                            <legend >Use Emotes From</legend> 
+                            <fieldset id="emoteList">
+                                <legend>Use Emotes From</legend>
                                 <label>Twitch:<input type="checkbox" id="emoteSourceTwitch" name="emotesTwitch"></label>
                                 <label>FFZ:<input type="checkbox" id="emoteSourceFFZ" name="emotesFFZ"></label>
                                 <label>BetterTTV:<input type="checkbox" id="emoteSourceBTTV" name="emotesBTTV"></label>
                                 <label>7TV:<input type="checkbox" id="emoteSource7TV" name="emotes7TV"></label>
                             </fieldset>
-                        </label>
+                            </label>
 
                         </fieldset>
                         <fieldset name="Messages">
@@ -123,8 +124,8 @@
                             </label><br>
                             <label>Custom Sizes:<input type="checkbox" id="customSizes" name="customSizes"></label>
                             <br>
-                            <label name="customSize">Badges Size:<input type="number" name="badgeSize" value="15" min="1"
-                                    oninput="validity.valid||(value=value*-1);"></label>
+                            <label name="customSize">Badges Size:<input type="number" name="badgeSize" value="15"
+                                    min="1" oninput="validity.valid||(value=value*-1);"></label>
                             <br name="customSize">
                             <label name="customSize">Emote Size:<input type="number" name="emoteSize" value="15" min="1"
                                     oninput="validity.valid||(value=value*-1);"></label>
