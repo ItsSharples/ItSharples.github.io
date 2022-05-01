@@ -1,0 +1,81 @@
+:root {
+    --background: transparent;
+}
+
+#background-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    image-rendering: optimizeSpeed;
+    object-fit: cover;
+}
+
+html:not([data-scroll='0']) nav#navbar {
+    animation: fade-background-in 500ms linear 0s 1 forwards, fade-opacity-in 300ms linear 0s 1 forwards;
+}
+
+html[data-scroll='0'] nav#navbar {
+    animation: fade-background-out 250ms linear 0s 1 forwards;
+}
+
+html:not([data-scroll='0']) footer {
+    animation: fade-background-in 500ms linear 0s 1 forwards, fade-opacity-in 300ms linear 0s 1 forwards;
+}
+
+html[data-scroll='0'] footer {
+    opacity: 0;
+    pointer-events: none;
+    animation: fade-background-out 250ms linear 0s 1 forwards;
+}
+
+@keyframes fade-background-out {
+    to {
+        background-color: var(--background);
+        box-shadow: none;
+    }
+}
+
+@keyframes fade-background-in {
+    from {
+        background-color: var(--background);
+        box-shadow: none;
+    }
+
+    to {
+        background-color: var(--nav-background);
+        box-shadow: 0 0 1em var(--header-background);
+
+    }
+}
+
+@keyframes fade-opacity-in {
+    to {
+        opacity: 100%;
+    }
+}
+
+#subbody {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+
+    position: absolute;
+    top: 25vh;
+    min-height: 100%;
+}
+
+#subbody * {
+    justify-content: center;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+
+    text-shadow: 4px 4px 2px black;
+}
+
+header {
+    font-size: 50px;
+}

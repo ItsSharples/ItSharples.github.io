@@ -1,4 +1,6 @@
 :root {
+    --theme-colour: rgb(23, 28, 33);
+
     --twitch-white: rgb(240, 240, 255);
     --twitch-purple: rgb(145,70,255);
     --twitch-purple-dark: rgb(116, 56, 204);
@@ -25,6 +27,7 @@
     --header-background: rgb(23, 27, 32);
 
     --footer-text: rgb(17, 170, 204);
+    --footer-background: var(--theme-colour);
 
     --light-text: rgb(206, 206, 206);
     --dark-text: rgb(0, 0, 0);

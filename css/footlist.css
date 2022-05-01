@@ -1,13 +1,22 @@
+
+footer {
+    margin: 0;
+    padding-bottom: .5em;
+    position: sticky;
+    top:calc(100vh - 32px);
+    height: 100%;
+    z-index: 1000 !important;
+}
 .footlist {
     justify-content: center;
     padding: 5px;
     margin: 0;
     bottom: -3px;
-    margin-bottom: 5px;
+    
     display: flex;
     position: relative;
     padding-inline-start: 0px;
-    z-index: 1000 !important;
+    
 }
 .footlist li {
     list-style: none;

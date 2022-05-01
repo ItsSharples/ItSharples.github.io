@@ -29,7 +29,7 @@ body {
 #background {
     background-color: var(--background);
     margin: 0;
-    padding-bottom: 0.1em;
+    padding: 0;
     /* position: relative; */
     min-height: 100%;
     overscroll-behavior: none;
@@ -38,8 +38,8 @@ body {
 footer {
     position: relative;
     width: 100%;
-    color: var(--nav-text);
-    background-color: var(--nav-background);
+    color: var(--footer-text);
+    background-color: var(--footer-background);
     z-index: 10;
     /* margin-top: 1px; */
 }
@@ -85,9 +85,10 @@ html:not([data-scroll='0']) nav input{
     max-width: 950px;
     width: 90%;
     margin: auto;
-    margin-bottom: .1em;
+    margin-bottom: 0;
+    padding-bottom: .5em;
     z-index: 5;
-    min-height: calc(100vh - 5em);
+    min-height: calc(100vh - 5.15em);
 }
 
 ul .left {
