@@ -47,10 +47,13 @@ class twitchChannel {
         this.m_emotes = emotes;
         this.m_customEmotes = customEmotes;
 
-        console.log("Loaded Channel Data");
+        console.log("Loaded Channel Data:", customEmotes);
     }
 }
-
+const scaleLookup = {
+    "1": "18w", "2": "36w", "3": "72w", "4": "72w",
+    "1x": "18w", "2x": "36w", "3x": "72w", "4x": "72w"
+};
 let client_id = "kf48fc5oafct9wqb1jf3lrsfurujq2";
 var client;
 var state;
@@ -198,7 +201,7 @@ async function getBTTVChannelEmotes(config, id) {
                 newEmote["url"] = `https://cdn.betterttv.net/emote/${emote.id}/3x`;
                 let imgSet = [];
                 for (scale of ["1x", "2x", "3x"]) {
-                    imgSet.push(`https://cdn.betterttv.net/emote/${emote.id}/${scale} ${scale}`);
+                    imgSet.push(`https://cdn.betterttv.net/emote/${emote.id}/${scale} ${scaleLookup[scale]}`);
                 }
                 newEmote["imgSet"] = imgSet;
                 output.push(newEmote);
@@ -210,7 +213,19 @@ async function getBTTVChannelEmotes(config, id) {
 async function get7TVChannelEmotes(config, id) {
     return fetch(`https://api.7tv.app/v2/users/${id}/emotes`)
         .then(response => response.json())
-        .then(data => data)
+        .then(data => Object.values(data).map(emote => {
+            let index = 0;
+            let imgSet = [];
+            for (width of emote.width) {
+                let tuple = emote.urls[index];
+                let url = tuple[1];
+                imgSet.push(`${url} ${width}w`);
+                index++;
+            }
+            emote.imgSet = imgSet;
+            return emote
+        }
+        ))
 }
 
 async function getFFZChannelEmotes(config, id) {
@@ -218,17 +233,18 @@ async function getFFZChannelEmotes(config, id) {
         .then(response => response.json())
         .then(data => data.sets)
         .then(sets => Object.values(sets)
-            .map(set => set.emoticons
+            .map(set => Object.values(set.emoticons)
                 .map(emote => {
+                    console.log(emote)
                     let value = {};
                     value.name = emote.name;
                     let urls = Object.entries(emote.urls).map(
-                        ([scale, url], i) => `https:${url} ${scale}x`
+                        ([scale, url], i) => `https:${url} ${scaleLookup[scale]}`
                     )
-                    value.imgSet = urls;
-                    return value
+                    emote.imgSet = urls;
+                    return emote
                 })
-            ))
+            )).then(emotes => emotes.flat())
 
 }
 
@@ -299,7 +315,7 @@ function listenToMessages(config) {
                     case "subscriber": {
                         let badge = subscriberBadges.find((value, index, obj) => value.id == num);
                         let imgURL = badge.image_url_4x;
-                        let imgSet = `${imgData.image_url_1x} 1x, ${imgData.image_url_2x} 2x, ${imgData.image_url_4x} 4x`;
+                        let imgSet = `${imgData.image_url_1x} 18w, ${imgData.image_url_2x} 36w, ${imgData.image_url_4x} 72w`;
                         const img = document.createElement("img");
                         img.src = imgURL;
                         img.srcset = imgSet;
@@ -309,7 +325,7 @@ function listenToMessages(config) {
                     case "bits": {
                         let badge = bitsBadges.find((value, index, obj) => value.id == num);
                         let imgURL = badge.image_url_4x;
-                        let imgSet = `${imgData.image_url_1x} 1x, ${imgData.image_url_2x} 2x, ${imgData.image_url_4x} 4x`;
+                        let imgSet = `${imgData.image_url_1x} 18w, ${imgData.image_url_2x} 36w, ${imgData.image_url_4x} 72w`;
                         const img = document.createElement("img");
                         img.src = imgURL;
                         img.srcset = imgSet;
@@ -322,7 +338,7 @@ function listenToMessages(config) {
                             let imgData = badgeData.versions.find(IdEquals(num));
                             if (imgData) {
                                 let imgURL = imgData.image_url_4x;
-                                let imgSet = `${imgData.image_url_1x} 1x, ${imgData.image_url_2x} 2x, ${imgData.image_url_4x} 4x`;
+                                let imgSet = `${imgData.image_url_1x} 18w, ${imgData.image_url_2x} 36w, ${imgData.image_url_4x} 72w`;
                                 const img = document.createElement("img");
                                 img.src = imgURL;
                                 img.srcset = imgSet;
@@ -369,7 +385,7 @@ function listenToMessages(config) {
 
                     imgSet = [];
                     for (const scale of ["1", "2", "3"]) {
-                        imgSet.push(`https://static-cdn.jtvnw.net/emoticons/v2/${emote}/default/${theme}/${scale}.0 ${scale}x`);
+                        imgSet.push(`https://static-cdn.jtvnw.net/emoticons/v2/${emote}/default/${theme}/${scale}.0 ${scaleLookup[scale + "x"]}`);
                     }
 
                     locations.forEach((value, index, array) => {
