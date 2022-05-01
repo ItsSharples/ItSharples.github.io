@@ -13,8 +13,8 @@ body {
     font-family: var(--font-family);
 
 
-    font-size: var(--font-height-half);
-    line-height: var(--font-height-half);
+    font-size: var(--font-height);
+    line-height: var(--font-height);
 
     align-content: flex-start;
     flex-wrap: nowrap;
@@ -26,12 +26,14 @@ body {
     display: flex;
 }
 .chat-message img {
-    height: var(--font-height-half);
+    height: var(--font-height);
 }
 
 #chatbox {
-    background: var(--background-colour);
-    --font-height-half: calc(var(--font-height) / 2);
+    background-color: var(--background-colour);
+    color: var(--font-colour);
+
+
     /* --nav-background: transparent; */
 
     display:flex;
