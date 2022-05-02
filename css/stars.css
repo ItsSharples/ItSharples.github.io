@@ -32,9 +32,6 @@
     overflow:hidden;
     z-index: -1;
   }
-#subbody {
-    position: relative;
-}
 
 @keyframes space {
     40% {

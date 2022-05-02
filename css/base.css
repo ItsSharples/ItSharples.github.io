@@ -1,17 +1,23 @@
 @import url("colours.css");
 @import url("interaction.css");
 :root{
-    font: .9em/1.2 Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-weight: 500;
     min-width: 560px;
 
     scroll-behavior: smooth;
     overscroll-behavior-x: auto;
 
-    --font-size-normal: 25px;
-    --font-size-shrunk: 20px;
-
     color: var(--text);
+
+    /* Designed with 1rem = 16px */
+    --font-size-normal: 1.5625rem; /* 25px */
+    --font-size-shrunk: 1.25rem; /* 20px */
+
+    --font-size: var(--font-size-normal);
+}
+:root:not([data-scroll='0']){
+    --font-size: var(--font-size-shrunk);
 }
 
 body {
@@ -23,8 +29,6 @@ body {
     min-height: 100vh;
     overscroll-behavior: none;
     z-index: 0;
-    /* display: grid;
-    grid-template-rows: auto 1fr auto; */
 }
 #background {
     background-color: var(--background);
@@ -44,7 +48,7 @@ footer {
     /* margin-top: 1px; */
 }
 nav {
-    position: sticky;
+    position: fixed;
     top: 0;
     width: 100%;
     vertical-align: top;
@@ -57,28 +61,15 @@ nav {
     z-index: 10;
 }
 
+nav, nav input {
+    transition: font-size 100ms linear;
+}
+nav, input, nav input {
+    font-size: var(--font-size);
+}
 body {
+    transition: font-size 100ms linear;
     font-size: var(--font-size-normal);
-    transition: font-size 100ms linear;
-}
-nav {
-    font-size: var(--font-size-normal);
-    transition: font-size 100ms linear;
-}
-html:not([data-scroll='0']) nav{
-    font-size: var(--font-size-shrunk);
-    transition: font-size 100ms linear;
-}
-
-input {
-    font-size: var(--font-size-normal);
-}
-nav input {
-    transition: font-size 100ms linear;
-}
-html:not([data-scroll='0']) nav input{
-    font-size: var(--font-size-shrunk);
-    transition: font-size 100ms linear;
 }
 
 #subbody {
@@ -88,39 +79,14 @@ html:not([data-scroll='0']) nav input{
     margin-bottom: 0;
     padding-bottom: .5em;
     z-index: 5;
-    min-height: calc(100vh - 5.15em);
+    /* 0.5 [The bottom padding], 25px [The size of the footer]  */
+    min-height: calc(100vh - calc(0.5em + 25px));
 }
 
 ul .left {
     justify-content: left;
     padding: 0px;
     margin: 0px;
-}
-
-.box {
-    border-radius: 12px;
-    margin: 1em;
-    padding: 1em;
-    background-color: var(--box-background);
-    break-inside: avoid;
-    box-shadow: 3px 3px 0 1px var(--box-shadow);
-    color: var(--box-text);
-}
-
-.skills {
-    column-count: 1;
-}
-.skills > * {
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-
-#toggle {
-    position: relative;
-    top: 0;
-}
-#toggle:checked + div {
-    display: none;
 }
 
 .title {

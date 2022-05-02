@@ -13,14 +13,16 @@
 }
 
 html:not([data-scroll='0']) nav#navbar {
-    animation: fade-background-in 500ms linear 0s 1 forwards, fade-opacity-in 300ms linear 0s 1 forwards;
+    animation:  fade-background-in 500ms linear 0s 1 forwards, fade-opacity-in 300ms linear 0s 1 forwards;
 }
 
 html[data-scroll='0'] nav#navbar {
+    /* background-color: transparent;
+    box-shadow: none; */
     animation: fade-background-out 250ms linear 0s 1 forwards;
 }
 
-html:not([data-scroll='0']) footer {
+/* html:not([data-scroll='0']) footer {
     animation: fade-background-in 500ms linear 0s 1 forwards, fade-opacity-in 300ms linear 0s 1 forwards;
 }
 
@@ -28,18 +30,18 @@ html[data-scroll='0'] footer {
     opacity: 0;
     pointer-events: none;
     animation: fade-background-out 250ms linear 0s 1 forwards;
-}
+} */
 
 @keyframes fade-background-out {
     to {
-        background-color: var(--background);
+        background-color: transparent;
         box-shadow: none;
     }
 }
 
 @keyframes fade-background-in {
     from {
-        background-color: var(--background);
+        background-color: transparent;
         box-shadow: none;
     }
 
@@ -55,27 +57,78 @@ html[data-scroll='0'] footer {
         opacity: 100%;
     }
 }
-
 #subbody {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-
-    position: absolute;
-    top: 25vh;
-    min-height: 100%;
+    justify-content: center;
+    text-align: center;
 }
 
-#subbody * {
+#landing * {
+    
+    animation-name: zoom-text;
+    
+    animation-duration: 1s;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+    animation-timing-function: cubic-bezier(.6,-0.28,.74,.05);
+}
+
+@keyframes zoom-text {
+    0% {
+        font-size: 0%;
+    }
+    100% {
+        font-size: var(--font-size);
+    }
+}
+@keyframes slide-down {
+    0% {
+        transform: translateY(-18vh);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+
+#subbody {
+    /* The amount of Viewport Height minus 3.6em [Height of Header] */
+    --original-visible-space: calc(100vh - 3.6em);
+    --visible-space: var(--original-visible-space);
+    /* The height of the footer plus 0.5em [Subbody Padding] */
+    --footer-height: calc(25px);
+
+    display: initial;
+}
+section {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    height: 100vh;
+}
+
+#landing {
+    --font-size: var(--font-size-normal);
+}
+
+#landing {
     justify-content: center;
     margin: 0;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 1em;
-
     text-shadow: 4px 4px 2px black;
 }
 
 header {
-    font-size: 50px;
+    padding-top: 45vh;
+    --font-size: 5rem;
+}
+
+#overview {
+    position: relative;
+    height: var(--visible-space);
+    background-color: violet;
+}
+
+#subbody section:last-child {
+    --visible-space: calc(var(--original-visible-space) - var(--footer-height));
 }
