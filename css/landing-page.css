@@ -98,6 +98,7 @@ html[data-scroll='0'] footer {
     --footer-height: calc(25px);
 
     display: initial;
+    color: var(--light-text);
 }
 section {
     position: sticky;
