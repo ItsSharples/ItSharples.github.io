@@ -9,6 +9,7 @@ includeFiles: [
   js,
   css,
   otf,
+  ico,
   webmanifest
 ]
 
