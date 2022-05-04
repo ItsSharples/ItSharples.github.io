@@ -1,19 +1,32 @@
+from math import floor
 from random import randint, random
 
 layers = [
-    ".stars1 { animation: space 240s linear infinite; background-image: ",
-    ".stars2 { animation: space 300s linear infinite; background-image:",
-    ".stars3 { animation: space 360s linear infinite; background-image:",
-    ".stars4 { animation: space 450s linear infinite; background-image:"
+    ".stars1 { animation: space 2400s linear infinite; background-image:",
+    ".stars2 { animation: space 3000s linear infinite; background-image:",
+    ".stars3 { animation: space 3600s linear infinite; background-image:",
+    ".stars4 { animation: space 4500s linear infinite; background-image:"
 ]
+
+width = 400;
+height = 220;
+numchunks = 5;
+numstars = 10;
+
+dim = max(width, height);
+
+xchunk = floor((dim+width) / (numchunks*2));
+ychunk = floor((dim+height) / (numchunks*2));
+
 
 
 out = ""
-for layer in layers:
+for i, layer in enumerate(layers):
+    layerInt = i-1;
     out += layer
-    for star in range(20):
-        x = randint(0, 80) * 5;
-        y = randint(0, 45) * 5;
+    for star in range(numstars):
+        x = randint(0, xchunk) * numchunks;
+        y = randint(0, ychunk) * numchunks;
 
         val = random()
         if val > 0.7:
@@ -25,6 +38,12 @@ for layer in layers:
             w = 1
         out += f"radial-gradient({w}px {w}px at {x}px {y}px, white, rgba(255, 255, 255, 0)),"
 
-    out = out[:-1] + ";}\n"
+    out = out[:-1] + ";"
+    
+    out += f"background-size: {dim}px {dim}px;"
+    out += f"transform: rotate({layerInt * 4}turn);"
 
-print(out)
+    out += "}\n"
+
+with open("./css/stars-config.css", "w") as config:
+    config.write(out);

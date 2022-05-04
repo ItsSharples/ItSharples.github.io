@@ -1,7 +1,3 @@
-:root {
-    --background: transparent;
-}
-
 #background-img {
     position: absolute;
     top: 0;
@@ -17,20 +13,8 @@ html:not([data-scroll='0']) nav#navbar {
 }
 
 html[data-scroll='0'] nav#navbar {
-    /* background-color: transparent;
-    box-shadow: none; */
     animation: fade-background-out 250ms linear 0s 1 forwards;
 }
-
-/* html:not([data-scroll='0']) footer {
-    animation: fade-background-in 500ms linear 0s 1 forwards, fade-opacity-in 300ms linear 0s 1 forwards;
-}
-
-html[data-scroll='0'] footer {
-    opacity: 0;
-    pointer-events: none;
-    animation: fade-background-out 250ms linear 0s 1 forwards;
-} */
 
 @keyframes fade-background-out {
     to {
@@ -57,9 +41,14 @@ html[data-scroll='0'] footer {
         opacity: 100%;
     }
 }
+#background {
+    background-color: transparent;
+}
 #subbody {
     justify-content: center;
     text-align: center;
+
+    background-color: transparent;
 }
 
 #landing * {
@@ -94,8 +83,11 @@ html[data-scroll='0'] footer {
     /* The amount of Viewport Height minus 3.6em [Height of Header] */
     --original-visible-space: calc(100vh - 3.6em);
     --visible-space: var(--original-visible-space);
+    
     /* The height of the footer plus 0.5em [Subbody Padding] */
     --footer-height: calc(25px);
+
+    --bottom-space: calc(100vh - var(--footer-height));
 
     display: initial;
     color: var(--light-text);
@@ -105,10 +97,13 @@ section {
     position: -webkit-sticky;
     top: 0;
     height: 100vh;
+    background-color: var(--background);
 }
 
 #landing {
     --font-size: var(--font-size-normal);
+    background-color: transparent;
+    
 }
 
 #landing {
@@ -127,9 +122,13 @@ header {
 #overview {
     position: relative;
     height: var(--visible-space);
-    background-color: violet;
+    background-color: var(--background)
 }
 
 #subbody section:last-child {
-    --visible-space: calc(var(--original-visible-space) - var(--footer-height));
+    --visible-space: calc(var(--bottom-space) - 2.6em);
+}
+#subbody section:last-child :first-child{
+    margin-top: 0;
+    padding-top: 1em;
 }

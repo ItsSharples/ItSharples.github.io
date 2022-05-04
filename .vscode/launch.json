@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Build Stars",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "${cwd}/python/stars.py",
             "console": "integratedTerminal",
             "justMyCode": true
         },
