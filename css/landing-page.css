@@ -30,7 +30,7 @@ html[data-scroll='0'] nav#navbar {
     }
 
     to {
-        background-color: var(--nav-background);
+        background-color: var(--header-background);
         box-shadow: 0 0 1em var(--header-background);
 
     }
