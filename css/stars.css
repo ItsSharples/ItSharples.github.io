@@ -43,3 +43,9 @@
   }
 
   @import url(star-config.css);
+  @media (prefers-reduced-motion) {
+    .stars1, .stars2, .stars3, .stars4 {
+      animation-play-state: paused !important;
+    }
+  }
+  
