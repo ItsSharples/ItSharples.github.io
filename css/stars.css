@@ -1,51 +1,46 @@
-
-
-
 .space {
-    background-color: transparent;
-    background-position: bottom;
-    background-repeat: repeat round;
-    background-attachment: fixed;
-    /* border: 1px dashed purple; */
-    position: absolute;
-    
-    top: -10vh;
-    left: -10vw;
-    right: -10vw;
-    bottom: -10vh;
+  background-color: transparent;
+  background-position: bottom;
+  background-repeat: repeat round;
+  background-attachment: fixed;
+  /* border: 1px dashed purple; */
+  position: absolute;
+
+  top: -10vh;
+  left: -10vw;
+  right: -10vw;
+  bottom: -10vh;
 }
 
 #bg-stars {
-    position: fixed;
-    top:0; left:0;
-    width: 100vw;
-    height: 190vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 190vh;
 
-    background: radial-gradient(circle at bottom, navy 0, black 100%);
-    
-    overflow: hidden;
-    z-index: -1;
-  }
+  background: radial-gradient(circle at bottom, navy 0, black 100%);
+
+  overflow: hidden;
+  z-index: -1;
+}
 
 @keyframes space {
-    40% {
-      opacity: 0.75;
-    }
-    50% {
-      opacity: 0.25;
-    }
-    60% {
-      opacity: 0.75;
-    }
-    100% {
-      transform: rotate(1turn);
-    }
+  40% {
+    opacity: 0.75;
   }
 
-  @import url(star-config.css);
-  @media (prefers-reduced-motion) {
-    .stars1, .stars2, .stars3, .stars4 {
-      animation-play-state: paused !important;
-    }
+  50% {
+    opacity: 0.25;
   }
-  
+
+  60% {
+    opacity: 0.75;
+  }
+
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+@import url(star-config.css);

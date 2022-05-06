@@ -1,12 +1,12 @@
 from math import floor
 from random import randint, random, choice
 
-layers = [
-    ".stars1 { animation: space 2400s linear infinite; background-image:",
-    ".stars2 { animation: space 3000s linear infinite; background-image:",
-    ".stars3 { animation: space 3600s linear infinite; background-image:",
-    ".stars4 { animation: space 4500s linear infinite; background-image:"
-]
+layersAndRules = {
+    ".stars1":"animation: space 2400s linear infinite;",
+    ".stars2":"animation: space 3000s linear infinite;",
+    ".stars3":"animation: space 3600s linear infinite;",
+    ".stars4":"animation: space 4500s linear infinite;"
+}
 
 colours = ['163, 193, 255',
            '179, 204, 255',
@@ -26,32 +26,45 @@ xchunk = floor((dim+width) / (numchunks*2))
 ychunk = floor((dim+height) / (numchunks*2))
 
 
-out = ""
-for i, layer in enumerate(layers):
+outComponents = []
+# Take each Layer and Convert into appropriate css
+for i, (layerName, layerRules) in enumerate(layersAndRules.items()):
+    layerOut = layerName + " { " + layerRules + " "
     layerInt = i-1
-    out += layer
+
+    # Add Basic Rules
+    layerOut += f"background-size: {dim}px {dim}px; "
+    layerOut += f"transform: rotate({layerInt * 4}turn); "
+
+    # Write the stars out as the background 'image'
+    starRule = "background-image: "
     for star in range(numstars):
         x = randint(0, xchunk) * numchunks
         y = randint(0, ychunk) * numchunks
 
         val = random()
         if val > 0.7:
-            if val > 0.9:
-                w = 2.5
-            else:
-                w = 1.5
+            if val > 0.9: w = 2.5
+            else: w = 1.5
         else:
             w = 1
 
         colour = choice(colours)
-        out += f"radial-gradient({w}px {w}px at {x}px {y}px, rgba({colour}, 0.8), rgba({colour}, 0)),"
+        starRule += f"radial-gradient({w}px {w}px at {x}px {y}px, rgba({colour}, 0.8), rgba({colour}, 0)),"
 
-    out = out[:-1] + ";"
+    starRule = starRule[:-1] + "; "
 
-    out += f"background-size: {dim}px {dim}px;"
-    out += f"transform: rotate({layerInt * 4}turn);"
+    # Finish the Rule
+    layerOut += starRule;
+    layerOut += "}"
 
-    out += "}\n"
+    # Add to the final components
+    outComponents.append(layerOut)
+
+# Add Reduced Motion Config
+reducedMotion = f"@media (prefers-reduced-motion) {{ {', '.join(layersAndRules.keys())} {{ animation-play-state: paused !important; }} }}\n"
+
+outComponents.append(reducedMotion)
 
 with open("./css/stars-config.css", "w") as config:
-    config.write(out)
+    config.write("\n".join(outComponents))
