@@ -163,10 +163,10 @@
  * Make this absolute positioned
  * at the top left of the screen
  */
-#menu {  
+#menu {
     position: fixed;
     box-sizing: border-box;
-    /* top:3.6em;*/
+    top:3.6em;
     left:0px; 
 
     margin: 0px;
@@ -193,6 +193,7 @@
 
 #menu li
 {
+    display: none;
   padding: 10px 0;
 }
 
@@ -228,6 +229,9 @@ html:not([data-scroll='0']) #hamMenu{
  @media (max-width: 480px) {
     #showMenu:checked ~ #menu {
         transform: none;
+    }
+    #showMenu:checked ~ #menu li {
+        display: initial;
     }
 }
 
