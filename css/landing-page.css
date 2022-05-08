@@ -9,7 +9,7 @@
 }
 
 html:not([data-scroll='0']) nav#navbar {
-    animation:  fade-background-in 500ms linear 0s 1 forwards, fade-opacity-in 300ms linear 0s 1 forwards;
+    animation: fade-background-in 500ms linear 0s 1 forwards, fade-opacity-in 300ms linear 0s 1 forwards;
 }
 
 html[data-scroll='0'] nav#navbar {
@@ -41,9 +41,11 @@ html[data-scroll='0'] nav#navbar {
         opacity: 100%;
     }
 }
+
 #background {
     background-color: transparent;
 }
+
 #subbody {
     justify-content: center;
     text-align: center;
@@ -52,38 +54,38 @@ html[data-scroll='0'] nav#navbar {
 }
 
 #landing * {
-    
     animation-name: zoom-text;
-    
     animation-duration: 1s;
     animation-direction: normal;
     animation-fill-mode: forwards;
-    animation-timing-function: cubic-bezier(.6,-0.28,.74,.05);
+    animation-timing-function: cubic-bezier(.6, -0.28, .74, .05);
 }
 
 @keyframes zoom-text {
     0% {
         font-size: 0%;
     }
+
     100% {
         font-size: var(--font-size);
     }
 }
+
 @keyframes slide-down {
     0% {
         transform: translateY(-18vh);
     }
+
     100% {
         transform: translateY(0);
     }
 }
 
-
 #subbody {
     /* The amount of Viewport Height minus 3.6em [Height of Header] */
     --original-visible-space: calc(100vh - 3.6em);
     --visible-space: var(--original-visible-space);
-    
+
     /* The height of the footer plus 0.5em [Subbody Padding] */
     --footer-height: calc(25px);
 
@@ -92,6 +94,7 @@ html[data-scroll='0'] nav#navbar {
     display: initial;
     color: var(--light-text);
 }
+
 section {
     position: sticky;
     position: -webkit-sticky;
@@ -103,7 +106,7 @@ section {
 #landing {
     --font-size: var(--font-size-normal);
     background-color: transparent;
-    
+
 }
 
 #landing {
@@ -128,7 +131,19 @@ header {
 #subbody section:last-child {
     --visible-space: calc(var(--bottom-space) - 2.6em);
 }
-#subbody section:last-child :first-child{
+
+#subbody section:last-child>:first-child {
     margin-top: 0;
     padding-top: 1em;
+}
+
+section {
+    padding-left: 5em;
+    padding-right: 5em;
+    min-height: fit-content;
+}
+
+
+section a {
+    padding: 2px 1px 0;
 }

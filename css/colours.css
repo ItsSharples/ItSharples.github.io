@@ -2,7 +2,7 @@
     --theme-colour: rgb(23, 28, 33);
 
     --twitch-white: rgb(240, 240, 255);
-    --twitch-purple: rgb(145,70,255);
+    --twitch-purple: rgb(145, 70, 255);
     --twitch-purple-dark: rgb(116, 56, 204);
     --twitch-purple-very-dark: rgb(101, 48, 178);
 
@@ -29,27 +29,44 @@
     --footer-text: rgb(17, 170, 204);
     --footer-background: var(--theme-colour);
 
+    --content-background-dark: rgb(48, 48, 48);
+    --content-background-light: rgb(206, 206, 206);
+
     --light-text: rgb(206, 206, 206);
     --dark-text: rgb(0, 0, 0);
+}
+
+/* Default Colours for Elements */
+:root {
+    --text-active: var(--text);
+    --text-hover: var(--text);
+    --text-visited: var(--text);
+
+
+    --colour: var(--text);
+    --colour-hover: var(--text-hover);
+    --colour-active: var(--text-active);
+    --colour-visited: var(--text-visited);
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         color-scheme: dark;
         --text: var(--light-text);
-        --background: rgb(48, 48, 48);
+        --background: var(--content-background-dark);
 
         --box-text: var(--text);
         --box-background: rgb(51, 119, 85);
         --box-shadow: rgba(233, 233, 233, 0.25);
-        
+
     }
 }
+
 @media (prefers-color-scheme: light) {
     :root {
         color-scheme: light;
         --text: var(--dark-text);
-        --background: rgb(206, 206, 206);
+        --background: var(--content-background-light);
 
         --box-text: var(--light-text);
         --box-background: rgb(131, 179, 155);
@@ -61,5 +78,12 @@
     --colour: var(--twitch-purple);
     --colour-hover: var(--twitch-purple-very-dark);
     --colour-active: var(--twitch-purple-dark);
+    --colour-visited: var(--twitch-purple-very-dark);
 }
 
+.colour-blue {
+    --colour: var(--blue);
+    --colour-hover: var(--blue-dark);
+    --colour-active: var(--blue-dark);
+    --colour-visited: var(--blue-very-dark);
+}
