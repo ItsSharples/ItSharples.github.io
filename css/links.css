@@ -18,7 +18,7 @@ a:link {
 
 a {
     position: relative;
-    text-decoration: none;
+    
     
     --colour: var(--blue);
     --colour-hover: var(--blue);
@@ -32,6 +32,9 @@ a:hover {
     text-decoration: underline;
 }
 
+section a {
+    text-decoration: none;
+}
 section a:before {
     content: '';
     position: absolute;
