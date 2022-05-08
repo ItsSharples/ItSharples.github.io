@@ -1,6 +1,5 @@
 ---
 name: Mesh Slicing
-ignore: True
 ---
 
 # Mesh Slicing
