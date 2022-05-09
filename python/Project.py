@@ -1,12 +1,13 @@
 from dataclasses import dataclass
+from pathlib import Path
 
 
 @dataclass
 class Project:
-    url: str
+    url: Path
     preview: str
     page: str
     isHTML: bool
 
     def __repr__(self) -> str:
-        return self.url
+        return self.preview

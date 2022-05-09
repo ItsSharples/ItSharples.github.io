@@ -3,18 +3,20 @@ import os
 from collections import defaultdict
 from markdown import Markdown
 import yaml
+import pathlib
+from pathlib import Path
 
 from TreeNode import TreeNode
 from Project import Project
 from SafeEval import safe_eval
 
 
-def readIntoString(url: str):
+def readIntoString(url: Path):
     with open(url, "r") as file:
         return file.read()
 
 
-def writeStringInto(string: str, url: str):
+def writeStringInto(string: str, url: Path):
     with open(url, "w") as out:
         out.write(string)
 
@@ -99,29 +101,28 @@ def createHTML(keypairs: dict[str, str], template: str, patterns: dict[str, re.P
     return template.strip()
 
 
-def searchDir(path: str, forExtension: str = ".html"):
-    out: list[str] = []
-    if os.path.isfile(path):
+def searchDir(path: Path, forExtension: str = ".html"):
+    out: list[Path] = []
+    if path.is_file():
         out.append(path)
-    for project in os.scandir(path):
+    for project in path.iterdir():
         if project.name == "data":
             continue
-        if forExtension in project.name:
-            out.append(project.path)
+        if forExtension in project.suffixes:
+            out.append(project)
             continue
         if project.is_dir():
-            out += (searchDir(os.path.join(path, project.name), forExtension))
+            out += (searchDir((path / project.name), forExtension))
             continue
     return out
 
-
-def createProjectPreview(template: str, yaml: defaultdict[str, str], patterns: dict[str, re.Pattern]):
+def createProjectPreview(template: str, yaml: defaultdict[str, str | Path], patterns: dict[str, re.Pattern]):
     if "titlecard-url" not in yaml.keys():
-        yaml["titlecard-url"] = f"{yaml['url']}/titlecard.png"
+        yaml["titlecard-url"] = yaml['url'].joinpath("titlecard.png")
     return createHTML(yaml, template, patterns)
 
 
-def writeTemplate(keypairs: defaultdict[str, str], url: str,  template: str, patterns: dict[str, re.Pattern]):
+def writeTemplate(keypairs: defaultdict[str, str], url: Path,  template: str, patterns: dict[str, re.Pattern]):
     writeStringInto(createHTML(keypairs, template, patterns), url)
 
 
@@ -129,7 +130,7 @@ def yamlToDict(yamlStr: str) -> defaultdict:
     return defaultdict(str, yaml.safe_load(yamlStr.strip()))
 
 
-def createProjects(source: str, patterns: dict[str, re.Pattern], templates: dict[str, str]):
+def createProjects(source: pathlib.Path, patterns: dict[str, re.Pattern], templates: dict[str, str]):
 
     previewTemplate = templates['preview']
     projectTemplate = templates['project']
@@ -137,8 +138,7 @@ def createProjects(source: str, patterns: dict[str, re.Pattern], templates: dict
     yamlPattern = patterns["yaml"]
 
     projectTree: TreeNode[Project] = TreeNode(None)
-    projects = searchDir(os.path.join(source, "projects"), ".md")
-    for project in projects:
+    for project in searchDir(source / "projects", ".md"):
         with open(project, "r") as file:
             a = re.match(yamlPattern, file.read())
 
@@ -146,13 +146,13 @@ def createProjects(source: str, patterns: dict[str, re.Pattern], templates: dict
         md.build_parser()
 
         yaml, markdown = yamlToDict(a['yaml']), md.convert(a['markdown'])
-        yaml["url"] = os.path.dirname(project)
+        yaml["url"] = project.parent
         yaml["ignore"] = bool(yaml['ignore'])
 
         if yaml["ignore"]:
             continue
 
-        groups: list[str] = os.path.normpath(yaml["url"]).split(os.sep)
+        groups: list[Path] = yaml["url"].parts
         currNode = projectTree
         for group in groups:
             currNode = currNode[group]
@@ -162,9 +162,8 @@ def createProjects(source: str, patterns: dict[str, re.Pattern], templates: dict
             str, [('content', markdown)]), projectTemplate, patterns)
 
         project = Project(
-            url=yaml['url'], preview=preview, page=page, isHTML=True)
+            url= yaml['url'], preview=preview, page=page, isHTML=True)
         currNode.append(project)
-
     # We can ignore 'Base' node, and pretend we start at 'projects'
     return projectTree.getBranch('projects').rename('Projects')
 
@@ -210,18 +209,18 @@ def convertIntoHTML(projects: TreeNode[Project], patterns: dict[str, re.Pattern]
 
 def buildProjects(
         patternStrings: dict[str, str], templatePaths: dict[str, str],
-        source: str = ".", destination: str = "_site", templateFolder: str = "templates"):
+        source: pathlib.Path = Path("."), destination: Path = Path("_site"), templateFolder: Path = Path("templates")):
 
     patterns = {pattern: re.compile(
         patternStrings[pattern], flags=re.DOTALL) for pattern in patternStrings}
-    templates = {path: readIntoString(os.path.join(
+    templates = {path: readIntoString(Path(
         templateFolder, templatePaths[path])) for path in templatePaths}
 
     projects = createProjects(source, patterns, templates)
 
     # List is so that it actions the map
     list(filter(None, projects.mapContent(lambda project:
-                                          writeStringInto(project.page, os.path.join(
+                                          writeStringInto(project.page, Path(
                                               destination, project.url, "index.html"))
                                           )))
 
@@ -230,5 +229,5 @@ def buildProjects(
         defaultdict(
             str, [('content', convertIntoHTML(projects, patterns, templates))]),
         templates['overview'], patterns)
-    writeStringInto(previewPage, os.path.join(
+    writeStringInto(previewPage, Path(
         destination, "projects/index.html"))

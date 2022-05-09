@@ -1,5 +1,6 @@
 import argparse
 import os
+from pathlib import Path
 import shutil
 import yaml
 from dataclasses import dataclass, field
@@ -141,7 +142,7 @@ def main():
         shutil.copyfile(copy, to)
 
     # Build the projects
-    buildProjects(patternStrings, templatePaths, args.sourcePath,
+    buildProjects(patternStrings, templatePaths, Path(args.sourcePath),
                   args.buildPath, args.templatePath)
 
 
