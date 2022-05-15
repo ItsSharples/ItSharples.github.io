@@ -6,6 +6,7 @@
 footer {
     margin: 0;
     position: relative;
+    z-index: 9999;
 }
 .footlist {
     display: flex;

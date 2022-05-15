@@ -20,20 +20,24 @@
 
 /* Header and Footer*/
 :root {
-    --nav-text: rgb(17, 170, 204);
-    --nav-background: rgb(24, 24, 24);
+    --nav-text: hsl(191, 85%, 43%);
+    --nav-background: hsl(0, 0%, 9%);
 
-    --header-text: rgb(206, 206, 206);
-    --header-background: rgb(23, 27, 32);
+    --header-text: hsl(0, 0%, 81%);
+    --header-background: hsl(213, 16%, 11%);
 
-    --footer-text: rgb(17, 170, 204);
+    --footer-text: hsl(191, 85%, 43%);
     --footer-background: var(--theme-colour);
 
-    --content-background-dark: rgb(48, 48, 48);
-    --content-background-light: rgb(206, 206, 206);
+    --content-background-dark: hsl(0, 0%, 19%);
+    --content-background-light: hsl(0, 0%, 81%);
 
-    --light-text: rgb(206, 206, 206);
-    --dark-text: rgb(0, 0, 0);
+    --nav-menu-text: currentColor;
+    --nav-menu-background: hsl(213, 16%, 15%);
+    /* #ededed; */
+
+    --light-text: hsl(0, 0%, 81%);
+    --dark-text: hsl(0, 0%, 0%);
 }
 
 /* Default Colours for Elements */
@@ -56,8 +60,8 @@
         --background: var(--content-background-dark);
 
         --box-text: var(--text);
-        --box-background: rgb(51, 119, 85);
-        --box-shadow: rgba(233, 233, 233, 0.25);
+        --box-background: hsl(150, 40%, 33%);
+        --box-shadow: hsla(0, 0%, 91%, 0.25);
 
     }
 }
@@ -69,8 +73,8 @@
         --background: var(--content-background-light);
 
         --box-text: var(--light-text);
-        --box-background: rgb(131, 179, 155);
-        --box-shadow: rgba(233, 233, 233, 0.25);
+        --box-background: hsl(150, 24%, 61%);
+        --box-shadow: hsla(0, 0%, 91%, 0.25);
     }
 }
 

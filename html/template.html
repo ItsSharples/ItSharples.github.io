@@ -15,29 +15,28 @@
     <base href="/">
     <!-- CSS -->
     <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/navlist.css">
+    <link rel="stylesheet" href="/css/navlist-new.css">
     <link rel="stylesheet" href="/css/footlist.css">
-    <link rel="stylesheet" href="/css/hamburger.css">
+    <link rel="stylesheet" href="/css/hamburger-new.css">
     <!-- Favicons -->
     <link rel="icon" href="/assets/images/favicon/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/assets/images/favicon/apple-touch-icon.png">
     <!-- Scripts -->
     <script src="/js/scrollZoom.js" async></script>
-    <script src="/js/buttonPress.js" defer></script>
+    <script src="/js/buttonPress-new.js" async></script>
     <!-- Other -->
     <link rel="manifest" href="/manifest.webmanifest">
 </head>
-<nav id="navbar">
+<nav class="navbar">
     <ul class="navlist">
         <li class="left">
-            <ul>
+            <ul class="navbar-item">
                 <li id="hamMenu">
-                    <input type="checkbox" id="menuButton">
-                    <div id="hamburger">
+                    <label for="showMenu" id="hamburger">
                         <span></span>
                         <span></span>
                         <span></span>
-                    </div>
+                    </label>
                 </li>
                 <li id="navIcon">
                     <img srcset="/assets/images/PIA21891/PIA21891x50.png 50w,
@@ -52,8 +51,9 @@
                 </li>
             </ul>
         </li>
-        <li id="topNav">
-            <ul>
+        <input type="checkbox" id="showMenu">
+        <li class="primary-navigation" id="navigation">
+            <ul class="navbar-item">
                 <li><a href="./">Home</a></li>
                 <li><a href="./projects/">Projects</a></li>
                 <li><a href="./contact.html">Contact</a></li>
@@ -64,15 +64,129 @@
 
 <body>
     <div id="background">
-        <nav>
-            <input type="checkbox" id="showMenu" style="display:none">
+        <!-- <nav>
+            <input type="checkbox" id="showMenu" style="display:none" aria-controls="primary-navigation" aria-label="Menu">
             <ul id="menu">
                 <li><a href="./">Home</a></li>
                 <li><a href="./projects/">Projects</a></li>
                 <li><a href="./contact.html">Contact</a></li>
             </ul>
-        </nav>
+        </nav> -->
         <div id="subbody">
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
+            <div>This is a Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sed voluptas modi error
+                maxime doloribus est placeat, nemo quas. Velit, debitis. Corporis sequi ipsum itaque ipsa blanditiis
+                quod cum qui.</div>
         </div>
     </div>
 </body>
