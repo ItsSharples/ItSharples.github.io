@@ -21,10 +21,10 @@
     color: var(--header-text);
 }
 
-.navbar * {
+/* .navbar * {
     justify-content: flex-start;
     width: min-content;
-}
+} */
 
 .navlist {
     display: flex;
@@ -51,12 +51,11 @@
 }
 
 .navbar ul ul {
-    width: min-content;
+    /* width: min-content; */
     margin-inline-end: 0;
 }
 
 .navbar li {
-    list-style: none;
     height: 2em;
     line-height: 2em;
     font-weight: bold;
@@ -74,13 +73,14 @@
     color: var(--blue);
 }
 
-.navbar img {
+#navIcon {
     height: 2em;
     width: 2em;
     aspect-ratio: 1;
     padding: 0;
     border-radius: 0.16em;
     vertical-align: baseline;
+    box-sizing: border-box;
 }
 
 #navigation {
@@ -97,6 +97,8 @@
     padding-inline-start: 3.2em;
     transition: padding-inline-start 100ms linear;
 }
+
+
 
 /* Tablets */
 @media (min-width: 480px) {
@@ -129,7 +131,10 @@
 #iconTxt {
     display: none;
 
-    width: 100%;
+    width: min-content;
+    margin: 0;
+    padding: 0;
+    margin-left: 0.8em;
     overflow: hidden;
     text-overflow: clip;
     word-wrap: hidden;
@@ -163,6 +168,7 @@
 }
 
 @media (max-width: 480px) {
+
     /*
     * Make this absolute positioned
     * at the top left of the screen
@@ -226,12 +232,18 @@
     height: 2em;
     left: .45em;
 }
-#showMenu::before {content: none;}
-#showMenu::after {content: none;}
+
+#showMenu::before {
+    content: none;
+}
+
+#showMenu::after {
+    content: none;
+}
 
 #showMenu:checked~#navigation {
     transform: none;
-    
+
     left: 1px;
 }
 

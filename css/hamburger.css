@@ -17,15 +17,17 @@
   min-height: 100%;
   z-index: 95;
 
-  margin-left: 20px;
+  margin-left: 1em;
+  margin-right: 0.5em;
+
+  width: 100%;
   
   
   -webkit-user-select: none;
   user-select: none;
 
-  width: 0;
   opacity: 0;
-  margin-right: 0;
+  
   transform: translateX(0);
   overflow: hidden;
 
@@ -82,15 +84,11 @@
  */
 #hamburger {
     position: relative;
-    padding: 0px;
     width: 1.4em;
     height: 1.26em;
 
     margin: 0;
-    padding-left: 7.5px;
-    padding-right: 0.3em;
-    padding-top:   9.25px;
-    padding-bottom: .37em;
+    padding: 0.37em 0.3em;
     z-index: 1;
     transform: translate(0%, 0%);
 
@@ -201,9 +199,16 @@
 
 #hamMenu {
     font-size: var(--font-size-normal);
+    transition: font-size 100ms linear;
 }
 html:not([data-scroll='0']) #hamMenu{
     font-size: var(--font-size-shrunk);
+}
+
+#hamMenu input {
+    font-size: 100%;
+    width: 2em;
+    height: 2em;
 }
 
 #hamMenu {
