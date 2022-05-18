@@ -21,6 +21,12 @@
     color: var(--header-text);
 }
 
+.navlist img {
+    max-height: 2em;
+    max-width: 2em;
+    aspect-ratio: 1;
+}
+
 .navlist ul {
     display: flex;
     box-sizing: border-box;
