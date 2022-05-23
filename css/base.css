@@ -83,7 +83,7 @@ html:not([data-scroll='0']) nav {
     font-size: 80%;
 }
 
-#subbody {
+#content {
     max-width: 950px;
     width: 90%;
     margin: auto;

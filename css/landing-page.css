@@ -46,7 +46,7 @@ html[data-scroll='0'] nav#navbar {
     background-color: transparent;
 }
 
-#subbody {
+#content {
     justify-content: center;
     text-align: center;
 
@@ -81,12 +81,12 @@ html[data-scroll='0'] nav#navbar {
     }
 }
 
-#subbody {
+#content {
     /* The amount of Viewport Height minus 3.6em [Height of Header] */
     --original-visible-space: calc(100vh - 3.6em);
     --visible-space: var(--original-visible-space);
 
-    /* The height of the footer plus 0.5em [Subbody Padding] */
+    /* The height of the footer plus 0.5em [Content Padding] */
     --footer-height: calc(25px);
 
     --bottom-space: calc(100vh - var(--footer-height));
@@ -128,11 +128,11 @@ header {
     background-color: var(--background)
 }
 
-#subbody section:last-child {
+#content section:last-child {
     --visible-space: calc(var(--bottom-space) - 2.6em);
 }
 
-#subbody section:last-child>:first-child {
+#content section:last-child>:first-child {
     margin-top: 0;
     padding-top: 1em;
 }

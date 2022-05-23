@@ -20,18 +20,18 @@ h6 {
   margin-block: 0;
 }
 
-#subbody a {
+#content a {
   display: inline-flex;
   flex-direction: row;
   align-self: center;
 }
 
-#subbody a:link {
+#content a:link {
   text-decoration: none !important;
   line-height: 1.3em;
 }
 
-#subbody a:link:hover::after {
+#content a:link:hover::after {
   content: "🔗";
   display: inline;
   font-size: x-small;
@@ -57,7 +57,7 @@ li {
 }
 
 @supports (scroll-snap-align: start) {
-  #subbody {
+  #content {
     scroll-snap-type: x block;
   }
   html {
