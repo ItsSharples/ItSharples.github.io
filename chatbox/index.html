@@ -36,25 +36,23 @@
     <!-- Other -->
     <link rel="manifest" href="/manifest.webmanifest">
 </head>
-
-<nav id="navbar">
-    <ul class="navlist">
+<nav class="navbar">
+    <ul class="navlist" role="list">
         <li class="left">
-            <ul>
+            <ul class="navbar-item">
                 <li id="hamMenu">
-                    <input type="checkbox" id="menuButton">
-                    <div id="hamburger">
+                    <label for="showMenu" id="hamburger">
                         <span></span>
                         <span></span>
                         <span></span>
-                    </div>
+                    </label>
                 </li>
                 <li id="navIcon">
-                    <img srcset="/assets/images/PIA21891/PIA21891x50.png 0.5x,
-                                 /assets/images/PIA21891/PIA21891x320.png 1x,
-                                 /assets/images/PIA21891/PIA21891x640.png 1.5x,
-                                 /assets/images/PIA21891/PIA21891.png 1000w"
-                        src="/assets/images/PIA21891/PIA21891x50.png" alt="Header Logo" width="50px">
+                    <img srcset="/assets/images/PIA21891/PIA21891x50.png 50w,
+                                /assets/images/PIA21891/PIA21891x320.png 320w,
+                                /assets/images/PIA21891/PIA21891x640.png 640w,
+                                /assets/images/PIA21891/PIA21891.png 1000w"
+                        src="/assets/images/PIA21891/PIA21891x50.png" alt="Header Logo" width="100%">
                     </img>
                 </li>
                 <li id="iconTxt">
@@ -62,8 +60,9 @@
                 </li>
             </ul>
         </li>
-        <li id="topNav">
-            <ul>
+        <input type="checkbox" id="showMenu">
+        <li class="primary-navigation" id="navigation">
+            <ul class="navbar-item" role="list">
                 <li><a href="/">Home</a></li>
                 <li><a href="/projects/">Projects</a></li>
                 <li><a href="/contact.html">Contact</a></li>
@@ -71,18 +70,8 @@
         </li>
     </ul>
 </nav>
-
-
 <body>
     <div id="background">
-        <nav>
-            <input type="checkbox" id="showMenu" style="display:none">
-            <ul id="menu">
-                <li><a href="/">Home</a></li>
-                <li><a href="/projects/">Projects</a></li>
-                <li><a href="/contact.html">Contact</a></li>
-            </ul>
-        </nav>
         <div id="content">
             <div id="config">
                 <div id="config-body">
