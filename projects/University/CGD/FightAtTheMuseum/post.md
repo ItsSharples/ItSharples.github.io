@@ -13,7 +13,7 @@ The budget is tight, and one of two employees is going to be laid off at the end
 
 Fight at the Museum is a quick & quirky party game where you have to multitask between throwing stage props at each other, as well as pumping the pump-cart to keep the occasional audience entertained. Balance fake pleasantries & rivalry driven toy throwing tantrums in this unconventional co-op feud! If you loose all your star ratings, you lose, if your HP gets eliminated by your opponent, you lose!
 
-![](./xsx5z_orig.png)
+![](/projects/University/CGD/FightAtTheMuseum/xsx5z_orig.png)
 
 ## Discussion
 

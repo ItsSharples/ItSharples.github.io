@@ -22,7 +22,7 @@ If anything odd occurs, please accept that it is your job to remove pests and ot
 
 Note: payment is not included, this job is officially recognised as volunteer work. By working shifts, you therefore accept this agreement.
 
-![A GIF Showing a short Demo of the Gameplay; Picking up Objects and sorting them into Chutes, or into the Furnace.](./qualityassurancethumbnail_orig.gif)
+![A GIF Showing a short Demo of the Gameplay; Picking up Objects and sorting them into Chutes, or into the Furnace.](/projects/University/CGD/QualityAssurance/qualityassurancethumbnail_orig.gif)
 
 ## Discussion
 
@@ -30,4 +30,4 @@ Quality Assurance was made by myself and 5 other fellow university Games Technol
 Working alongside an external company's AI 3D model generator, which utilises images to generate simple 3D objects.
 The game took the chaos of those outputs, as sometimes they were real-looking objects, and sometimes not, and turning that into a game, finding diamonds (well, mostly chairs) in the rough!
 
-![A Contraption is held in the bottom right of the screen, emitting a beam towards a yellow lamp atop a brown table. The Floor of the Room is littered with coloured shapes, some resembling objects, others just amorphous blobs. In the left, there are coloured chutes with arrows pointing down into them. At the top of the screen, a progress bar, roughly one third full.](./quality-assurance-screenshot-4.png)
+![A Contraption is held in the bottom right of the screen, emitting a beam towards a yellow lamp atop a brown table. The Floor of the Room is littered with coloured shapes, some resembling objects, others just amorphous blobs. In the left, there are coloured chutes with arrows pointing down into them. At the top of the screen, a progress bar, roughly one third full.](/projects/University/CGD/QualityAssurance/quality-assurance-screenshot-4.png)
