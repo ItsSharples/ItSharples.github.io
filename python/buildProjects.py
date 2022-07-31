@@ -1,6 +1,5 @@
 from copy import deepcopy
 import re
-import os
 from collections import defaultdict
 from markdown import Markdown
 import yaml
