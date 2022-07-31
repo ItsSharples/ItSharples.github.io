@@ -9,16 +9,16 @@
     <div>
         <div class="infobar">
             <p>{{name}}</p>
-            {%if(tags)%{
+            {% if(tags) %{
                 <ul class="tag-list">
                 Tags: 
-                {%foreach(tag in tags)%{
+                {% foreach(tag in tags) %{
                     <li class="tag">
                         {{ tag }}
                     </li>
-                }%endforeach%}
+                }% end foreach %}
                 </ul>
-            }%endif%}
+            }% endif %}
         </div>
     </div>
     </a>

@@ -1,5 +1,6 @@
+{% set(hDepth) % {depth + 2} %endset%}
 <div role="group" class="group depth-{{ depth }}">
-    <h{{ calc(depth + 1)}}>{{ Name }}</h{{ calc(depth + 1) }}>
+    <h{{ calc(hDepth) }}>{{ Name }}</h{{ calc(hDepth) }}>
     <ul class="group">
         {{ Content }}
     </ul>

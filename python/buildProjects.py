@@ -1,3 +1,4 @@
+from copy import deepcopy
 import re
 import os
 from collections import defaultdict
@@ -24,8 +25,45 @@ def writeStringInto(string: str, url: Path):
 def normalise(string: str):
     return string.strip().lower()
 
+def replaceInTemplateAtSpan(template: str, value: str, span: tuple[int, int]):
+    return template[:span[0]] + value + template[span[1]:]
+
+
+def calculateValue(calculation: str, operatorPattern: re.Pattern, keypairs: dict[str, str]) -> str:
+    # Inside Calculations, the values change meaning from just strings to potential values
+    value: str = calculation
+    print(f"Calculation: {value}")
+    # Safety Check, only evaluate if exists in a very limited subset of python
+    operators = operatorPattern.search(value)
+    if operators:
+        normalLeft = normalise(operators['left'])
+        normalRight = normalise(operators['right'])
+        # Convert left and right to values, if possible
+        left = keypairs[normalLeft] if normalLeft in keypairs else normalLeft
+        right = keypairs[normalRight] if normalRight in keypairs else normalRight
+
+        left = int(left) if left.isnumeric() else left
+        right = int(right) if right.isnumeric() else right
+
+        operator = normalise(operators['operator'])
+
+        computation = ''.join([str(left), str(operator), str(right)])
+
+        return replaceInTemplateAtSpan(value, str(safe_eval(computation)), operators.span())
+
+        # value = value[:operators.start()] + \
+        #     str(safe_eval(computation)) + value[operators.end():]
+
+    # If is a value that's been set before
+    # WARNING!!! this could leak information about the build system
+    if keypairs[value]:
+        print(f"Old Value: {value}")
+        return keypairs[value]
+                
+
 
 def createHTML(keypairs: dict[str, str], template: str, patterns: dict[str, re.Pattern]):
+    keypairs = deepcopy(keypairs)
     # Is there a better way to reconstruct the template?
     commandPattern = patterns['command']
     calculatePattern = patterns['calculate']
@@ -44,7 +82,19 @@ def createHTML(keypairs: dict[str, str], template: str, patterns: dict[str, re.P
         match(query):
             case "if":
                 if(keypairs[value]):
-                    template = template[:span[0]] + result + template[span[1]:]
+                    template = replaceInTemplateAtSpan(template, result, span)
+                    editedTemplate = True
+
+            case "set":
+                print(f"Setting: {value}")
+                result = calculateValue(result, operatorPattern, keypairs)
+                if keypairs[value]:
+                    print(f"Overriding {keypairs[value]} with {result} at {value}")
+                keypairs[value] = result;
+
+            case "get":
+                if keypairs[value]:
+                    template = replaceInTemplateAtSpan(template, keypairs[value], span)
                     editedTemplate = True
 
             case "foreach":
@@ -56,7 +106,7 @@ def createHTML(keypairs: dict[str, str], template: str, patterns: dict[str, re.P
                         ",\n".join(out) + template[span[1]:]
                     editedTemplate = True
             case _:
-                print(query)
+                print(f"Unknown Query: {query}")
                 pass
 
         if not editedTemplate:
@@ -65,38 +115,21 @@ def createHTML(keypairs: dict[str, str], template: str, patterns: dict[str, re.P
 
         todoCompute = computePattern.search(normalise(template))
 
+    
     # Then build the template with the values
     match = commandPattern.search(template)
     while match:
-        todoCalculate = calculatePattern.search(normalise(match[1]))
+        command = normalise(match["command"]);
+        todoCalculate = calculatePattern.search(command)
         if todoCalculate:
-            # Inside Calculations, the values change meaning from just strings to potential values
-            value = todoCalculate[1]
-            # Safety Check, only evaluate if exists in a very limited subset of python
-            operators = operatorPattern.search(value)
-
-            if operators:
-                normalLeft = normalise(operators['left'])
-                normalRight = normalise(operators['right'])
-                # Convert left and right to values, if possible
-                left = keypairs[normalLeft] if normalLeft in keypairs else normalLeft
-                right = keypairs[normalRight] if normalRight in keypairs else normalRight
-
-                left = int(left) if left.isnumeric() else left
-                right = int(right) if right.isnumeric() else right
-
-                operator = normalise(operators['operator'])
-
-                computation = ''.join([str(left), str(operator), str(right)])
-
-                value = value[:operators.start()] + \
-                    str(safe_eval(computation)) + value[operators.end():]
-
+            value = calculateValue(todoCalculate["calculation"], operatorPattern, keypairs)
         else:
-            value = keypairs[normalise(match[1])]
+            # WARNING!!! this could leak information about the build system
+            value = keypairs[command]
 
-        template = template[:match.start(
-            0)] + str(value) + template[match.end(0):]
+        #print(value)
+
+        template = replaceInTemplateAtSpan(template, str(value), match.span())
         match = commandPattern.search(template)
     return template.strip()
 
