@@ -22,4 +22,4 @@ But first I want to remove more of the magic words, and place them into the conf
 ## What languages does it use?
 This project uses yaml, regex, and Markdown inside Python 3.10.
 The Files are Non-Standard Markdown (with a YAML header), and HTML (with SSG syntax), and Standard YAML in the Config File.
-The Markdown files should mostly work without SSG Processing ([Obsidian](https://obsidian.md)) uses a similar system), but HTML will be visibly artifacted.
+The Markdown files should mostly work without SSG Processing ([Obsidian](https://obsidian.md) uses a similar system), but HTML will be visibly artifacted.
