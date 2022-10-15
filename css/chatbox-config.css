@@ -6,7 +6,6 @@
 }
 #content {
     display: grid;
-    margin: 0;
     grid-template-columns: 10fr 12fr;
 
     max-width: 100%;

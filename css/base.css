@@ -37,6 +37,7 @@ body {
     background-color: var(--background);
     margin: 0;
     padding: 0;
+    padding-top: 3.6em;
     /* position: relative; */
     min-height: 100%;
     overscroll-behavior: none;
@@ -88,7 +89,6 @@ html:not([data-scroll='0']) nav {
     width: 90%;
     margin: auto;
     margin-bottom: 0;
-    padding-top: 4em;
     padding-bottom: .5em;
     z-index: 5;
     /* 0.5 [The bottom padding], 25px [The size of the footer]  */
