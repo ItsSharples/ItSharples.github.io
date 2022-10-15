@@ -17,7 +17,7 @@ body {
     line-height: var(--font-height);
 
     align-content: flex-start;
-    flex-wrap: nowrap;
+    
 }
 .chat-message * {
     vertical-align: bottom;
@@ -39,6 +39,7 @@ body {
     display:flex;
     justify-content: flex-start;
     flex-direction: column;
+    flex-wrap: wrap;
 
     width: 100vw;
     height: 100%;
