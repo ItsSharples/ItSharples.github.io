@@ -15,7 +15,25 @@ class twitchChannel {
 
         var badges = [];
         badges = badges.concat(await getGlobalBadges(config, channel_id));
-        badges = badges.concat(await getChannelBadges(config, channel_id));
+        
+        var channelBadges = []
+        channelBadges = channelBadges.concat(await getChannelBadges(config, channel_id));
+        channelBadges.forEach(channelBadge => 
+            {
+                var index = badges.findIndex(badge => badge.set_id == channelBadge.set_id);
+                // Couldn't find the value
+                if (index == -1){
+                    badges.push(channelBadge)
+                }
+                else {
+                    channelBadge.versions.forEach(version => 
+                        badges[index].versions.push(version)
+                    )
+                }
+                }
+        );
+        console.log(channelBadges)
+
 
         var emotes = [];
         var customEmotes = [];
@@ -115,12 +133,16 @@ function setupWebpage(hash) {
 
     client?.disconnect();
     client = new tmi.Client({
-        options: { skipUpdatingEmotesets: true },
+        options: {
+            skipUpdatingEmotesets: true,
+            debug: false,
+        },
         identity: {
             username: client_id,
             password: 'oauth:' + config.accessToken
         },
-        channels: [config.channelName]
+        channels: [config.channelName],
+        
     });
 
     client.connect();
@@ -235,7 +257,7 @@ async function getFFZChannelEmotes(config, id) {
         .then(sets => Object.values(sets)
             .map(set => Object.values(set.emoticons)
                 .map(emote => {
-                    console.log(emote)
+                    //console.log(emote)
                     let value = {};
                     value.name = emote.name;
                     let urls = Object.entries(emote.urls).map(
@@ -248,60 +270,58 @@ async function getFFZChannelEmotes(config, id) {
 
 }
 
+async function loadPronouns(username) {
+    return fetch(`https://pronouns.alejo.io/api/users/${username}`)
+    .then(response => response.json())
+    .then(data => data.data)
+
+}
+
 function listenToMessages(config) {
     function setIdEquals(name) { return (object, index, array) => object.set_id == name; }
 
     function IdEquals(name) { return (object, index, array) => object.id == name; }
-    function getEmotes() {
 
-        // get7TVGlobalEmotes
-        // https://api.7tv.app/v2/emotes/global
-        // get7TVChannelEmotes
-        // https://api.7tv.app/v2/users/${id}/emotes
+    client.on('raw_message', (...args) => {
+        console.log(args);
 
-        // getBTTVGlobalEmotes
-        // getBTTVChannelEmotes
-        // https://api.betterttv.net/3/cached/users/twitch/${id}
-
-        // https://cdn.betterttv.net/emote/556b5df02558416e1b5f0082/3x
-
-        // getFFZGlobalEmotes
-        // 
-        // getFFZChannelEmotes
-        // https://api.frankerfacez.com/v1/room/id/${id}
-        // https://api.betterttv.net/3/cached/frankerfacez/users/twitch/${id}
+        switch(args["1"].command){
+            case "USERNOTICE": {
+                console.log("Announcment? ModCheck")
+            }
+            case "PRIVMSG": {
+                break
+            }
+            default : {
+                console.log(args)
+            }
 
 
-        return twitchEmotes;
-    }
-
-
-    function naturalSort(a, b) {
-        let [al, ar] = a.split("-");
-        let [bl, br] = b.split("-");
-        return al.localeCompare(bl, undefined, {
-            numeric: true,
-            sensitivity: 'base'
-        });
-    }
+        }
+        // const msg = document.createElement("div");
+        // msg.className = "chat-message";
+        // const colon = document.createElement("span");
+        // colon.innerText = message;
+        // msg.insertBefore(colon, null);
+        // document.getElementById("chatbox").insertBefore(msg, null);
+        // window.scrollBy({ 'top': window.innerHeight, 'behavior': 'instant' });
+    });
 
     client.on('message', (channel, tags, message, self) => {
+        client.log.info("Message");
         const config = state.config;
         const badgesData = state.badges;
         const twitchEmotes = state.emotes;
         const customEmotes = state.customEmotes;
+
         function getBadgesFor(name) {
-            return (badgesData.find(setIdEquals(name)) ?? []);
+            return (badgesData.find(setIdEquals(name)) ?? {"set_id": name, "versions": []});
         }
 
         const subscriberBadges = getBadgesFor("subscriber");
         const bitsBadges = getBadgesFor("bits");
         const emoteCache = twitchEmotes;
-        // console.log(tags);
-        // let pronouns = (async(username) => await fetch(`https://pronouns.alejo.io/api/users/${username}`)
-        // .then(response => response.json())
-        // .then(data => data.data))(tags.username)
-        // console.log(pronouns);
+
         const msg = document.createElement("div");
         if (!config.emoteOnly) {
 
@@ -313,21 +333,24 @@ function listenToMessages(config) {
                 badgeNode.innerText = badge;
                 switch (badge) {
                     case "subscriber": {
-                        let badge = subscriberBadges.find((value, index, obj) => value.id == num);
-                        let imgURL = badge.image_url_4x;
+                        console.log(tags)
+                        console.log(message)
+                        console.log(badgesData)
+                        console.log(subscriberBadges);
+                        let imgData = subscriberBadges.versions.find((value, index, obj) => value.id == num);
+                        
                         let imgSet = `${imgData.image_url_1x} 18w, ${imgData.image_url_2x} 36w, ${imgData.image_url_4x} 72w`;
                         const img = document.createElement("img");
-                        img.src = imgURL;
+                        img.src = imgData.image_url_4x;
                         img.srcset = imgSet;
                         badgeNode = img;
                         break;
                     }
                     case "bits": {
-                        let badge = bitsBadges.find((value, index, obj) => value.id == num);
-                        let imgURL = badge.image_url_4x;
+                        let imgData = bitsBadges.versions.find((value, index, obj) => value.id == num);
                         let imgSet = `${imgData.image_url_1x} 18w, ${imgData.image_url_2x} 36w, ${imgData.image_url_4x} 72w`;
                         const img = document.createElement("img");
-                        img.src = imgURL;
+                        img.src = badge.image_url_4x;
                         img.srcset = imgSet;
                         badgeNode = img;
                         break;
@@ -362,9 +385,8 @@ function listenToMessages(config) {
             msg.insertBefore(badges, name);
         }
 
-        const text = document.createElement("div");
+        const text = document.createElement("span");
         text.className = "message"
-
 
         const colon = document.createElement("span");
         colon.innerText = config.emoteOnly ? "" : ":";
