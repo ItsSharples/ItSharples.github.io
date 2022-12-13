@@ -26,11 +26,9 @@ class twitchChannel {
                     badges.push(channelBadge)
                 }
                 else {
-                    channelBadge.versions.forEach(version => 
-                        badges[index].versions.push(version)
-                    )
+                    badges[index] = channelBadge
                 }
-                }
+            }
         );
         console.log(channelBadges)
 
@@ -283,21 +281,39 @@ function listenToMessages(config) {
     function IdEquals(name) { return (object, index, array) => object.id == name; }
 
     client.on('raw_message', (...args) => {
-        console.log(args);
+        //console.log(args);
 
         switch(args["1"].command){
+            case "PRIVMSG": {
+                return;
+            }
+            case "PONG": {
+                console.log("PING")
+                break;
+            }
+            case "PING": {
+                console.log("PING")
+                break;
+            }
             case "USERNOTICE": {
                 console.log("Announcment? ModCheck")
+                console.log(args)
+
+                console.log(args["1"].tags["msg-id"])
+                break;
             }
-            case "PRIVMSG": {
-                break
+            case "CLEARCHAT": {
+                console.log("Ban Perhamps?")
+                console.log(args)
+                break;
             }
             default : {
+                console.log("No Clue, here's the args:")
                 console.log(args)
+                break;
             }
-
-
         }
+        
         // const msg = document.createElement("div");
         // msg.className = "chat-message";
         // const colon = document.createElement("span");
@@ -333,10 +349,6 @@ function listenToMessages(config) {
                 badgeNode.innerText = badge;
                 switch (badge) {
                     case "subscriber": {
-                        console.log(tags)
-                        console.log(message)
-                        console.log(badgesData)
-                        console.log(subscriberBadges);
                         let imgData = subscriberBadges.versions.find((value, index, obj) => value.id == num);
                         
                         let imgSet = `${imgData.image_url_1x} 18w, ${imgData.image_url_2x} 36w, ${imgData.image_url_4x} 72w`;
