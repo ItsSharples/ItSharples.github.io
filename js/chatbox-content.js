@@ -276,13 +276,42 @@ async function loadPronouns(username) {
 }
 
 function listenToMessages(config) {
-    function setIdEquals(name) { return (object, index, array) => object.set_id == name; }
+    messagesSent = []
 
+    maxMessageCount = 50
+    if(!!config.maxMessageCount){
+        maxMessageCount = config.maxMessageCount
+    }
+    function cleanupExcessMessages() {
+        // Clean up if there's too many messages
+        while(messageCount > maxMessageCount){
+            messagesSent.shift().remove();
+            messageCount-=1;
+        }
+    }
+    
+    function setIdEquals(name) { return (object, index, array) => object.set_id == name; }
     function IdEquals(name) { return (object, index, array) => object.id == name; }
+    function getImgSet(imgData) {
+        bestImg = null;
+        imgSet = []
+        if(!!imgData.image_url_1x){
+            bestImg = imgData.image_url_1x
+            imgSet.push(`${imgData.image_url_1x} 18w`)
+        }
+        if(!!imgData.image_url_2x){
+            bestImg = imgData.image_url_2x
+            imgSet.push(`${imgData.image_url_2x} 36w`)
+        }
+        if(!!imgData.image_url_4x){
+            bestImg = imgData.image_url_4x
+            imgSet.push(`${imgData.image_url_4x} 72w`)
+        }
+        return [bestImg, imgSet.join()]
+
+    }
 
     client.on('raw_message', (...args) => {
-        //console.log(args);
-
         switch(args["1"].command){
             case "PRIVMSG": {
                 return;
@@ -349,21 +378,24 @@ function listenToMessages(config) {
                 badgeNode.innerText = badge;
                 switch (badge) {
                     case "subscriber": {
-                        let imgData = subscriberBadges.versions.find((value, index, obj) => value.id == num);
-                        
-                        let imgSet = `${imgData.image_url_1x} 18w, ${imgData.image_url_2x} 36w, ${imgData.image_url_4x} 72w`;
                         const img = document.createElement("img");
-                        img.src = imgData.image_url_4x;
+                        let imgData = subscriberBadges.versions.find((value, index, obj) => value.id == num);
+                        const [bestImg, imgSet] = getImgSet(imgData);
+
+                        img.src = bestImg;
                         img.srcset = imgSet;
+
                         badgeNode = img;
                         break;
                     }
                     case "bits": {
-                        let imgData = bitsBadges.versions.find((value, index, obj) => value.id == num);
-                        let imgSet = `${imgData.image_url_1x} 18w, ${imgData.image_url_2x} 36w, ${imgData.image_url_4x} 72w`;
                         const img = document.createElement("img");
-                        img.src = badge.image_url_4x;
+                        let imgData = bitsBadges.versions.find((value, index, obj) => value.id == num);
+                        const [bestImg, imgSet] = getImgSet(imgData);
+
+                        img.src = bestImg;
                         img.srcset = imgSet;
+
                         badgeNode = img;
                         break;
                     }
@@ -372,10 +404,13 @@ function listenToMessages(config) {
                         if (badgeData) {
                             let imgData = badgeData.versions.find(IdEquals(num));
                             if (imgData) {
-                                let imgURL = imgData.image_url_4x;
-                                let imgSet = `${imgData.image_url_1x} 18w, ${imgData.image_url_2x} 36w, ${imgData.image_url_4x} 72w`;
+                                //let imgURL = imgData.image_url_4x;
+                                //let imgSet = `${imgData.image_url_1x} 18w, ${imgData.image_url_2x} 36w, ${imgData.image_url_4x} 72w`;
                                 const img = document.createElement("img");
-                                img.src = imgURL;
+
+                                const [bestImg, imgSet] = getImgSet(imgData);
+
+                                img.src = bestImg;
                                 img.srcset = imgSet;
                                 badgeNode = img;
                             }
@@ -388,7 +423,9 @@ function listenToMessages(config) {
             // Chatter Name :)
             const name = document.createElement("span");
             name.innerText = tags['display-name'];
-            name.style = `color:${tags.color}`;
+            if(tags.color != null){
+                name.style = `color:${tags.color}`;
+            }
 
             name.className = "name";
             badges.className = "badges";
@@ -483,6 +520,8 @@ function listenToMessages(config) {
 
         document.getElementById("chatbox").insertBefore(msg, null);
         window.scrollBy({ 'top': window.innerHeight, 'behavior': 'instant' });
-
+        messageCount = messagesSent.push(msg)
+        cleanupExcessMessages()
+        
     });
 }
