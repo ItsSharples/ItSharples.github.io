@@ -4,6 +4,7 @@
 const tableDOM = document.querySelector("table")
 const exampleModeCheck = document.getElementById("example-mode");
 
+const debugMode = true;
 let tableState = {}
 var beforeRow = -1;
 var creationDialog;
@@ -168,6 +169,9 @@ function removeRow(index){
     regenerateTableDOM()
 }
 
+function isColumnEmpty(index){
+    return tableState.Contents.every((row) => row[2][index] == 0)
+}
 function addColumn(name = "", defaultValue = null) {
     if(name == ""){
         name = `Assignment ${tableState.NumAssignments + 1}`
@@ -182,6 +186,15 @@ function addColumn(name = "", defaultValue = null) {
     }
 
     regenerateTableDOM();
+}
+
+function removeColumn(index){
+    console.log(`Remove Assignment: ${index}`)
+    for(row of tableState.Contents){
+        row[2][index] = 0
+    }
+
+    regenerateTableDOM()
 }
 
 function clearTableDOM(){
@@ -260,6 +273,12 @@ function getGrade(values, type = "percent"){
     percent = Math.round(percent);
     return {"Pass" : percent > 60, "Text": getGradeText(percent, type)};
 }
+function updateGradeText(forCell, withValues, withType){
+    const grade = getGrade(withValues, withType);
+    forCell.textContent = grade.Text; 
+    if(grade.Pass){forCell.classList.remove("fail-grade");}
+    else{forCell.classList.add("fail-grade");}
+}
 
 function makeButton(name, id = "", clickEvent = null){
     const newButton = document.createElement("button");
@@ -276,12 +295,22 @@ function makeButton(name, id = "", clickEvent = null){
 
 /* https://www.matuzo.at/blog/highlighting-columns/ */
 /* https://stackoverflow.com/a/42658933 */
+
+function selectRow(rowElement){
+    const didntContain = !rowElement.classList.contains("highlight-click-row");
+    for(element of document.getElementsByClassName("highlight-click-row")){
+        element.classList.remove("highlight-click-row");
+    }
+
+    if(didntContain){
+        rowElement.classList.add("highlight-click-row")
+    }
+}
 function regenerateTableDOM(focusOn = []){
     console.log("Regenerate Table DOM")
     const tblBody = document.createElement("tbody");
     const tblHead = document.createElement("thead");
     const colGroup = document.createElement("colgroup");
-
 
     const gradeSelect = document.createElement("select");
 
@@ -290,10 +319,12 @@ function regenerateTableDOM(focusOn = []){
 
     // generate the headers
     const headerRow = document.createElement("tr");
+    headerRow.id = "header-row";
     for (const rowData of tableState.Headers) {
         const cell = document.createElement("th");
         const cellText = document.createTextNode(rowData);
         cell.appendChild(cellText);
+        cell.scope = "col";
         headerRow.appendChild(cell);
 
         const col = document.createElement("col");
@@ -305,6 +336,7 @@ function regenerateTableDOM(focusOn = []){
         const cell = document.createElement("th");
         const cellText = document.createTextNode(`Assignment ${assignmentNum + 1}`);
         cell.appendChild(cellText);
+        cell.scope = "col";
         headerRow.appendChild(cell);
 
         const col = document.createElement("col");
@@ -315,6 +347,7 @@ function regenerateTableDOM(focusOn = []){
     // The Final Grade Column is going to be funky, so just add it specifically
     {
         const gradeCell = document.createElement("th");
+        gradeCell.scope = "col";
         const cellText = document.createTextNode("Final Grade");
 
         const gradeLabel = document.createElement("label");
@@ -348,27 +381,28 @@ function regenerateTableDOM(focusOn = []){
 
     // Add the headers to the body
     tblHead.appendChild(headerRow);
+
+    var currIndex = 0;
     /// Now we add the Contents to the Table
     for (const rowData of tableState.Contents) {
         const row = document.createElement("tr");
         row.id = `student-${htmlString(rowData[0])}-${rowData[1]}`
+        row.name = `student-${htmlString(rowData[0])}-${rowData[1]}`
+        row.value = row.id;
         const focusOnRow = shouldFocus & (focusOn[0] == tblBody.childElementCount);
         
         let gradeValues = []
         for (const columnData of rowData) {
-            
             // If it's a list, assume it be the assignment values
             if(Object.prototype.toString.call(columnData) == "[object Array]"){
                 gradeValues = columnData
                 Array(tableState.NumAssignments).fill().map((_, assignmentNum) => {
                     const cell = document.createElement("td");
-                    const cellText = document.createTextNode("");
-
                     const scoreGot = gradeValues[assignmentNum];
-                    cellText.textContent = !!scoreGot ? scoreGot : "";
+                    // If there's a score, write that, else write nothing
+                    cell.textContent = !!scoreGot ? scoreGot : "";
                     cell.classList.add("grade")
 
-                    cell.appendChild(cellText);
                     row.appendChild(cell);
 
                     // https://stackoverflow.com/a/20906991
@@ -384,22 +418,12 @@ function regenerateTableDOM(focusOn = []){
             }
             else {
                 const cell = document.createElement("td");
-                const cellText = document.createTextNode("");
-                cellText.textContent = columnData;
-
-                cell.appendChild(cellText);
+                cell.textContent = columnData;
                 row.appendChild(cell);
 
                 if(columnData == rowData[0]){
                     cell.addEventListener("click", (event) => {
-                        const didntContain = !event.target.parentElement.classList.contains("highlight-click-row");
-                        for(element of document.getElementsByClassName("highlight-click-row")){
-                            element.classList.remove("highlight-click-row");
-                        }
-
-                        if(didntContain){
-                            event.target.parentElement.classList.add("highlight-click-row")
-                        }
+                        selectRow(event.target.parentElement);
                     })
                 }
             }
@@ -407,23 +431,10 @@ function regenerateTableDOM(focusOn = []){
 
         // Work out the final Grade
         const gradeCell = document.createElement("td");
-        
-        const cellText = document.createTextNode("2");
-
-        function updateGradeText(){
-            const grade = getGrade(gradeValues, gradeSelect.value);
-            cellText.textContent = grade.Text
-            if(grade.Pass){gradeCell.classList.remove("fail-grade");}
-            else{gradeCell.classList.add("fail-grade");}
-            
-        }
-
-        updateGradeText()
+        updateGradeText(gradeCell, gradeValues, gradeSelect.value)
         gradeSelect.addEventListener("change", (event) => {
-            updateGradeText()
+            updateGradeText(gradeCell, gradeValues, gradeSelect.value)
         });
-
-        gradeCell.appendChild(cellText);
         gradeCell.classList.add("grade")
         row.appendChild(gradeCell);
 
@@ -521,7 +532,7 @@ function regenerateTableDOM(focusOn = []){
         moveFocusEnd(focusCell);
     }
 
-    // Add Hover Effect 
+    // Add Hover/Click Effect for Columns
     {
         const cols = tableDOM.getElementsByTagName('col');
         const tds = document.getElementsByTagName('td');
@@ -537,7 +548,7 @@ function regenerateTableDOM(focusOn = []){
         for (const cell of [...ths]) {
             const index = cell.cellIndex;
             if(!!cols[index]){
-            if(cols[index].classList.contains("assignment-col")) {
+            if(!cols[index].classList.contains("final-grade-col")) {
             cell.addEventListener('click', (event) => {
                 
                     const col = cols[index];
@@ -560,30 +571,104 @@ function regenerateTableDOM(focusOn = []){
 function activateContextMenu(forElement) {
     var useDefault = false;
     var menuTarget = null;
+    const contextMenuParent = document.getElementById("contextMenuParent");
     const contextMenu = document.getElementById("contextMenu");
 
     // Because we're destroying everything on every update, we need to find our menu target again
     function updateMenuTarget(){
         var newParent = document.getElementById(menuTarget.parentElement.id)
-        menuTarget = newParent.firstChild;
+        var menuIndex = Array.from(menuTarget.parentElement.children).indexOf(menuTarget)
+        menuTarget = newParent.children[menuIndex];
 
-        const title = contextMenu.querySelector(".title")
-        title.textContent = `${menuTarget.textContent}: ${menuTarget.parentElement.rowIndex - 1}`
+        {
+            const assignmentNum = menuTarget.cellIndex - 1;
+            const studentRow = menuTarget.parentElement.rowIndex - 1;
+            const studentName = menuTarget.parentElement.firstChild.textContent;
+            const content = []
+            contextMenu.classList = []
+            if(studentRow >= 0){
+                content.push(studentName, `Row: ${studentRow}`)
+                contextMenu.classList.add("has-student")
+                if(studentRow == 0){
+                    contextMenu.classList.add("first-student")
+                }
+                if(studentRow == tableState.Contents.length - 1){
+                    contextMenu.classList.add("last-student")
+                }
+            }
+            if(assignmentNum > 0){
+                content.push(`Assignment: ${assignmentNum}`)
+                contextMenu.classList.add("has-assignment")
+            }
+
+            const title = contextMenu.querySelector(".title")
+            if(!debugMode)
+            {
+                title.style.display = "none";
+            }
+            title.textContent = content.join(" - ")
+
+            var assignmentElements = contextMenu.getElementsByClassName("assignment");
+            var removeElementsLists = Array.from(assignmentElements).map((element) => Array.from(element.getElementsByClassName("remove")))
+            var removeElements = Array.prototype.concat(...removeElementsLists)
+            const assignmentIndex = assignmentNum - 1;
+            for(element of removeElements){
+                function updateElement(isEmpty, position){
+                    element.textContent = `${isEmpty ? "Remove" : "Clear"} ${position}`
+                    if(isEmpty) {
+                        element.classList.add("is-empty")
+                    }
+                    else {
+                        element.classList.remove("is-empty")
+                    }
+                }
+                if(element.matches('.up')){
+                    if(assignmentIndex < 0){continue}
+                    const isEmpty = isColumnEmpty(assignmentIndex - 1)
+                    updateElement(isEmpty, "Assignment Left")
+                    
+                }
+                if(element.matches('.self')){
+                    const isEmpty = isColumnEmpty(assignmentIndex)
+                    updateElement(isEmpty, "This Assignment")
+                }
+                if(element.matches('.down')){
+                    if(assignmentIndex >= tableState.NumAssignments){continue}
+                    const isEmpty = isColumnEmpty(assignmentIndex+1);
+                    updateElement(isEmpty, "Assignment Right")
+                }
+            }
+        }
     }
 
     contextMenu.addEventListener('click', handleClicks);
     function handleClicks(event){
         if (event.target.matches('.remove')) {
-            var currRow = menuTarget.parentElement.rowIndex - 1;
+            const currRow = menuTarget.parentElement.rowIndex - 1;
+            const currCol = menuTarget.cellIndex - 2;
+
+            var currIndex = currRow;
+            var remove = removeRow;
+            if(event.target.matches('.student')){
+                remove = removeRow;
+                currIndex = currRow;
+            }
+            if(event.target.matches('.assignment')){
+                remove = removeColumn;
+                currIndex = currCol;
+                console.log(isColumnEmpty(currIndex))
+            }
+            
             if(event.target.matches('.up')){
-                removeRow(currRow - 1)
+                
+                remove(currIndex - 1)
             }
             if(event.target.matches('.self')){
-                removeRow(currRow)
+                remove(currIndex)
                 closeMenu()
             }
             if(event.target.matches('.down')){
-                removeRow(currRow + 1)
+                remove(currIndex + 1)
             }
             updateMenuTarget()
         }
@@ -599,12 +684,19 @@ function activateContextMenu(forElement) {
 
         }
     }
-    function editMenu(x, y, hidden){
+    function editMenu(x, y, hidden, parent = contextMenu.parentElement){
         if(!!contextMenu){
             contextMenu.style.display = hidden ? "none" : "block";
             contextMenu.hidden = hidden;
-            contextMenu.style.top = `${y}px`;
+
+            //console.log(y, contextMenu.clientHeight, window.innerHeight );
+            const bottomPadding = 25;
+            if(y + contextMenu.clientHeight > (window.innerHeight - bottomPadding) ) {
+                y = y - (y + contextMenu.clientHeight - window.innerHeight) - bottomPadding;
+            }
+            contextMenu.style.top = `${y + window.scrollY}px`;
             contextMenu.style.left = `${x}px`;
+            parent.appendChild(contextMenu)
         }
     }
     function closeMenu(){
@@ -614,8 +706,8 @@ function activateContextMenu(forElement) {
     function hideMenu(){
         editMenu(0, 0, true)
     }
-    function showMenu(x, y){
-        editMenu(x, y, false)
+    function showMenu(x, y, onElement){
+        editMenu(x, y, false, onElement)
     }
     function contextCeption(event){
         menuTarget.focus()
@@ -623,15 +715,12 @@ function activateContextMenu(forElement) {
         return true;
     }
     function callContextMenu(event){
-        console.log("context click");
+        //console.log("context click");
         event.preventDefault();
         menuTarget = event.target
         updateMenuTarget()
 
-        showMenu(event.x, event.y);
-
-        
-        //title.textContent = event.target.name
+        showMenu(event.x, event.y, menuTarget.parentElement);
     }
 
     hideMenu()
