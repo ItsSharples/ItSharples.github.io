@@ -533,6 +533,15 @@ function regenerateTableDOM(focusOn = []){
 function start() {
     console.log("Starting")
 
+    // Check if there's any local storage
+    if(!!localStorage.getItem("data")){
+        loadTable();
+    }
+    else{
+        resetTable();
+        saveTable();
+    }
+
     // const observer = new MutationObserver((mutationRecords) => {
         
     //     const target = mutationRecords[0].target;
