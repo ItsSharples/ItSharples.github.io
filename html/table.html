@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="/css/footlist.css">
     <link rel="stylesheet" href="/css/hamburger-new.css">
     <link rel="stylesheet" href="/css/table.css">
+    <link rel="stylesheet" href="/css/context-menu.css">
     <!-- Favicons -->
     <link rel="icon" href="/assets/images/favicon/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/assets/images/favicon/apple-touch-icon.png">
@@ -98,6 +99,20 @@
             </table>
             <label for="example-mode">Example Mode</label>
             <input id="example-mode" name="example-mode" type="checkbox">
+            <div id="contextMenu">
+                <p class="title"></p>
+                <div id="add-cell" class="cell-modify">
+                    <p>Add Student:</p>
+                    <button id="add-up" class="add up">⇧</button>
+                    <button id="add-down" class="add down">⇩</button>
+                </div>
+                <div id="remove-cell" class="cell-modify">
+                    <p>Remove Student:</p>
+                    <button id="remove-up" class="remove up">⇧</button>
+                    <button id="remove-self" class="remove self">⇦</button>
+                    <button id="remove-down" class="remove down">⇩</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>

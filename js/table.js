@@ -5,7 +5,8 @@ const tableDOM = document.querySelector("table")
 const exampleModeCheck = document.getElementById("example-mode");
 
 let tableState = {}
-
+var beforeRow = -1;
+var creationDialog;
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max-min) + min);
@@ -78,9 +79,14 @@ function getRandomName(){
     CharName = [firstNames[getRandomInt(0, firstNames.length)], lastNames[getRandomInt(0, firstNames.length)]].join(" ")
     return CharName;
 }
-
 const getRandomStudentID = () => getRandomInt(2100000, 2199999);
+const validIndex = (index) => Math.min(Math.max(index, 0), tableState.Contents.length) == index;
 
+function htmlString(string){
+    var out = string.toLowerCase()
+    out = out.replaceAll(" ", "-")
+    return out;
+}
 function resetTable(){
     console.log("Reset Table")
     tableState = {
@@ -116,24 +122,52 @@ function loadTable() {
     regenerateTableDOM()
 
 }
-function addRow(name, id) {
-    console.log(`Add Row: ${name}`)
-    if (!name || !id) {
-        console.log("Invalid Inputs")
-        return;
+function createStudent(beforeRow = -1) {
+    if(exampleModeCheck.checked){
+        addRow(null, null, beforeRow)
     }
-
+    else{
+        creationDialog.show()
+    }
+}
+function addRow(name, id, before = -1) {
+    console.log(`Add Row: ${name}`)
     let AssignmentGrades = []
-    if(exampleModeCheck.value == "on"){
+    if(exampleModeCheck.checked){
+        name = getRandomName();
+        id = getRandomStudentID();
         for(val of [...Array(tableState.NumAssignments)]){
             AssignmentGrades.push(getRandomAssignmentGrade())
         }
     }
 
-    tableState.Contents.push([name, id, AssignmentGrades])
-    regenerateTableDOM()
+    if (!name || !id) {
+        console.log("Invalid Inputs")
+        return;
+    }
 
+    var newStudent = [name, id, AssignmentGrades];
+    /// Splice can work on negative indices, but we're using -1 to mean unassigned
+    if(before == -1){
+        tableState.Contents.push(newStudent)
+    }
+    else{
+        tableState.Contents.splice(before, 0, newStudent)
+    }
+    regenerateTableDOM()
 }
+
+function removeRow(index){
+    console.log(`Remove Row: ${index}`)
+    
+    if(!validIndex(index)){
+        console.log(`Index out of range: ${index}`)
+        return;
+    }
+    tableState.Contents.splice(index, 1)
+    regenerateTableDOM()
+}
+
 function addColumn(name = "", defaultValue = null) {
     if(name == ""){
         name = `Assignment ${tableState.NumAssignments + 1}`
@@ -141,7 +175,7 @@ function addColumn(name = "", defaultValue = null) {
     console.log(`Add Column: ${name}`)
     tableState.NumAssignments += 1;
 
-    if(exampleModeCheck.value == "on"){
+    if(exampleModeCheck.checked){
         for(character of tableState.Contents){
             character[2].push(getRandomAssignmentGrade())
         }
@@ -224,10 +258,7 @@ function getGradeText(percentGrade, type = "percent"){
 function getGrade(values, type = "percent"){
     var percent = values.reduce((acc, curr) => acc + curr, 0) / tableState.NumAssignments;
     percent = Math.round(percent);
-
-
     return {"Pass" : percent > 60, "Text": getGradeText(percent, type)};
-
 }
 
 function makeButton(name, id = "", clickEvent = null){
@@ -320,6 +351,7 @@ function regenerateTableDOM(focusOn = []){
     /// Now we add the Contents to the Table
     for (const rowData of tableState.Contents) {
         const row = document.createElement("tr");
+        row.id = `student-${htmlString(rowData[0])}-${rowData[1]}`
         const focusOnRow = shouldFocus & (focusOn[0] == tblBody.childElementCount);
         
         let gradeValues = []
@@ -436,7 +468,7 @@ function regenerateTableDOM(focusOn = []){
                     if (child.name == "studentID") {id = child.value}
                     if (child.name == "studentName") {name = child.value}
                 }
-                addRow(name, id)
+                addRow(name, id, beforeRow)
                 dialog.close();
                 
             }
@@ -447,13 +479,10 @@ function regenerateTableDOM(focusOn = []){
 
         const studentCell = document.createElement("td");
         const addStudentButton = makeButton("Add Student", "new-student-btn", (event) => {
-            if(exampleModeCheck.value == "on"){
-                addRow(getRandomName(), getRandomStudentID())
-            }
-            else{
-                dialog.show()
-            }
+            createStudent()
         });
+        creationDialog = dialog;
+
         addStudentButton.appendChild(dialog);
         studentCell.appendChild(addStudentButton);
         footer.appendChild(studentCell);
@@ -528,7 +557,87 @@ function regenerateTableDOM(focusOn = []){
 }
 }
 
+function activateContextMenu(forElement) {
+    var useDefault = false;
+    var menuTarget = null;
+    const contextMenu = document.getElementById("contextMenu");
 
+    // Because we're destroying everything on every update, we need to find our menu target again
+    function updateMenuTarget(){
+        var newParent = document.getElementById(menuTarget.parentElement.id)
+        menuTarget = newParent.firstChild;
+
+        const title = contextMenu.querySelector(".title")
+        title.textContent = `${menuTarget.textContent}: ${menuTarget.parentElement.rowIndex - 1}`
+    }
+
+    contextMenu.addEventListener('click', handleClicks);
+    function handleClicks(event){
+        if (event.target.matches('.remove')) {
+            var currRow = menuTarget.parentElement.rowIndex - 1;
+            if(event.target.matches('.up')){
+                removeRow(currRow - 1)
+            }
+            if(event.target.matches('.self')){
+                removeRow(currRow)
+                closeMenu()
+            }
+            if(event.target.matches('.down')){
+                removeRow(currRow + 1)
+            }
+            updateMenuTarget()
+        }
+        if (event.target.matches('.add')) {
+            var currRow = menuTarget.parentElement.rowIndex - 1;
+            if(event.target.matches('.up')){
+                createStudent(currRow)
+            }
+            if(event.target.matches('.down')){
+                createStudent(currRow + 1)
+            }
+            updateMenuTarget()
+
+        }
+    }
+    function editMenu(x, y, hidden){
+        if(!!contextMenu){
+            contextMenu.style.display = hidden ? "none" : "block";
+            contextMenu.hidden = hidden;
+            contextMenu.style.top = `${y}px`;
+            contextMenu.style.left = `${x}px`;
+        }
+    }
+    function closeMenu(){
+        hideMenu()
+        menuTarget = null
+    }
+    function hideMenu(){
+        editMenu(0, 0, true)
+    }
+    function showMenu(x, y){
+        editMenu(x, y, false)
+    }
+    function contextCeption(event){
+        menuTarget.focus()
+        hideMenu();
+        return true;
+    }
+    function callContextMenu(event){
+        console.log("context click");
+        event.preventDefault();
+        menuTarget = event.target
+        updateMenuTarget()
+
+        showMenu(event.x, event.y);
+
+        
+        //title.textContent = event.target.name
+    }
+
+    hideMenu()
+    forElement.addEventListener("contextmenu", callContextMenu);
+    contextMenu.addEventListener("contextmenu", contextCeption)
+}
 
 function start() {
     console.log("Starting")
@@ -541,6 +650,8 @@ function start() {
         resetTable();
         saveTable();
     }
+
+    activateContextMenu(tableDOM);
 
     // const observer = new MutationObserver((mutationRecords) => {
         
