@@ -39,7 +39,7 @@ body {
     padding: 0;
     padding-top: 3.6em;
     /* position: relative; */
-    min-height: 100%;
+    min-height: fit-content;
     overscroll-behavior: none;
     z-index: 0;
 }
@@ -92,8 +92,8 @@ html:not([data-scroll='0']) nav {
     padding-bottom: .5em;
     z-index: 5;
     /* 0.5 [The bottom padding], 25px [The size of the footer]  */
-    min-height: calc(100vh - calc(0.5em + 25px));
-
+    /* min-height: calc(100vh - calc(0.5em + 25px)); */
+    min-height: calc(100vh - 3.6em);
     overflow-x: hidden;
 }
 
