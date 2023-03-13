@@ -188,10 +188,26 @@ function addColumn(name = "", defaultValue = null) {
     regenerateTableDOM();
 }
 
-function removeColumn(index){
+function removeColumn(forceAction, index){
     console.log(`Remove Assignment: ${index}`)
-    for(row of tableState.Contents){
-        row[2][index] = 0
+    const isEmpty = isColumnEmpty(index)
+
+    if(forceAction || isEmpty){ // Remove the Column
+        tableState.Contents = tableState.Contents.map((row) => {
+            var assignmentValues = row.pop()
+            assignmentValues.splice(index, 1)
+            var newRow = row.concat([])
+            newRow[2] = [...assignmentValues]
+            return newRow
+            
+        })
+        tableState.NumAssignments = tableState.NumAssignments - 1;
+    }
+    else { // Empty the Column
+        for(row of tableState.Contents){
+            row[2][index] = 0
+            console.log(row)
+        }
     }
 
     regenerateTableDOM()
@@ -570,12 +586,14 @@ function regenerateTableDOM(focusOn = []){
 
 function activateContextMenu(forElement) {
     var useDefault = false;
+    var forceAction = false;
     var menuTarget = null;
     const contextMenuParent = document.getElementById("contextMenuParent");
     const contextMenu = document.getElementById("contextMenu");
 
     // Because we're destroying everything on every update, we need to find our menu target again
     function updateMenuTarget(){
+        console.log("Update Menu");
         var newParent = document.getElementById(menuTarget.parentElement.id)
         var menuIndex = Array.from(menuTarget.parentElement.children).indexOf(menuTarget)
         menuTarget = newParent.children[menuIndex];
@@ -614,7 +632,11 @@ function activateContextMenu(forElement) {
             const assignmentIndex = assignmentNum - 1;
             for(element of removeElements){
                 function updateElement(isEmpty, position){
-                    element.textContent = `${isEmpty ? "Remove" : "Clear"} ${position}`
+                    var action = isEmpty ? "Remove" : "Clear";
+                    if(forceAction){
+                        action = "Remove"
+                    }
+                    element.textContent = `${action} ${position}`
                     if(isEmpty) {
                         element.classList.add("is-empty")
                     }
@@ -654,7 +676,7 @@ function activateContextMenu(forElement) {
                 currIndex = currRow;
             }
             if(event.target.matches('.assignment')){
-                remove = removeColumn;
+                remove = removeColumn.bind(null, forceAction);
                 currIndex = currCol;
                 console.log(isColumnEmpty(currIndex))
             }
@@ -718,14 +740,21 @@ function activateContextMenu(forElement) {
         //console.log("context click");
         event.preventDefault();
         menuTarget = event.target
+        
         updateMenuTarget()
 
         showMenu(event.x, event.y, menuTarget.parentElement);
     }
+    function shouldForceMenu(event){
+        forceAction = event.shiftKey;
+        updateMenuTarget()
+    }
 
     hideMenu()
+    document.addEventListener("keydown", shouldForceMenu);
+    document.addEventListener("keyup", shouldForceMenu);
     forElement.addEventListener("contextmenu", callContextMenu);
-    contextMenu.addEventListener("contextmenu", contextCeption)
+    contextMenu.addEventListener("contextmenu", contextCeption);
 }
 
 function start() {

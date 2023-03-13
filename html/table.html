@@ -99,18 +99,29 @@
             </table>
             <label for="example-mode">Example Mode</label>
             <input id="example-mode" name="example-mode" type="checkbox">
-            <div id="contextMenu">
-                <p class="title"></p>
-                <div id="add-cell" class="cell-modify">
-                    <p>Add Student:</p>
-                    <button id="add-up" class="add up">⇧</button>
-                    <button id="add-down" class="add down">⇩</button>
-                </div>
-                <div id="remove-cell" class="cell-modify">
-                    <p>Remove Student:</p>
-                    <button id="remove-up" class="remove up">⇧</button>
-                    <button id="remove-self" class="remove self">⇦</button>
-                    <button id="remove-down" class="remove down">⇩</button>
+            <div id="contextMenuParent">
+                <div id="contextMenu">
+                    <p class="title"></p>
+                    <div id="add-cell" class="cell-modify student">
+                        <!-- ⇧⇩⇦ -->
+                        <button id="row-add-up" class="add up student">Add Student Above</button>
+                        <button id="row-add-down" class="add down student">Add Student Below</button>
+                    </div>
+                    <div id="remove-cell" class="cell-modify student">
+                        <button id="row-remove-up" class="remove up student">Remove Student Above</button>
+                        <button id="row-remove-self" class="remove self student">Remove This Student</button>
+                        <button id="row-remove-down" class="remove down student">Remove Student Below</button>
+                    </div>
+                    <div id="add-column" class="cell-modify assignment">
+                        <!-- ⇧⇩⇦ -->
+                        <button id="column-add-left" class="add up assignment">Add Assignment Left</button>
+                        <button id="column-add-right" class="add down assignment">Add Assignment Right</button>
+                    </div>
+                    <div id="remove-cell" class="cell-modify assignment">
+                        <button id="column-remove-left" class="remove up assignment">Remove Assignment Left</button>
+                        <button id="column-remove-self" class="remove self assignment">Remove This Assignment</button>
+                        <button id="column-remove-right" class="remove down assignment">Remove Assignment Right</button>
+                    </div>
                 </div>
             </div>
         </div>
