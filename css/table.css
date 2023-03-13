@@ -1,0 +1,83 @@
+
+#content {
+    max-width: fit-content;
+}
+table * {
+    white-space: nowrap;
+    overflow: hidden;
+    width: fit-content;
+}
+
+tbody, tfoot, thead {
+    width: fit-content;
+    text-align: center;
+    vertical-align: middle;
+}
+td.grade {
+    text-align: end;
+}
+td:not(.grade) {
+    text-align: start;
+}
+td.grade:empty {
+    background-color: rgba(255, 255, 0, 0.4);
+    text-align: center;
+}
+td.grade:empty:before{
+    content: "-";
+    
+}
+
+th, td, tr, table {
+    border: 0px solid;
+    border-collapse: collapse;
+    /* width: min-content; */
+}
+
+table {
+    background: transparent;
+    table-layout: fixed;
+}
+
+thead th{
+    background-color: darkgrey;
+}
+tbody tr{
+    background-color: rgba(0, 0, 0, 0.2);
+}
+tbody tr:nth-child(even){
+    background-color: rgba(174, 255, 255, 0.095);
+}
+
+
+
+
+.highlight-click-row * {
+    background-color: rgba(0, 0, 255, 0.15) !important;
+}
+.highlight-click-col {
+    background-color: rgba(0, 0, 255, 0.15) !important;
+}
+
+/* As long as the table isn't highlighting a column */
+:not(:has(.highlight-click-col)) .highlight-hover {
+    background-color: rgba(0, 255, 255, 0.095);
+}
+
+
+
+td button {
+    width: fit-content;
+}
+
+.grade-selector {
+    appearance: none;
+    background-color: transparent;
+    text-align: center;
+    border: none;
+}
+
+.fail-grade {
+    background-color: rgba(255, 0, 0, 0.9) !important;
+    color: white;
+}
