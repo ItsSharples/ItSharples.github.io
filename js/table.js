@@ -5,7 +5,13 @@ const tableDOM = document.querySelector("table")
 const exampleModeCheck = document.getElementById("example-mode");
 
 const debugMode = true;
-let tableState = {}
+let tableState = {
+    "Headers" : [],
+    "NumAssignments" : 0,
+    "Contents" : [],
+}
+
+let history = [tableState]
 var beforeRow = -1;
 var creationDialog;
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
@@ -83,34 +89,44 @@ function getRandomName(){
 const getRandomStudentID = () => getRandomInt(2100000, 2199999);
 const validIndex = (index) => Math.min(Math.max(index, 0), tableState.Contents.length) == index;
 
+function saveToHistory(){
+    if(JSON.stringify(tableState) !== JSON.stringify(history.slice(-1))){
+        history.push(JSON.parse(JSON.stringify(tableState)))
+    }
+}
+function reloadToLastHistory(){
+    console.log(history)
+    let currState = history.pop()
+    setTableTo(history.pop())
+}
+
 function htmlString(string){
     var out = string.toLowerCase()
     out = out.replaceAll(" ", "-")
     return out;
 }
+function setTableTo(data){
+    tableState["Headers"] = data["Headers"]
+    tableState["NumAssignments"] = data["NumAssignments"]
+    tableState["Contents"] = data["Contents"]
+
+    saveToHistory()
+    regenerateTableDOM()
+}
 function resetTable(){
     console.log("Reset Table")
-    tableState = {
-        "Headers" : [
-            "StudentName",
-            "StudentID",
-        ],
-        "NumAssignments" : 5,
-        "Contents" : []
-    }
+    tableState["Headers"] = ["StudentName", "StudentID",]
+    tableState["NumAssignments"] = 5
+    tableState["Contents"] = []
 
     for(newChar of [...Array(10)]){
         AssignmentGrades = [...Array(tableState.NumAssignments)].map((value, index, array)=>getRandomAssignmentGrade());
         tableState.Contents.push([getRandomName(), getRandomStudentID(), AssignmentGrades])
     }
 
+    saveToHistory()
     regenerateTableDOM()
 }
-
-function updateData() {
-    console.log("Update Data")
-}
-
 
 function saveTable() {
     console.log("Save Table")
@@ -119,9 +135,8 @@ function saveTable() {
 
 function loadTable() {
     console.log("Load Table")
-    tableState = JSON.parse(localStorage.getItem("data"));
-    regenerateTableDOM()
-
+    var data = JSON.parse(localStorage.getItem("data"));
+    setTableTo(data)
 }
 function createStudent(beforeRow = -1) {
     if(exampleModeCheck.checked){
@@ -155,6 +170,7 @@ function addRow(name, id, before = -1) {
     else{
         tableState.Contents.splice(before, 0, newStudent)
     }
+    saveToHistory()
     regenerateTableDOM()
 }
 
@@ -166,25 +182,34 @@ function removeRow(index){
         return;
     }
     tableState.Contents.splice(index, 1)
+    saveToHistory()
     regenerateTableDOM()
 }
 
 function isColumnEmpty(index){
     return tableState.Contents.every((row) => row[2][index] == 0)
 }
-function addColumn(name = "", defaultValue = null) {
+function addColumn(name = "", position = -1, defaultValue = 0) {
     if(name == ""){
-        name = `Assignment ${tableState.NumAssignments + 1}`
+        name = `Assignment ${position == -1 ? tableState.NumAssignments + 1 : position}`
     }
     console.log(`Add Column: ${name}`)
     tableState.NumAssignments += 1;
+    for(character of tableState.Contents){
 
-    if(exampleModeCheck.checked){
-        for(character of tableState.Contents){
-            character[2].push(getRandomAssignmentGrade())
-        }
+    if(position == -1){
+        position = character[2].length
+        character[2].push(defaultValue)
+    }
+    else{
+        character[2].splice(position, 0, defaultValue)
     }
 
+    if(exampleModeCheck.checked){
+            character[2][position] = getRandomAssignmentGrade()
+        }
+    }
+    saveToHistory()
     regenerateTableDOM();
 }
 
@@ -206,10 +231,9 @@ function removeColumn(forceAction, index){
     else { // Empty the Column
         for(row of tableState.Contents){
             row[2][index] = 0
-            console.log(row)
         }
     }
-
+    saveToHistory()
     regenerateTableDOM()
 }
 
@@ -247,6 +271,8 @@ function onEditGrade(event){
         const changedCol = event.target.cellIndex - 2;
         tableState.Contents[changedRow][2][changedCol] = newVal;
         console.log(tableState);
+
+        saveToHistory()
         regenerateTableDOM([changedRow, changedCol])
     }
 }
@@ -323,6 +349,7 @@ function selectRow(rowElement){
     }
 }
 function regenerateTableDOM(focusOn = []){
+    //if(saveChange){saveToHistory()}
     console.log("Regenerate Table DOM")
     const tblBody = document.createElement("tbody");
     const tblHead = document.createElement("thead");
@@ -593,6 +620,7 @@ function activateContextMenu(forElement) {
 
     // Because we're destroying everything on every update, we need to find our menu target again
     function updateMenuTarget(){
+        if(!menuTarget){return}
         console.log("Update Menu");
         var newParent = document.getElementById(menuTarget.parentElement.id)
         var menuIndex = Array.from(menuTarget.parentElement.children).indexOf(menuTarget)
@@ -631,7 +659,7 @@ function activateContextMenu(forElement) {
             var removeElements = Array.prototype.concat(...removeElementsLists)
             const assignmentIndex = assignmentNum - 1;
             for(element of removeElements){
-                function updateElement(isEmpty, position){
+                function updateElement(isEmpty, position, index){
                     var action = isEmpty ? "Remove" : "Clear";
                     if(forceAction){
                         action = "Remove"
@@ -643,21 +671,25 @@ function activateContextMenu(forElement) {
                     else {
                         element.classList.remove("is-empty")
                     }
+                    if(index < 0 | index >= tableState.NumAssignments){
+                        element.classList.add("hidden-column")
+                    }
+                    else {
+                        element.classList.remove("hidden-column")
+                    }
                 }
                 if(element.matches('.up')){
-                    if(assignmentIndex < 0){continue}
                     const isEmpty = isColumnEmpty(assignmentIndex - 1)
-                    updateElement(isEmpty, "Assignment Left")
+                    updateElement(isEmpty, "Assignment Left", assignmentIndex - 1)
                     
                 }
                 if(element.matches('.self')){
                     const isEmpty = isColumnEmpty(assignmentIndex)
-                    updateElement(isEmpty, "This Assignment")
+                    updateElement(isEmpty, "This Assignment", assignmentIndex)
                 }
                 if(element.matches('.down')){
-                    if(assignmentIndex >= tableState.NumAssignments){continue}
                     const isEmpty = isColumnEmpty(assignmentIndex+1);
-                    updateElement(isEmpty, "Assignment Right")
+                    updateElement(isEmpty, "Assignment Right", assignmentIndex+1)
                 }
             }
         }
@@ -678,7 +710,6 @@ function activateContextMenu(forElement) {
             if(event.target.matches('.assignment')){
                 remove = removeColumn.bind(null, forceAction);
                 currIndex = currCol;
-                console.log(isColumnEmpty(currIndex))
             }
             
             if(event.target.matches('.up')){
@@ -695,12 +726,26 @@ function activateContextMenu(forElement) {
             updateMenuTarget()
         }
         if (event.target.matches('.add')) {
-            var currRow = menuTarget.parentElement.rowIndex - 1;
+            const currRow = menuTarget.parentElement.rowIndex - 1;
+            const currCol = menuTarget.cellIndex - 2;
+
+            var currIndex = currRow;
+            var add = createStudent;
+            if(event.target.matches('.student')){
+                add = createStudent;
+                currIndex = currRow;
+            }
+            if(event.target.matches('.assignment')){
+                add = addColumn.bind(null, "");
+                currIndex = currCol;
+            }
+            
+
             if(event.target.matches('.up')){
-                createStudent(currRow)
+                add(currIndex)
             }
             if(event.target.matches('.down')){
-                createStudent(currRow + 1)
+                add(currIndex + 1)
             }
             updateMenuTarget()
 
@@ -770,6 +815,19 @@ function start() {
     }
 
     activateContextMenu(tableDOM);
+
+    document.addEventListener("keydown", (event) => {
+        if(event.key.toLowerCase() == "z"){
+            if(event.ctrlKey | event.metaKey){
+                if(event.shiftKey) {//Redo, heck that
+                }
+                else {//Undo
+                    reloadToLastHistory()
+                }
+
+            }
+        }
+    })
 
     // const observer = new MutationObserver((mutationRecords) => {
         
