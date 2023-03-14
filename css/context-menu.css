@@ -44,3 +44,6 @@
 #contextMenu:not(.has-assignment) .assignment {
     display: none;
 }
+#contextMenu .hidden-column {
+    display: none;
+}
