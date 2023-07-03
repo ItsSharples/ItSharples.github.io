@@ -17,8 +17,8 @@ colours = ['163, 193, 255',
 
 width = 400
 height = 220
-numchunks = 5
-numstars = 10
+numchunks = 2
+numstars = 8
 
 dim = max(width, height)
 
