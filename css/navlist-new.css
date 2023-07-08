@@ -230,7 +230,9 @@
     }
 }
 
+
 #showMenu {
+    cursor: pointer;
     position: absolute;
     width: 2em;
     height: 2em;
@@ -246,10 +248,15 @@
     content: none;
 }
 
-#showMenu:checked~#navigation {
+*:has(#showMenu:checked)~#navigation {
     transform: none;
-
     left: 1px;
+}
+
+@media (min-width: 480px) {
+    #showMenu {
+        display: none;
+    }
 }
 
 /* End Title */
