@@ -1,0 +1,93 @@
+body {
+  counter-reset: section;
+  /* Set a counter named 'section', and its initial value is 0. */
+}
+
+h4::before {
+  counter-increment: section;
+  /* Increment the value of section counter by 1 */
+  content: "Section " counter(section) ": ";
+  /* Display the word 'Section ', the value of section counter, and a colon before the content of each h3 */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 1.5em;
+  margin-block: 0;
+}
+
+#content a {
+  display: inline-flex;
+  flex-direction: row;
+  align-self: center;
+}
+
+#content a:link {
+  text-decoration: none !important;
+  line-height: 1.3em;
+}
+
+#content a:link:hover::after {
+  content: "🔗";
+  display: inline;
+  font-size: x-small;
+}
+
+.note-sorted::after {
+  content: " (Sorted by Familiarity)";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 60%;
+  text-decoration: none;
+}
+
+ul {
+  font-size: inherit;
+  margin-inline: 0;
+  padding-inline: 0;
+}
+
+li {
+  list-style-type: none;
+  text-indent: 0;
+}
+
+@supports (scroll-snap-align: start) {
+  #content {
+    scroll-snap-type: x block;
+  }
+  html {
+    scroll-padding-top: 6em;
+  }
+}
+
+.list-row {
+  display: grid;
+  grid-template-columns: repeat(100, auto);
+  grid-template-rows: repeat(100, auto);
+  align-items: start;
+  justify-items: start;
+}
+
+.sep-colon::after {
+  content: ":";
+}
+
+.select-all {  
+  -webkit-user-select: all;  /* Chrome 49+ */
+  -moz-user-select: all;     /* Firefox 43+ */
+  -ms-user-select: all;      /* No support yet */
+  user-select: all;          /* Likely future */   
+}
+
+/* Need to also include :visited because it's more specific than just :link */
+.disable-links a:is(:link, :visited){
+  pointer-events: none;
+  color: currentColor;
+  font-weight: normal;
+  font-style: normal;
+}

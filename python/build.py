@@ -5,7 +5,8 @@ import re
 import shutil
 import yaml
 from dataclasses import dataclass, field
-from buildProjects import buildProjects, writeStringIntoPath, readPathIntoString
+from buildProjects import buildProjects
+from helpers import readPathIntoString, writeStringIntoPath, getFileExtensionOfPath
 
 
 @dataclass
@@ -74,9 +75,6 @@ def setupParserAndParse():
     return args, yamlConfig
 
 
-def getFileExtensionOfPath(path: str):
-    return os.path.splitext(path)[1][1:]
-
 def main():
     args, yamlConfig = setupParserAndParse()
 
@@ -109,6 +107,7 @@ def main():
 
         usedDirs = []
         for root, dirs, files in os.walk(path):
+            relativeRoot = root[len(path)+1:]
             reinclude = set(dirs) & folderConfig.include
             # Exclude from dirs, all subdirs starting with . or in the exclude set,
             #   and then reinclude any that were excluded. Include overrides Exclude
@@ -118,7 +117,7 @@ def main():
 
             for file in files:
                 fileExtension = getFileExtensionOfPath(file)
-                filePath = os.path.join(root, file)
+                filePath = Path(os.path.join(relativeRoot, file))
                 foundExtensions.add(fileExtension)
 
                 if fileExtension in fileConfig.include:
@@ -128,12 +127,14 @@ def main():
                 if fileExtension in fileConfig.exclude:
                     excludedFiles.append(filePath)
                     continue
-
                 
+                # File wasn't referenced, so is disused
+                excludedFiles.append(filePath)
 
-            usedDirs.append(root)
+            usedDirs.append(relativeRoot)
         unusedExtensions = foundExtensions ^ (fileConfig.include | fileConfig.exclude)
         print(f"WARNING: Found Extensions: {unusedExtensions} that were not explicitly included or excluded from the project")
+
         return usedDirs, foundFiles, excludedFiles, unusedExtensions
 
     print(f"Building from {args.sourcePath} into {args.buildPath}")
@@ -141,12 +142,12 @@ def main():
     dirs, includedFiles, excludedFiles, unusedExtensions = searchDirForExtensions(
         args.sourcePath, fileConfig, folderConfig)
     
-    noncompiledHTML: list[tuple[Path, str]] = []
+    noncompiledHTML: list[tuple[str, Path]] = []
     toCopy: list[str] = []
     for copy in includedFiles:
-        to = Path(args.buildPath, copy[2:])
+        to = Path(args.buildPath, copy)
         if getFileExtensionOfPath(to) == "html":
-            contents = readPathIntoString(copy)
+            contents = readPathIntoString(Path(args.sourcePath, copy))
             noncompiledHTML.append((contents, to))
         else:
             toCopy.append(copy)
@@ -159,15 +160,16 @@ def main():
     # Rebuild the Tree
     for dir in set(dirs):
         try:
-            os.makedirs(os.path.join('.', args.buildPath, dir[2:]))
+            os.makedirs(Path(args.buildPath, dir))
         except FileExistsError:
             continue
 
     # Add the leaves
     for copy in toCopy:
-        to = os.path.join('.', args.buildPath, copy[2:])
-        ##print(f"Copying {copy} to {to}")
-        shutil.copyfile(copy, to)
+        fromPath = Path(args.sourcePath, copy)
+        toPath = Path(args.buildPath, copy)
+        print(f"Copying {fromPath} to {toPath}")
+        shutil.copyfile(fromPath, toPath)
 
     # Build the projects
     preview, pages = buildProjects(patternStrings, templatePaths, Path(args.sourcePath),

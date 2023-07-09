@@ -1,0 +1,52 @@
+<Root>
+<LayoutList>
+<Layout name="Default Layout">
+	<Item per_instance = "false">
+    <semantic name="POSITION" id="0"></semantic>
+    <format layout = "RGBA" type="FLOAT"></format>
+	</Item>
+	<Item per_instance = "false">
+		<semantic name="COLOR" id="0"></semantic>
+		<format layout = "RGBA" type="FLOAT"></format>
+	</Item>
+	<Item per_instance = "false">
+		<semantic name="NORMAL" id="0"></semantic>
+		<format layout = "RGBA" type="FLOAT"></format>
+	</Item>
+</Layout>
+<Layout name="Textured Layout"> 
+	<Item per_instance = "false">
+		<semantic name="POSITION" id="0"></semantic>
+		<format layout = "RGBA" type="FLOAT"></format>
+	</Item>
+	<Item per_instance = "false">
+		<semantic name="COLOR" id="0"></semantic>
+		<format layout = "RGBA" type="FLOAT"></format>
+	</Item>
+	<Item per_instance = "false">
+		<semantic name="NORMAL" id="0"></semantic>
+		<format layout = "RGBA" type="FLOAT"></format>
+	</Item>
+	<Item per_instance = "false">
+		<semantic name="TEXCOORD" id="0"></semantic>
+		<format layout = "RG" type="FLOAT"></format>
+	</Item>
+</Layout> 
+</LayoutList>
+
+<ShaderList>
+<Shader name="Default Pixel" type="pixel" version="5.0" layout = "Default Layout">
+<File name="DefaultPixelShader" type="hlsl"></File>
+</Shader>
+<Shader name="Default Vertex" type="vertex" version="5.0" layout = "Default Layout">
+<File name="DefaultVertexShader" type="hlsl"></File>
+</Shader>
+
+<Shader name="Textured Pixel" type="pixel" version="5.0" layout = "Textured Layout">
+<File name="TexturedPixelShader" type="hlsl"></File>
+</Shader>
+<Shader name="Textured Vertex" type="vertex" version="5.0" layout = "Textured Layout">
+<File name="TexturedVertexShader" type="hlsl"></File>
+</Shader>
+</ShaderList>
+</Root>

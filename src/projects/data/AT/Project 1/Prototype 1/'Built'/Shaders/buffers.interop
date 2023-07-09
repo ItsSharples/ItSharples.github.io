@@ -1,0 +1,12 @@
+buffer MatrixBuffer
+{
+    //Matrix worldMatrix;
+    Matrix viewMatrix;
+    Matrix projectionMatrix;
+};
+
+buffer CoordBuffer
+{
+    Vector coord_pos;
+    //Vector coord_rot;
+};

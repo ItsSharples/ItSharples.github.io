@@ -1,0 +1,30 @@
+Technical Skills:
+
+Programming languages
+C++
+C#
+Python
+
+Frameworks
+WinUI 3
+Win32
+DirectX 11
+
+Game Engines
+Unity
+Unreal Engine 4
+ASGE (University C++ bespoke engine)
+
+Software Skills
+Git
+GitKraken
+Visual Studio 2019
+
+Other Experience
+Maya
+FMOD
+Audacity
+CLion
+Adobe Premiere Pro
+OBS
+Blender

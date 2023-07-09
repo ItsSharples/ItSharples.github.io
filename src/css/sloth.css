@@ -1,0 +1,28 @@
+
+#a{ background-color: blue; grid-column: 1; }
+#b{ background-color: red; grid-column: 2; }
+#c{ background-color: green; grid-column: 3; }
+
+#a:hover{cursor: grab;}
+#b:hover{cursor: grab;}
+#c:hover{cursor: grab;}
+.triple-rows{
+    --left-stretch: 1fr;
+    --mid-stretch: 1fr;
+    --right-stretch: 1fr;
+}
+.triple-rows:has(#a:hover){
+    --left-stretch: 2fr;
+}
+.triple-rows:has(#b:hover){
+    --mid-stretch: 2fr;
+}
+.triple-rows:has(#c:hover){
+    --right-stretch: 2fr;
+}
+
+.triple-rows {
+    display: grid;
+    width: 100vw;
+    grid-template-columns: var(--left-stretch) var(--mid-stretch) var(--right-stretch);
+}

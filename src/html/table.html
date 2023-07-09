@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Safari Colour Things -->
+    <meta name="color" content="#171b20">
+    <meta name="theme-color" content="#171b20">
+    <meta name="color-scheme" content="dark light">
+    <!-- Data -->
+    <meta name="author" content="Sharples">
+
+    <meta name="title" content="Table Test | Sharples' Corner">
+    <meta name="description" content="Sharples shows off stuff they've been up to">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Sharples' Corner">
+    <meta property="og:url" content="https://itssharples.github.io/html/index.html">
+    <meta property="og:title" content="Student Grades Table Test | Messing Around">
+    <meta property="og:description" content="A basic table generated in js">
+    <meta property="og:image" content="">
+
+    <title>Sharples' Corner</title>
+    <base href="/">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/navlist-new.css">
+    <link rel="stylesheet" href="/css/footlist.css">
+    <link rel="stylesheet" href="/css/hamburger-new.css">
+    <link rel="stylesheet" href="/css/table.css">
+    <link rel="stylesheet" href="/css/context-menu.css">
+    <!-- Favicons -->
+    <link rel="icon" href="/assets/images/favicon/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/images/favicon/apple-touch-icon.png">
+    <!-- Scripts -->
+    <script src="/js/scrollZoom.js" async></script>
+    <script src="/js/buttonPress-new.js" async></script>
+    <script type="text/javascript" src="/js/table.js" defer></script>
+    <!-- Canvas.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.0.1/chart.min.js" integrity="sha512-tQYZBKe34uzoeOjY9jr3MX7R/mo7n25vnqbnrkskGr4D6YOoPYSpyafUAzQVjV6xAozAqUFIEFsCO4z8mnVBXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Other -->
+    <link rel="manifest" href="/manifest.webmanifest">
+</head>
+<nav class="navbar">
+    <ul class="navlist" role="list">
+        <li class="left">
+            <ul class="navbar-item">
+                <li id="hamMenu">
+                    <label for="showMenu" id="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </label>
+                </li>
+                <li id="navIcon">
+                    <picture alt="Header Logo" width="100%">
+                        <source type="image/webp" alt="Header Logo" 
+                        srcset="/assets/images/PIA21891/PIA21891.webp 1000w,
+                                /assets/images/PIA21891/PIA21891x320.webp 320w,
+                                /assets/images/PIA21891/PIA21891x50.webp 50w"
+
+                        sizes=  "(min-width: 769px) 20px,
+                                 (min-width: 480px) 100px,
+                                 200px"
+                        >
+                        <img src="/assets/images/PIA21891/PIA21891x50.png" alt="Header Logo"></img>
+                    </picture>
+                </li>
+                <li id="iconTxt">
+                    Sharples' Corner
+                </li>
+            </ul>
+        </li>
+        <li><input type="checkbox" id="showMenu"></li>
+        <li class="primary-navigation" id="navigation">
+            <ul class="navbar-item" role="list">
+                <li><a href="/">Home</a></li>
+                <li><a href="/projects/">Projects</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
+<body>
+    <div id="background">
+        <main id="content">
+            <table id="Grades" class="table">
+                <!--
+                <tr id="Header">
+                    <foreach item in headers>
+                        <td class="HeaderItem">{item.name}</td>
+                    </foreach>
+                    
+                </tr>
+                <tr id="{StudentID}" class="DataRow">
+                    <foreach value in Data[StudentID]>
+                        <td id="{value.name}">{value.contents}</td>
+                    </foreach>
+                </tr>
+                -->
+            </table>
+            <label for="example-mode">Example Mode</label>
+            <input id="example-mode" name="example-mode" type="checkbox">
+            <div id="contextMenuParent">
+                <div id="contextMenu">
+                    <p class="title"></p>
+                    <div id="add-cell" class="cell-modify student">
+                        <!-- ⇧⇩⇦ -->
+                        <button id="row-add-up" class="add up student">Add Student Above</button>
+                        <button id="row-add-down" class="add down student">Add Student Below</button>
+                    </div>
+                    <div id="remove-cell" class="cell-modify student">
+                        <button id="row-remove-up" class="remove up student">Remove Student Above</button>
+                        <button id="row-remove-self" class="remove self student">Remove This Student</button>
+                        <button id="row-remove-down" class="remove down student">Remove Student Below</button>
+                    </div>
+                    <div id="add-column" class="cell-modify assignment">
+                        <!-- ⇧⇩⇦ -->
+                        <button id="column-add-left" class="add up assignment">Add Assignment Left</button>
+                        <button id="column-add-right" class="add down assignment">Add Assignment Right</button>
+                    </div>
+                    <div id="remove-cell" class="cell-modify assignment">
+                        <button id="column-remove-left" class="remove up assignment">Remove Assignment Left</button>
+                        <button id="column-remove-self" class="remove self assignment">Remove This Assignment</button>
+                        <button id="column-remove-right" class="remove down assignment">Remove Assignment Right</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+<footer>
+    <ul class="footlist">
+        <li><a href="mailto:contactme@sharples.dev" rel="nofollow">Email</a></li>
+        <li><a href="https://github.com/ItsSharples" rel="nofollow">GitHub</a></li>
+        <li><a href="https://itssharples.itch.io" rel="nofollow">Itch.io</a></li>
+        <li><a href="https://twitter.com/ItsSharples" rel="nofollow">Twitter</a></li>
+    </ul>
+</footer>
+</html>

@@ -1,5 +1,5 @@
 
-sourceDir: '.'
+sourceDir: 'src'
 destinationDir: '_site'
 templateDir: templates
 

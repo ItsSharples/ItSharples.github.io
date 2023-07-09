@@ -1,0 +1,8 @@
+<Root>
+<TextureList>
+<Texture name = "snow" filename="Snow/Colour.png"></Texture>
+<Texture name = "debug" filename="debug.png"></Texture>
+<Texture name = "tree" filename="image.png"></Texture>
+<Texture name = "skybox" filename="Skybox.tif"></Texture>
+</TextureList>
+</Root>

@@ -1,0 +1,314 @@
+/*
+ * Based on a Codepen made by Erik Terwan
+ *
+ / Original
+ * Made by Erik Terwan
+ * 24th of November 2015
+ * MIT License
+ *
+ *
+ * https://codepen.io/erikterwan/pen/EVzeRP
+ */
+
+#hamMenu {
+    display: flex;
+    position: relative;
+    min-height: 100%;
+    width: 100%;
+    aspect-ratio: 1;
+
+    -webkit-user-select: none;
+    user-select: none;
+
+    cursor: pointer;
+
+    transform: translateX(0);
+    overflow: hidden;
+
+    /* margin-left: 1em; */
+    margin: 0;
+    padding: 0;
+    margin-right: 0.4em;
+
+    /* transition: 
+        font-size 100ms linear, */
+    /* top 100ms linear; */
+    /* opacity 100ms linear,
+        width 300ms linear 100ms; */
+}
+
+#hamMenu ul {
+    display: block;
+}
+
+#hamMenu li {
+    line-height: 100%;
+    height: 100%;
+    text-align: left;
+}
+
+/* #hamMenu a
+{
+  text-decoration: none;
+  color: #232323;
+  
+  transition: color 0.3s ease;
+}
+
+#hamMenu a:hover
+{
+  color: tomato;
+} */
+
+
+#menuButton {
+    position: absolute;
+    display: block;
+
+    width: 2em;
+    height: 2em;
+    padding: 0px;
+    margin: 0px;
+
+    cursor: pointer;
+
+    /* hide this */
+    z-index: 2;
+    /* and place it over the hamburger */
+
+    -webkit-touch-callout: none;
+}
+
+/*
+ * Just a quick hamburger
+ */
+#hamburger {
+    position: relative;
+    width: 2em;
+    height: 2em;
+    aspect-ratio: 1;
+
+    margin: 0;
+    padding: 0.37em 0.3em;
+    z-index: 1;
+    transform: translate(0%, 0%);
+
+    overflow: hidden;
+
+    transition:
+        width 100ms linear,
+        height 100ms linear;
+}
+
+#hamburger span {
+    display: block;
+    width: 1.4em;
+    height: 0.19em;
+
+    margin: 0;
+    margin-bottom: 0.23em;
+
+
+    position: relative;
+    top: .1em;
+    left: 0;
+
+    background: #cdcdcd;
+    border-radius: 3px;
+    z-index: 1;
+    transform-origin: center;
+
+    transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
+        background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
+        opacity 0.55s ease,
+        width 100ms ease;
+}
+
+#hamburger>span:last-child {
+    margin-bottom: 0;
+}
+
+/* 
+ * Transform all the slices of hamburger
+ * into a crossmark.
+ */
+ #hamburger>span {
+    animation-name: hamburger-first;
+    animation-duration: 2s; 
+    animation-timing-function: ease-in;
+    animation-direction: reverse;
+    animation-fill-mode: both;
+}
+#hamburger[checked]>span {
+    animation-direction: normal;
+    /* background: #232323; */
+}
+
+/* But hide the middle one. */
+#hamburger>span:nth-child(2) {
+    animation-name: hamburger-middle;
+}
+#hamburger[checked]>span:nth-child(2) {
+    animation-name: hamburger-middle;
+}
+
+/* And the last one should go the other direction */
+#hamburger>span:last-child {
+    animation-name: hamburger-last;
+}
+/* #hamburger[checked]>span:last-child {
+    animation: hamburger-last 250ms ease-in normal forwards;
+} */
+
+#hamMenu {
+    font-size: var(--font-size-normal);
+    transition:
+        width 100ms linear,
+        transform 100ms linear,
+        font-size 100ms linear;
+}
+
+html:not([data-scroll='0']) #hamMenu {
+    font-size: var(--font-size-shrunk);
+}
+
+#hamMenu input {
+    font-size: 100%;
+    width: 2em;
+    height: 2em;
+}
+
+#hamMenu {
+    /* animation: hamburger-appear 100ms ease-in 0.1s forwards;
+    -webkit-animation: hamburger-appear 100ms ease-in 0.1s forwards; */
+
+    width: 2em;
+
+    -webkit-transform: translateX(0) scale(1);
+    transform: translateX(0) scale(1);
+}
+
+@media (min-width: 480px) {
+    #hamMenu {
+        /* animation: hamburger-disappear 100ms ease-in 0s forwards;
+        -webkit-animation: hamburger-disappear 100ms ease-in 0s forwards; */
+
+        width: 0;
+
+        -webkit-transform: translateX(-100%);
+        transform: translateX(-100%);
+    }
+}
+
+@supports (outline-color: -webkit-focus-ring-color) {
+    #showMenu:focus-within {
+        outline: 5px auto -webkit-focus-ring-color;
+    }
+}
+
+@keyframes slide-out-x {
+    0% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(-200%);
+    }
+}
+
+@-webkit-keyframes slide-out-x {
+    0% {
+        -webkit-transform: translateX(0%);
+    }
+
+    100% {
+        -webkit-transform: translateX(-200%);
+    }
+}
+
+@keyframes slide-in-x {
+    0% {
+        transform: translateX(-200%);
+    }
+
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+@-webkit-keyframes slide-in-x {
+    0% {
+        transform: translateX(-200%);
+    }
+
+    100% {
+        -webkit-transform: translateX(0%);
+    }
+}
+/* */
+@keyframes hamburger-first {
+    0% { transform: translateX(0) scale(1); }
+    100% { transform: translateX(-.02em) translateY(.42em) rotate(45deg); }
+}
+
+@-webkit-keyframes hamburger-first {
+    0% { -webkit-transform: translateX(0) scale(1); }
+    100% { -webkit-transform: translateX(-.02em) translateY(.42em) rotate(45deg); }
+}
+/* */
+@keyframes hamburger-middle {
+    0% { transform: translateX(0) scale(1); }
+    100% { transform: scale(0, 0); }
+}
+
+@-webkit-keyframes hamburger-middle {
+    0% { -webkit-transform: translateX(0) scale(1); }
+    100% { -webkit-transform: scale(0, 0); }
+}
+/* */
+@keyframes hamburger-last {
+    0% { transform: translateX(0) scale(1); }
+    100% { transform: translateX(-.02em) translateY(-.42em) rotate(-45deg); }
+}
+
+@-webkit-keyframes hamburger-last {
+    0% { -webkit-transform: translateX(0) scale(1); }
+    100% { -webkit-transform: translateX(-.02em) translateY(-.42em) rotate(-45deg); }
+}
+
+/* 
+@keyframes hamburger-disappear {
+    100% {
+        transform: translateX(-100%) scaleX(0);
+        margin: 0;
+    }
+}
+
+@keyframes hamburger-appear {
+    0% {
+        visibility: visible;
+    }
+    100% {
+        transform: translateX(-100%) scaleX(1);
+        opacity: 1;
+        margin-right: 0.4em;
+    }
+}
+
+@-webkit-keyframes hamburger-disappear {
+    100% {
+        -webkit-transform: translateX(-100%) scaleX(0);
+        margin: 0;
+    }
+}
+
+@-webkit-keyframes hamburger-appear {
+    0% {
+        visibility: visible;
+    }
+    100% {
+        -webkit-transform: translateX(0%) scaleX(1);
+        opacity: 1;
+        margin-right: 0.4em;
+    }
+} */

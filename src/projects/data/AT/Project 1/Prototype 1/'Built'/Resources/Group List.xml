@@ -1,0 +1,16 @@
+<Root>
+	<GroupList>
+		<Group name = "Ground">
+			<Object name = "Plane" count = "20" distance_between = "20" place_randomly = "false"></Object>
+		</Group>
+		<Group name = "Trees">
+			<Object name = "Tree" count = "15" distance_between = "10" place_randomly = "true"></Object>
+		</Group>
+		<Group name = "Rocks">
+			<Object name = "Rock" count = "5" distance_between = "30" place_randomly = "true"></Object>
+		</Group>
+		<Group name = "Snowpiles">
+			<Object name = "Snowpile" count = "5" distance_between = "30" place_randomly = "true"></Object>
+		</Group>
+	</GroupList>
+</Root>

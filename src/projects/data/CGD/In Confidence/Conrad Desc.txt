@@ -1,0 +1,6 @@
+
+Welcome to Artificial Incorporated, a business comprised of you, it's quality assurance worker. You are the only human associate at the company, ensuring the machines upstairs output only quality content. By operating our standard issue gravitational object grabber, sort the quality content into their correct colours, removing any obstructive brown packaging in advance. If anything odd occurs, please accept that it is your job to remove pests and other junk following our safety guidelines and utilising the incinerator accordingly. Thank you for your work.
+Note: payment is not included, this job is officially recognised as volunteer work. By Working shifts, you therefor accept this agreement.
+
+
+Quality Assurance was created in a one-week game jam run via my UWE Commercial Games Development course, working alongside an external company's AI 3D model generator, which utilises images to generate simple 3D objects from. This game took a spin on this approach where we sometimes managed to create real-looking objects, and sometimes not, utilising the AI generator, turning those outputs into a game! Quality Assurance was made by myself and 5 other fellow university Games Technology students.

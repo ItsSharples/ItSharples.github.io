@@ -1,0 +1,39 @@
+<Root>
+<ObjectList>
+<Object name="Player" texture_name ="tree" layout ="Default Layout">
+  <shaders pixel ="Default Pixel" vertex ="Default Vertex"></shaders>
+<model type ="obj" obj ="sled"></model>
+<collider shape = "circle" type ="" scale = ".5"  width = "1" height = "1" depth = "1"></collider>
+</Object>
+  
+  
+<Object name="Skybox" texture_name ="skybox" layout ="Textured Layout">
+<shaders pixel ="Textured Pixel" vertex ="Textured Vertex"></shaders>
+<model type ="icosphere"><dims width = "600" quality = "3" inverted ="true"></dims></model>
+</Object>
+    
+<Object name="Plane" type = "plane" texture_name = "snow" layout = "Textured Layout">
+<shaders pixel = "Textured Pixel" vertex = "Textured Vertex" ></shaders>
+<model type = "plane"><dims height = "20" width = "20" quality = "0"></dims></model>
+</Object>
+
+<Object name="Tree" texture_name = "snow" layout = "Default Layout">
+<shaders pixel = "Default Pixel" vertex = "Default Vertex"></shaders>
+<model type = "obj" obj = "treePine"></model>
+<collider shape = "circle" type ="damage" scale = ".25"  width = "1" height = "1" depth = "1"></collider>
+</Object>
+
+<Object name="Rock" texture_name = "snow" layout = "Default Layout">
+<shaders pixel = "Default Pixel" vertex = "Default Vertex"></shaders>
+<model type = "obj" obj = "rockFormationSmall"></model>
+<collider shape = "circle" type ="damage" scale = ".5"  width = "1" height = "1" depth = "1"></collider>
+</Object>
+
+<Object name="Snowpile" texture_name = "snow" layout = "Default Layout">
+<shaders pixel = "Default Pixel" vertex = "Default Vertex"></shaders>
+<model type = "obj" obj = "snowPatch"></model>
+<collider shape = "circle" type ="slow" scale = "1"  width = "1" height = "1" depth = "1"></collider>
+</Object>
+
+</ObjectList>
+</Root>
