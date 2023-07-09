@@ -31,8 +31,10 @@
 
     <link rel="stylesheet" href="/css/landing-page.css">
 
-    <link rel="stylesheet" href="/css/stars.css">
-    <link rel="stylesheet" href="/css/stars-config.css">
+    <link rel="preload" href="/css/stars.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/css/stars.css"></noscript>
+    <link rel="preload" href="/css/stars-config.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/css/stars-config.css"></noscript>
     <!-- Favicons -->
     <link rel="icon" href="/assets/images/favicon/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/assets/images/favicon/apple-touch-icon.png">
