@@ -85,6 +85,14 @@
 
 #navIcon img {
     aspect-ratio: 1;
+    height: 2em;
+    width: 2em;
+}
+
+#navIcon picture {
+    aspect-ratio: 1;
+    height: 2em;
+    width: 2em;
 }
 
 #navigation {
