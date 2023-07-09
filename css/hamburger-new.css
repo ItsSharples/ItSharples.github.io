@@ -132,24 +132,33 @@
  * Transform all the slices of hamburger
  * into a crossmark.
  */
+ #hamburger>span {
+    animation-name: hamburger-first;
+    animation-duration: 2s; 
+    animation-timing-function: ease-in;
+    animation-direction: reverse;
+    animation-fill-mode: both;
+}
 #hamburger[checked]>span {
-    transform: translateX(-.02em) translateY(.42em) rotate(45deg);
+    animation-direction: normal;
     /* background: #232323; */
 }
 
-/*
- * But let's hide the middle one.
- */
+/* But hide the middle one. */
+#hamburger>span:nth-child(2) {
+    animation-name: hamburger-middle;
+}
 #hamburger[checked]>span:nth-child(2) {
-    transform: scale(0, 0);
+    animation-name: hamburger-middle;
 }
 
-/*
- * And the last one should go the other direction
- */
-#hamburger[checked]>span:last-child {
-    transform: translateX(-.02em) translateY(-.42em) rotate(-45deg);
+/* And the last one should go the other direction */
+#hamburger>span:last-child {
+    animation-name: hamburger-last;
 }
+/* #hamburger[checked]>span:last-child {
+    animation: hamburger-last 250ms ease-in normal forwards;
+} */
 
 #hamMenu {
     font-size: var(--font-size-normal);
@@ -235,6 +244,36 @@ html:not([data-scroll='0']) #hamMenu {
     100% {
         -webkit-transform: translateX(0%);
     }
+}
+/* */
+@keyframes hamburger-first {
+    0% { transform: translateX(0) scale(1); }
+    100% { transform: translateX(-.02em) translateY(.42em) rotate(45deg); }
+}
+
+@-webkit-keyframes hamburger-first {
+    0% { -webkit-transform: translateX(0) scale(1); }
+    100% { -webkit-transform: translateX(-.02em) translateY(.42em) rotate(45deg); }
+}
+/* */
+@keyframes hamburger-middle {
+    0% { transform: translateX(0) scale(1); }
+    100% { transform: scale(0, 0); }
+}
+
+@-webkit-keyframes hamburger-middle {
+    0% { -webkit-transform: translateX(0) scale(1); }
+    100% { -webkit-transform: scale(0, 0); }
+}
+/* */
+@keyframes hamburger-last {
+    0% { transform: translateX(0) scale(1); }
+    100% { transform: translateX(-.02em) translateY(-.42em) rotate(-45deg); }
+}
+
+@-webkit-keyframes hamburger-last {
+    0% { -webkit-transform: translateX(0) scale(1); }
+    100% { -webkit-transform: translateX(-.02em) translateY(-.42em) rotate(-45deg); }
 }
 
 /* 
