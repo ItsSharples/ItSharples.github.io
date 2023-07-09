@@ -6,6 +6,7 @@ templateDir: templates
 includeFiles: [
   png,
   gif,
+  webp,
   html,
   js,
   css,
