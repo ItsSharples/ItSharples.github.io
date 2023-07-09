@@ -11,12 +11,11 @@ from Project import Project
 from SafeEval import safe_eval
 
 
-def readIntoString(url: Path):
+def readPathIntoString(url: Path):
     with open(url, "r") as file:
         return file.read()
 
-
-def writeStringInto(string: str, url: Path):
+def writeStringIntoPath(string: str, url: Path):
     with open(url, "w") as out:
         out.write(string)
 
@@ -31,7 +30,7 @@ def replaceInTemplateAtSpan(template: str, value: str, span: tuple[int, int]):
 def calculateValue(calculation: str, operatorPattern: re.Pattern, keypairs: dict[str, str]) -> str:
     # Inside Calculations, the values change meaning from just strings to potential values
     value: str = calculation
-    print(f"Calculation: {value}")
+    ##print(f"Calculation: {value}")
     # Safety Check, only evaluate if exists in a very limited subset of python
     operators = operatorPattern.search(value)
     if operators:
@@ -47,8 +46,10 @@ def calculateValue(calculation: str, operatorPattern: re.Pattern, keypairs: dict
         operator = normalise(operators['operator'])
 
         computation = ''.join([str(left), str(operator), str(right)])
+        result = safe_eval(computation)
+        ##print(f"Result: {result}")
 
-        return replaceInTemplateAtSpan(value, str(safe_eval(computation)), operators.span())
+        return replaceInTemplateAtSpan(value, str(result), operators.span())
 
         # value = value[:operators.start()] + \
         #     str(safe_eval(computation)) + value[operators.end():]
@@ -56,7 +57,7 @@ def calculateValue(calculation: str, operatorPattern: re.Pattern, keypairs: dict
     # If is a value that's been set before
     # WARNING!!! this could leak information about the build system
     if keypairs[value]:
-        print(f"Old Value: {value}")
+        ##print(f"Old Value: {value}")
         return keypairs[value]
                 
 
@@ -85,8 +86,8 @@ def createHTML(keypairs: dict[str, str], template: str, patterns: dict[str, re.P
                     editedTemplate = True
 
             case "set":
-                print(f"Setting: {value}")
                 result = calculateValue(result, operatorPattern, keypairs)
+                ##print(f"Setting: {value} to {result}")
                 if keypairs[value]:
                     print(f"Overriding {keypairs[value]} with {result} at {value}")
                 keypairs[value] = result;
@@ -155,7 +156,7 @@ def createProjectPreview(template: str, yaml: defaultdict[str, str | Path], patt
 
 
 def writeTemplate(keypairs: defaultdict[str, str], url: Path,  template: str, patterns: dict[str, re.Pattern]):
-    writeStringInto(createHTML(keypairs, template, patterns), url)
+    writeStringIntoPath(createHTML(keypairs, template, patterns), url)
 
 
 def yamlToDict(yamlStr: str) -> defaultdict:
@@ -245,14 +246,14 @@ def buildProjects(
 
     patterns = {pattern: re.compile(
         patternStrings[pattern], flags=re.DOTALL) for pattern in patternStrings}
-    templates = {path: readIntoString(Path(
+    templates = {path: readPathIntoString(Path(
         templateFolder, templatePaths[path])) for path in templatePaths}
 
     projects = createProjects(source, patterns, templates)
 
     # List is so that it actions the map
-    list(filter(None, projects.mapContent(lambda project:
-                                          writeStringInto(project.page, Path(
+    projectList = list(filter(None, projects.mapContent(lambda project:
+                                          (project.page, Path(
                                               destination, project.url, "index.html"))
                                           )))
 
@@ -261,5 +262,7 @@ def buildProjects(
         defaultdict(
             str, [('content', convertIntoHTML(projects, patterns, templates))]),
         templates['overview'], patterns)
-    writeStringInto(previewPage, Path(
+    previewTuple = (previewPage, Path(
         destination, "projects/index.html"))
+    
+    return previewTuple, projectList

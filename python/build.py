@@ -1,10 +1,11 @@
 import argparse
 import os
 from pathlib import Path
+import re
 import shutil
 import yaml
 from dataclasses import dataclass, field
-from buildProjects import buildProjects
+from buildProjects import buildProjects, writeStringIntoPath, readPathIntoString
 
 
 @dataclass
@@ -73,6 +74,9 @@ def setupParserAndParse():
     return args, yamlConfig
 
 
+def getFileExtensionOfPath(path: str):
+    return os.path.splitext(path)[1][1:]
+
 def main():
     args, yamlConfig = setupParserAndParse()
 
@@ -93,37 +97,61 @@ def main():
         exclude=frozenset(args.excludeFiles)
     )
 
-    def searchDirForExtensions(path: str,
-                               fileConfig: IncludeExclude = fileConfig, folderConfig: IncludeExclude = folderConfig):
-        out: list[str] = []
+    def searchDirForExtensions(path: Path,
+                               fileConfig: IncludeExclude = fileConfig, 
+                               folderConfig: IncludeExclude = folderConfig):
+        foundFiles: list[str] = []
+        excludedFiles: list[str] = []
+        foundExtensions: set[str] = set()
+
         if os.path.isfile(path):
-            out.append(path.name)
+            foundFiles.append(path.name)
 
         usedDirs = []
         for root, dirs, files in os.walk(path):
             reinclude = set(dirs) & folderConfig.include
             # Exclude from dirs, all subdirs starting with . or in the exclude set,
-            #   and then reinclude any that were excluded
+            #   and then reinclude any that were excluded. Include overrides Exclude
             dirs[:] = (set(dirs)
                        - set([dir for dir in dirs if dir.startswith('.')])
-                       - folderConfig.exclude) \
-                | reinclude
+                       - folderConfig.exclude) | reinclude
 
             for file in files:
-                if file in fileConfig.exclude and not file in fileConfig.include:
+                fileExtension = getFileExtensionOfPath(file)
+                filePath = os.path.join(root, file)
+                foundExtensions.add(fileExtension)
+
+                if fileExtension in fileConfig.include:
+                    foundFiles.append(filePath)
                     continue
 
-                if os.path.splitext(file)[1][1:] in fileConfig.include:
-                    out.append(os.path.join(root, file))
+                if fileExtension in fileConfig.exclude:
+                    excludedFiles.append(filePath)
+                    continue
+
+                
 
             usedDirs.append(root)
-        return usedDirs, out
+        unusedExtensions = foundExtensions ^ (fileConfig.include | fileConfig.exclude)
+        print(f"WARNING: Found Extensions: {unusedExtensions} that were not explicitly included or excluded from the project")
+        return usedDirs, foundFiles, excludedFiles, unusedExtensions
 
     print(f"Building from {args.sourcePath} into {args.buildPath}")
 
-    dirs, toCopy = searchDirForExtensions(
+    dirs, includedFiles, excludedFiles, unusedExtensions = searchDirForExtensions(
         args.sourcePath, fileConfig, folderConfig)
+    
+    noncompiledHTML: list[tuple[Path, str]] = []
+    toCopy: list[str] = []
+    for copy in includedFiles:
+        to = Path(args.buildPath, copy[2:])
+        if getFileExtensionOfPath(to) == "html":
+            contents = readPathIntoString(copy)
+            noncompiledHTML.append((contents, to))
+        else:
+            toCopy.append(copy)
 
+    ### TODO: Diff the content?
     # Delete the old contents at Destination
     shutil.rmtree(args.buildPath, ignore_errors=True)
     os.mkdir(args.buildPath)
@@ -138,12 +166,27 @@ def main():
     # Add the leaves
     for copy in toCopy:
         to = os.path.join('.', args.buildPath, copy[2:])
-        print(f"Copying {copy} to {to}")
+        ##print(f"Copying {copy} to {to}")
         shutil.copyfile(copy, to)
 
     # Build the projects
-    buildProjects(patternStrings, templatePaths, Path(args.sourcePath),
-                  args.buildPath, args.templatePath)
+    preview, pages = buildProjects(patternStrings, templatePaths, Path(args.sourcePath),
+                  Path(args.buildPath), args.templatePath)
+    
+    unusedFilePatterns = {ext: re.compile(
+        fr"\.({ext})", flags=re.IGNORECASE) for ext in unusedExtensions}
+    foundPatterns = set()
+    for page, path in pages + noncompiledHTML:
+        # Search for values that they may depend on that the build won't copy
+        for (ext, pattern) in unusedFilePatterns.items():
+            found = re.search(pattern, page)
+            if found: foundPatterns.add(ext)
+
+        writeStringIntoPath(page, path)
+    print(f"WARNING: These patterns were found in the HTML of your project, but were not included in the build: {foundPatterns}")
+
+    # Write the preview file
+    writeStringIntoPath(*preview)
 
 
 if __name__ == "__main__":
