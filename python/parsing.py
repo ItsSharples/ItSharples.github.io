@@ -8,6 +8,7 @@ def setupParserAndParse():
     defaultSourcePath = "."
     defaultBuildPath = "_site"
     defaultTemplatesPath = "templates"
+    defaultComponentsPath = "components"
     defaultTypes = ["png", "html", "js", "css"]
     # Process Arguments
     parser = argparse.ArgumentParser(
@@ -20,6 +21,8 @@ def setupParserAndParse():
                         nargs='?', help=f"The source path relative to '.'. Default: {defaultSourcePath}")
     parser.add_argument('-t', '--templates', metavar='path', type=str, dest='templatePath', const=None,
                         nargs='?', help=f"The templates path relative to '.'. Default: {defaultTemplatesPath}")
+    parser.add_argument('-p', '--components', metavar='path', type=str, dest='componentPath', const=None,
+                        nargs='?', help=f"The components path relative to '.'. Default: {defaultComponentsPath}")
     fileGroup = parser.add_argument_group('Files')
     fileGroup.add_argument('-i', '--include-types', metavar='type', type=str, dest='includeFiles', const=None,
                            nargs='*', help=f"Types to include in the output path. Default: {defaultTypes}")
@@ -37,14 +40,18 @@ def setupParserAndParse():
     with open(args.config, 'r') as config:
         yamlConfig: dict = yaml.safe_load(config.read())
 
+    args.patterns = yamlConfig['patterns']
+    args.templates = yamlConfig['templates']
+
     # Read from yaml if the command line does not indicate a preference
     if args.sourcePath == None:
         args.sourcePath = yamlConfig.get("sourceDir", defaultSourcePath)
     if args.buildPath == None:
         args.buildPath = yamlConfig.get("destinationDir", defaultBuildPath)
     if args.templatePath == None:
-        args.templatePath = yamlConfig.get(
-            "templatePath", defaultTemplatesPath)
+        args.templatePath = yamlConfig.get("templatePath", defaultTemplatesPath)
+    if args.componentPath == None:
+        args.componentPath = yamlConfig.get("componentPath", defaultComponentsPath)
 
     if args.includeFiles == None:
         args.includeFiles = yamlConfig.get("includeFiles", defaultTypes)

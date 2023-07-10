@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from buildProjects import buildProjects
 from compileHTML import createHTML
 from helpers import readPathIntoString, writeStringIntoPath, getFileExtensionOfPath, \
-    searchDir, searchDirForExtensions, IncludeExclude
+    searchDir, searchDirForExtensions, IncludeExclude, getPathRelativeToRootChild
 from parsing import setupParserAndParse
 
 def main():
@@ -19,7 +19,8 @@ def main():
         patternStrings = yamlConfig["patterns"]
         templatePaths = yamlConfig["templates"]
 
-        templateFolder = args.templatePath
+        templateFolder = Path(args.templatePath)
+        componentFolder = Path(args.componentPath)
 
         patterns = {
                 pattern: re.compile(patternStrings[pattern], flags=re.DOTALL)
@@ -29,6 +30,12 @@ def main():
                 path: readPathIntoString(Path(templateFolder, templatePaths[path]))
                 for path in templatePaths
             }
+        
+        componentFiles = searchDir(componentFolder, "html")
+        components = {
+            component.stem: readPathIntoString(component)
+            for component in componentFiles
+        }
 
     except KeyError as exception:
         print(f"KeyError: Missing {exception} from the config")
@@ -86,7 +93,7 @@ def main():
     preview, pages = buildProjects(patterns, templates, sourcePath)
 
     for (page, path) in noncompiledHTML:
-        compiledPage = createHTML(defaultdict(str), page, patterns)
+        compiledPage = createHTML(defaultdict(str, components), page, patterns)
         print(f"Compiling: {path}")
         pages.append((compiledPage, path))
     

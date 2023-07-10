@@ -30,8 +30,6 @@ def createProjects(source: Path, patterns: dict[str, re.Pattern], templates: dic
 
     projectTree: TreeNode[Project] = TreeNode(None)
     for project in searchDir(source, "md"):
-        print(project)
-
         match = re.match(yamlPattern, readPathIntoString(project))
 
         md = Markdown()
