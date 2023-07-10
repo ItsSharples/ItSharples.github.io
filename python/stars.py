@@ -18,7 +18,7 @@ colours = ['163, 193, 255',
 width = 400
 height = 220
 numchunks = 2
-numstars = 8
+numstars = 4
 
 dim = max(width, height)
 
@@ -66,5 +66,5 @@ reducedMotion = f"@media (prefers-reduced-motion) {{ {', '.join(layersAndRules.k
 
 outComponents.append(reducedMotion)
 
-with open("./css/stars-config.css", "w") as config:
+with open("./src/css/stars-config.css", "w") as config:
     config.write("\n".join(outComponents))
