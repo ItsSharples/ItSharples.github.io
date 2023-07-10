@@ -7,7 +7,7 @@ from pathlib import Path
 from TreeNode import TreeNode
 from Project import Project
 from SafeEval import safe_eval
-from helpers import readPathIntoString, searchDir, writeStringIntoPath
+from helpers import readPathIntoString, searchDir, writeStringIntoPath, getPathRelativeToRootChild
 from compileHTML import createHTML
 
 def createProjectPreview(template: str, yaml: defaultdict[str, str | Path], patterns: dict[str, re.Pattern]):
@@ -29,21 +29,23 @@ def createProjects(source: Path, patterns: dict[str, re.Pattern], templates: dic
     yamlPattern = patterns["yaml"]
 
     projectTree: TreeNode[Project] = TreeNode(None)
-    for project in searchDir(source / "projects", "md"):
-        with open(project, "r") as file:
-            a = re.match(yamlPattern, file.read())
+    for project in searchDir(source, "md"):
+        print(project)
+
+        match = re.match(yamlPattern, readPathIntoString(project))
 
         md = Markdown()
         md.build_parser()
 
-        yaml, markdown = yamlToDict(a['yaml']), md.convert(a['markdown'])
-        yaml["url"] = project.parent
+        yaml, markdown = yamlToDict(match['yaml']), md.convert(match['markdown'])
+        yaml["url"] = getPathRelativeToRootChild(project.parent)
         yaml["ignore"] = bool(yaml['ignore'])
 
         if yaml["ignore"]:
             continue
 
         groups: list[Path] = yaml["url"].parts
+        # Go to the correct place in the ProjectTree
         currNode = projectTree
         for group in groups:
             currNode = currNode[group]
@@ -53,10 +55,10 @@ def createProjects(source: Path, patterns: dict[str, re.Pattern], templates: dic
             str, [('content', markdown)]), projectTemplate, patterns)
 
         project = Project(
-            url= yaml['url'], preview=preview, page=page, isHTML=True)
+            url=yaml['url'], preview=preview, page=page, isHTML=True)
         currNode.append(project)
-    # We can ignore 'Base' node, and pretend we start at 'projects'
-    return projectTree.getBranch('projects').rename('Projects')
+
+    return projectTree
 
 # Convert the projects Tree into groups of groups of data
 
@@ -99,20 +101,14 @@ def convertIntoHTML(projects: TreeNode[Project], patterns: dict[str, re.Pattern]
 
 
 def buildProjects(
-        patternStrings: dict[str, str], templatePaths: dict[str, str],
-        source: Path = Path("."), destination: Path = Path("_site"), templateFolder: Path = Path("templates")):
-
-    patterns = {pattern: re.compile(
-        patternStrings[pattern], flags=re.DOTALL) for pattern in patternStrings}
-    templates = {path: readPathIntoString(Path(
-        templateFolder, templatePaths[path])) for path in templatePaths}
+        patterns: dict[str, re.Pattern], templates: dict[str, re.Pattern],
+        source: Path = Path(".")):
 
     projects = createProjects(source, patterns, templates)
 
     # List is so that it actions the map
     projectList = list(filter(None, projects.mapContent(lambda project:
-                                          (project.page, Path(
-                                              destination, project.url, "index.html"))
+                                          (project.page, Path(project.url, "index.html"))
                                           )))
 
     # Write the Preview Page
@@ -120,7 +116,6 @@ def buildProjects(
         defaultdict(
             str, [('content', convertIntoHTML(projects, patterns, templates))]),
         templates['overview'], patterns)
-    previewTuple = (previewPage, Path(
-        destination, "projects/index.html"))
+    previewTuple = (previewPage, Path("projects/index.html"))
     
     return previewTuple, projectList
