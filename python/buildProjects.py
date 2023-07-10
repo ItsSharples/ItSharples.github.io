@@ -76,7 +76,7 @@ def convertIntoHTML(projects: TreeNode[Project], patterns: dict[str, re.Pattern]
             groupHtml = createHTML(defaultdict(str,
                                                [
                                                    ('content', groupHtml),
-                                                   ('name', projects.name),
+                                                   ('name', projects.name.capitalize()),
                                                    ('depth', str(projects.depth))
                                                ]), templates['group'], patterns)
 
@@ -105,6 +105,8 @@ def buildProjects(
         source: Path = Path(".")):
 
     projects = createProjects(source, patterns, templates)
+
+    projects = projects.getBranch('projects')
 
     # List is so that it actions the map
     projectList = list(filter(None, projects.mapContent(lambda project:
