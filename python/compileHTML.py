@@ -9,7 +9,7 @@ from helpers import normalise
 def replaceInTemplateAtSpan(template: str, value: str, span: tuple[int, int]):
     return template[:span[0]] + value + template[span[1]:]
 
-def calculateValue(calculation: str, operatorPattern: re.Pattern, keypairs: dict[str, str]) -> str:
+def calculateValue(calculation: str, operatorPattern: re.Pattern, keypairs: dict[str, str], evaluateResult = True) -> str:
     # Inside Calculations, the values change meaning from just strings to potential values
     value: str = calculation
     ##print(f"Calculation: {value}")
@@ -28,7 +28,11 @@ def calculateValue(calculation: str, operatorPattern: re.Pattern, keypairs: dict
         operator = normalise(operators['operator'])
 
         computation = ''.join([str(left), str(operator), str(right)])
-        result = safe_eval(computation)
+        if evaluateResult:
+            result = safe_eval(computation)
+        else:
+            result = deepcopy(computation)
+
         ##print(f"Result: {result}")
 
         return replaceInTemplateAtSpan(value, str(result), operators.span())
@@ -73,6 +77,13 @@ def createHTML(keypairs: dict[str, str], template: str, patterns: dict[str, re.P
                 if keypairs[value]:
                     print(f"Overriding {keypairs[value]} with {result} at {value}")
                 keypairs[value] = result;
+            
+            case "setraw":
+                result = calculateValue(result, operatorPattern, keypairs, False)
+                if keypairs[value]:
+                    print(f"Overriding {keypairs[value]} with {result} at {value}")
+                keypairs[value] = result;
+
 
             case "get":
                 if keypairs[value]:

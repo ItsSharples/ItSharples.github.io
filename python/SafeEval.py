@@ -4,9 +4,9 @@ import operator
 import math
 
 
-def safe_eval(s):
+def safe_eval(string: str):
 
-    def checkmath(x, *args):
+    def checkmaths(x, *args):
         if x not in [x for x in dir(math) if not "__" in x]:
             raise SyntaxError(f"Unknown func {x}()")
         fun = getattr(math, x)
@@ -19,7 +19,7 @@ def safe_eval(s):
         ast.Div: operator.truediv,
         ast.Mod: operator.mod,
         ast.Pow: operator.pow,
-        ast.Call: checkmath,
+        ast.Call: checkmaths,
         ast.BinOp: ast.BinOp,
     }
 
@@ -31,7 +31,8 @@ def safe_eval(s):
 
     ops = tuple(binOps) + tuple(unOps)
 
-    tree = ast.parse(s, mode='eval')
+    encodedString = string.encode()
+    tree = ast.parse(encodedString, mode='eval')
 
     def _eval(node):
         if isinstance(node, ast.Expression):
@@ -60,7 +61,7 @@ def safe_eval(s):
             return unOps[type(node.op)](operand)
         elif isinstance(node, ast.Call):
             args = [_eval(x) for x in node.args]
-            r = checkmath(node.func.id, *args)
+            r = checkmaths(node.func.id, *args)
             return r
         else:
             raise SyntaxError(f"Bad syntax, {type(node)}")

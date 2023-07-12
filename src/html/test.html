@@ -17,9 +17,9 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Sharples' Corner">
-    <meta property="og:url" content="https://itssharples.github.io/html/404.html">
-    <meta property="og:title" content="Error 404">
-    <meta property="og:description" content="There is No Content here!">
+    <meta property="og:url" content="https://itssharples.github.io/html/test.html">
+    <meta property="og:title" content="Test Page">
+    <meta property="og:description" content="Shoo!">
     <meta property="og:image" content="">
 
     <title>Sharples' Corner</title>
@@ -42,12 +42,16 @@
 {{ navbar }}
 <body>
     <div id="background">
-        <main id="content">
-            <hgroup>
-            <h1>404</h1>
-            <p>Couldn't find this page! Check the Spelling or jump back <a href="/">home</a>! </p>
-            </hgroup>
-        </main>
+<main id="content">
+    {% setraw(content) %{
+    <hgroup>
+    <h1>404</h1>
+    <p>Couldn't find this page! Check the Spelling or jump back <a href="/">home</a>! </p>
+    </hgroup>
+    }% end setraw %}
+
+    {{ content }}
+</main>
     </div>
 </body>
 {{ footer }}
